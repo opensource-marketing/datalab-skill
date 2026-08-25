@@ -1,0 +1,628 @@
+# 한국관광 데이터랩 qid 카탈로그 — 전국 요약(메인 화면)
+#
+# 데이터랩 첫 화면이 그리는 지표들이다. 다른 카탈로그가 "어느 지역·어느
+# 국가"를 묻는 데 비해, 여기는 **전국 전체가 지금 어떤가**에 답한다.
+# 그 층이 통째로 비어 있었다 — 색인이 화면 39개를 훑는 동안 정작 첫
+# 화면(main/getMainForm)을 한 번도 훑지 않았기 때문이다.
+#
+# ── 이 계열의 성질 ─────────────────────────────────────────────
+# 대부분 **파라미터를 받지 않거나 무시한다.** 화면이 "지금 전국"만
+# 그리기 때문이다. 축을 주면 값이 달라질 것으로 기대하면 틀린다.
+# 어느 것이 파라미터에 반응하는지는 실호출로 하나씩 확인했다:
+#
+#   반응한다   MN_01_01_027~031 (bgngYm/endYm) · TSA_03_01_0012 (BASE_YM1/2)
+#              MM_HO_HOT_001_003 (BASE_YM_TMAP_FR/TO · AGEG_DIV_CD)
+#   무시한다   MN_01_01_020 · MN_01_01_023 · MN_01_01_024 · MN_01_01_026
+#              MM_HO_HOT_001_001 · _002 · _004
+#
+# ── 기간 파라미터 이름이 다르다 ────────────────────────────────
+# 이 계열의 월별 추이는 BASE_YM1/BASE_YM2가 아니라 **bgngYm/endYm**을
+# 본다. BASE_YM1을 주면 오류가 아니라 빈 배열이 온다. 다른 카탈로그의
+# 습관대로 부르면 "데이터가 없다"로 잘못 읽힌다.
+#
+# ── DIV_NM은 코드다. 이름이 응답에 없다 ────────────────────────
+# MN_01_01_026과 MN_01_01_023은 지표 이름을 돌려주지 않고 DIV_NM 코드만
+# 준다. 무엇이 무엇인지는 사이트 화면이 그 코드로 어느 칸을 채우는지로만
+# 알 수 있다. 지어내지 않았다 — 코드 → 이름 표는 scripts/national.py의
+# CARDS에 있고, 근거는 main.html의 statusItemVal<코드> 라벨과
+# main_*.js의 stdStr 문자열이다.
+#
+# ── 액수 단위 ─────────────────────────────────────────────────
+# 소비액은 모두 **원**이다. 조 단위 숫자가 그대로 온다(2026년 내국인
+# 관광소비 연간누적 93,664,351,622,807). 다른 카탈로그에는 천원·백만원
+# 단위 지표가 섞여 있으니 나란히 놓기 전에 단위를 맞춰라.
+# ────────────────────────────────────────────────────────────────
+
+MN_01_01_026:
+  name: 전국 관광 현황 요약(25종)
+  screen: /datalab/portal/main/getMainForm.do
+  auth: public
+  params: []
+  fixed_params: {}
+  granularity: snapshot
+  section: 전국요약
+  query_axis: 전국
+  caution: >-
+    파라미터를 받지 않는다. DIV_NM이 지표 코드이고 이름은 응답에 없다 —
+    national.py의 CARDS로 풀어라. 지표마다 기준 시점(MAX_BASE_YM)이
+    다르므로 한 시점으로 뭉뚱그리지 마라. VALUE가 0인 행은 값이 없는
+    것이 아니라 ARR_VAL에 상위 항목 목록이 JSON 문자열로 들어 있는 행이다.
+  columns:
+    DIV_NM: {label: 지표코드, type: str, unit: ""}
+    VALUE: {label: 값, type: float, unit: ""}
+    RATE: {label: 증감률, type: float, unit: ""}
+    RATE1: {label: 보조_증감률, type: float, unit: ""}
+    MAX_BASE_YM: {label: 기준시점, type: str, unit: ""}
+    ARR_VAL: {label: 상위항목_JSON, type: str, unit: ""}
+
+MN_01_01_023:
+  name: 전국 관광 5대 지표(연간 누적)
+  screen: /datalab/portal/main/getMainForm.do
+  auth: public
+  params: []
+  fixed_params: {}
+  granularity: snapshot
+  section: 전국요약
+  query_axis: 전국
+  caution: >-
+    BASE_YM1·BASE_YM2를 받는 것처럼 보이지만 무시한다(창을 2023년으로
+    바꿔도 응답이 한 글자도 달라지지 않는다). DIV_NM 1~5는 각각 외지인
+    방문자수·내국인 관광소비·방한 외래객수·외국인 관광소비·관광사업체
+    수다. 출처가 서로 다르다(통신·카드·한국관광통계·카드·인허가)므로
+    같은 잣대로 비교하지 마라.
+  columns:
+    DIV_NM: {label: 지표코드, type: str, unit: ""}
+    VALUE: {label: 연간누적값, type: float, unit: ""}
+    PRE_VALUE: {label: 전년동기값, type: float, unit: ""}
+    RATE: {label: 증감률, type: float, unit: "%"}
+    MAX_BASE_YM: {label: 기준시점, type: str, unit: ""}
+
+MN_01_01_020:
+  name: 방한객 상위 10개국(누적)
+  screen: /datalab/portal/main/getMainForm.do
+  auth: public
+  params: []
+  fixed_params: {}
+  granularity: snapshot
+  section: 전국요약
+  query_axis: 전국
+  caution: >-
+    DD(기준일)를 받는 것처럼 보이지만 무시한다. 상위 10개국만 오므로(2026-08-23 재확인)
+    합계를 전체 방한객수로 읽지 마라. 국가를 골라 부르는 지표가 아니다.
+  columns:
+    PTL_NAT_CD: {label: 국가코드, type: str, unit: ""}
+    NAT_NM: {label: 국가명, type: str, unit: ""}
+    TOU_NUM: {label: 방한객수, type: float, unit: 명}
+
+MN_01_01_021:
+  name: 방한 외래객 통계의 조회 가능 기간
+  screen: /datalab/portal/main/getMainForm.do
+  auth: public
+  params: []
+  fixed_params: {}
+  granularity: snapshot
+  section: 전국요약
+  query_axis: 전국
+  caution: >-
+    관광 수치가 아니라 메타다. 한 행에 DATEFR~DATETO만 온다. 방한 외래객
+    통계가 어디까지 발표됐는지 확인할 때 쓴다.
+  columns:
+    DATEFR: {label: 시작월, type: str, unit: ""}
+    DATETO: {label: 종료월, type: str, unit: ""}
+
+MN_01_01_027:
+  name: 방한 외래객수 추이(월별)
+  screen: /datalab/portal/main/getMainForm.do
+  auth: public
+  params: [bgngYm, endYm]
+  fixed_params: {}
+  granularity: month
+  section: 전국추이
+  query_axis: 전국
+  caution: >-
+    기간을 BASE_YM1이 아니라 bgngYm·endYm으로 준다. 없으면 빈 배열이다.
+    요청한 달 수보다 적게 올 수 있다 — 아직 발표되지 않은 달이 빠진다.
+    BASE_YM이 그 행의 달이고, BASE_YM1·BASE_YM2는 요청한 창이 되풀이된다.
+  columns:
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    TOU_NUM: {label: 방한외래객수, type: float, unit: 명}
+    PREV_TOU_NUM: {label: 전년동월_방한외래객수, type: float, unit: 명}
+    TOU_NUM_PER: {label: 전년동월_증감률, type: float, unit: "%"}
+    PRE_BASE_YM1: {label: 전년_창시작, type: str, unit: ""}
+    PRE_BASE_YM2: {label: 전년_창종료, type: str, unit: ""}
+    BASE_YM1: {label: 요청_창시작, type: str, unit: ""}
+    BASE_YM2: {label: 요청_창종료, type: str, unit: ""}
+
+MN_01_01_028:
+  name: 의료관광 소비 추이(월별)
+  screen: /datalab/portal/main/getMainForm.do
+  auth: public
+  params: [bgngYm, endYm]
+  fixed_params: {}
+  granularity: month
+  section: 전국추이
+  query_axis: 전국
+  caution: >-
+    컬럼 이름이 TOU_NUM이지만 인원이 아니라 **소비액(원)**이다. 이름을
+    믿고 방문자 수로 읽으면 안 된다. 기간은 bgngYm·endYm으로 준다.
+  columns:
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    TOU_NUM: {label: 의료관광_소비액, type: float, unit: 원}
+    PREV_TOU_NUM: {label: 전년동월_소비액, type: float, unit: 원}
+    TOU_NUM_PER: {label: 전년동월_증감률, type: float, unit: "%"}
+    PRE_BASE_YM1: {label: 전년_창시작, type: str, unit: ""}
+    PRE_BASE_YM2: {label: 전년_창종료, type: str, unit: ""}
+    BASE_YM1: {label: 요청_창시작, type: str, unit: ""}
+    BASE_YM2: {label: 요청_창종료, type: str, unit: ""}
+
+MN_01_01_029:
+  name: 크루즈 입국자수 추이(월별)
+  screen: /datalab/portal/main/getMainForm.do
+  auth: public
+  params: [bgngYm, endYm]
+  fixed_params: {}
+  granularity: month
+  section: 전국추이
+  query_axis: 전국
+  caution: >-
+    기간은 bgngYm·endYm으로 준다. 크루즈 통계는 다른 지표보다 늦게
+    발표되어 요청한 창의 끝 달이 비는 일이 잦다.
+  columns:
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    TOU_NUM: {label: 크루즈_입국자수, type: float, unit: 명}
+    PREV_TOU_NUM: {label: 전년동월_입국자수, type: float, unit: 명}
+    TOU_NUM_PER: {label: 전년동월_증감률, type: float, unit: "%"}
+    PRE_BASE_YM1: {label: 전년_창시작, type: str, unit: ""}
+    PRE_BASE_YM2: {label: 전년_창종료, type: str, unit: ""}
+    BASE_YM1: {label: 요청_창시작, type: str, unit: ""}
+    BASE_YM2: {label: 요청_창종료, type: str, unit: ""}
+
+MN_01_01_030:
+  name: 한류관광 소비 추이(월별)
+  screen: /datalab/portal/main/getMainForm.do
+  auth: public
+  params: [bgngYm, endYm]
+  fixed_params: {}
+  granularity: month
+  section: 전국추이
+  query_axis: 전국
+  caution: >-
+    컬럼 이름이 TOU_NUM이지만 인원이 아니라 **소비액(원)**이다.
+    기간은 bgngYm·endYm으로 준다.
+  columns:
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    TOU_NUM: {label: 한류관광_소비액, type: float, unit: 원}
+    PREV_TOU_NUM: {label: 전년동월_소비액, type: float, unit: 원}
+    TOU_NUM_PER: {label: 전년동월_증감률, type: float, unit: "%"}
+    PRE_BASE_YM1: {label: 전년_창시작, type: str, unit: ""}
+    PRE_BASE_YM2: {label: 전년_창종료, type: str, unit: ""}
+    BASE_YM1: {label: 요청_창시작, type: str, unit: ""}
+    BASE_YM2: {label: 요청_창종료, type: str, unit: ""}
+
+MN_01_01_031:
+  name: 국내 방문객수 추이(월별)
+  screen: /datalab/portal/main/getMainForm.do
+  auth: public
+  params: [bgngYm, endYm]
+  fixed_params: {}
+  granularity: month
+  section: 전국추이
+  query_axis: 전국
+  caution: >-
+    통신 빅데이터 기준의 전국 방문 연인원이다. 한 사람이 여러 지역을
+    가면 여러 번 세므로 인구와 비교하지 마라. 기간은 bgngYm·endYm으로
+    준다. MN_01_01_024가 같은 값을 최근 12개월 고정으로 돌려준다(2026-08-23 재확인: 12행).
+  columns:
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    TOU_NUM: {label: 국내_방문객수, type: float, unit: 명}
+    PREV_TOU_NUM: {label: 전년동월_방문객수, type: float, unit: 명}
+    TOU_NUM_PER: {label: 전년동월_증감률, type: float, unit: "%"}
+    PRE_BASE_YM1: {label: 전년_창시작, type: str, unit: ""}
+    PRE_BASE_YM2: {label: 전년_창종료, type: str, unit: ""}
+    BASE_YM1: {label: 요청_창시작, type: str, unit: ""}
+    BASE_YM2: {label: 요청_창종료, type: str, unit: ""}
+
+MN_01_01_024:
+  name: 국내 방문객수 추이(최근 12개월 고정)
+  screen: /datalab/portal/main/getMainForm.do
+  auth: public
+  params: []
+  fixed_params: {}
+  granularity: month
+  section: 전국추이
+  query_axis: 전국
+  caution: >-
+    MN_01_01_031과 같은 값을 돌려주지만 **기간을 고를 수 없다**. 창을
+    바꿔도 응답이 같다(해시까지 일치하는 것을 확인했다). 기간을 정해
+    부를 일이 있으면 MN_01_01_031을 써라.
+  columns:
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    TOU_NUM: {label: 국내_방문객수, type: float, unit: 명}
+    PREV_TOU_NUM: {label: 전년동월_방문객수, type: float, unit: 명}
+    TOU_NUM_PER: {label: 전년동월_증감률, type: float, unit: "%"}
+    PRE_BASE_YM1: {label: 전년_창시작, type: str, unit: ""}
+    PRE_BASE_YM2: {label: 전년_창종료, type: str, unit: ""}
+    BASE_YM1: {label: 요청_창시작, type: str, unit: ""}
+    BASE_YM2: {label: 요청_창종료, type: str, unit: ""}
+
+TSA_03_01_0012:
+  name: 시도별 체류시간·숙박일·숙박비율
+  screen: /datalab/portal/main/getMainForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: period
+  section: 전국비교
+  query_axis: 전국
+  caution: >-
+    SGG_CD를 받는 것처럼 보이지만 무시한다 — 어느 지역을 넣어도 전국이
+    모두 온다. 기간(BASE_YM1·BASE_YM2)에는 반응하며 없으면 빈 배열이다.
+    **지금은 시도 17개가 한 번씩 온다**(2026-08-23 재확인: 2019·2021·2023·
+    2024·2025 모두 17행이며 월 단위도 같다). 한때 '전남광주통합특별시'(코드
+    12)가 '광주광역시'(29)·'전라남도'(46)와 함께 와 다 더하면 그 지역을 두
+    번 세게 만들었다 — 지금은 오지 않지만 합계를 낼 때 코드 12가 섞였는지
+    확인하라. STAY_TM과 SIDO_AVG_STAY_TM은 자릿수가 크게 다르고 사이트가
+    단위를 표기하지 않는다 — 절대값으로 읽지 말고 시도 간 비교에만 써라.
+  columns:
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    STAY_TM: {label: 체류시간, type: float, unit: ""}
+    SIDO_AVG_STAY_TM: {label: 시도평균_체류시간, type: float, unit: ""}
+    LODG_DAYS: {label: 평균_숙박일, type: float, unit: 일}
+    SIDO_AVG_LODG_TOU_RAT: {label: 숙박관광객_비율_증감, type: float, unit: ""}
+
+MM_HO_HOT_001_001:
+  name: 내국인 방문자 급등 행정동 Top3
+  screen: /datalab/portal/main/getMainForm.do
+  auth: public
+  params: []
+  fixed_params: {}
+  granularity: snapshot
+  section: 급등
+  query_axis: 전국
+  caution: >-
+    파라미터를 받지 않는다. 최근 3개월(BASE_YM_STR)을 전년 같은 기간과
+    견준 증가율(RAT) 상위 세 곳이다. TOU_NUM은 그 3개월 합계이고 한
+    사람이 여러 번 세어질 수 있어 행정동 인구와 비교하면 안 된다.
+    사이트가 단위를 표기하지 않아 확정하지 못했다.
+  columns:
+    RNK: {label: 순위, type: int, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    SGG_NM: {label: 시군구명, type: str, unit: ""}
+    ADONG_CD: {label: 행정동코드, type: str, unit: ""}
+    ADONG_NM: {label: 행정동명, type: str, unit: ""}
+    TOU_NUM: {label: 방문자수, type: float, unit: ""}
+    SPPY_TOU_NUM: {label: 전년동기_방문자수, type: float, unit: ""}
+    RAT: {label: 증가율, type: float, unit: "%"}
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    BASE_YM_STR: {label: 기준구간, type: str, unit: ""}
+
+MM_HO_HOT_001_002:
+  name: 외국인 방문자 급등 행정동 Top3
+  screen: /datalab/portal/main/getMainForm.do
+  auth: public
+  params: []
+  fixed_params: {}
+  granularity: snapshot
+  section: 급등
+  query_axis: 전국
+  caution: >-
+    파라미터를 받지 않는다. 내국인판(MM_HO_HOT_001_001)과 컬럼이 같지만
+    모수가 훨씬 작아 증가율이 크게 튄다 — 순위를 규모로 읽지 마라.
+    사이트가 단위를 표기하지 않아 확정하지 못했다.
+  columns:
+    RNK: {label: 순위, type: int, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    SGG_NM: {label: 시군구명, type: str, unit: ""}
+    ADONG_CD: {label: 행정동코드, type: str, unit: ""}
+    ADONG_NM: {label: 행정동명, type: str, unit: ""}
+    TOU_NUM: {label: 방문자수, type: float, unit: ""}
+    SPPY_TOU_NUM: {label: 전년동기_방문자수, type: float, unit: ""}
+    RAT: {label: 증가율, type: float, unit: "%"}
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    BASE_YM_STR: {label: 기준구간, type: str, unit: ""}
+
+MM_HO_HOT_001_003:
+  name: 연령대별 인기 관광지 Top5(내비게이션 검색)
+  screen: /datalab/portal/main/getMainForm.do
+  auth: public
+  params: [BASE_YM_TMAP_FR, BASE_YM_TMAP_TO, AGEG_DIV_CD]
+  fixed_params: {}
+  granularity: period
+  section: 급등
+  query_axis: 전국
+  caution: >-
+    기간을 BASE_YM_TMAP_FR·BASE_YM_TMAP_TO로 준다 — 이 이름이 아니면
+    빈 배열이다. AGEG_DIV_CD(20·30·40·50·60)는 생략할 수 있고 그러면
+    전 연령이 섞인 결과가 온다. SRCH_CNT_SUM은 내비게이션 검색 건수이지
+    방문자 수가 아니다.
+  columns:
+    RNK: {label: 순위, type: int, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SGG_NM: {label: 시군구명, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    ITS_BRO_ID: {label: 관광지ID, type: str, unit: ""}
+    ITS_BRO_NM: {label: 관광지명, type: str, unit: ""}
+    ADDR_ROAD_NM: {label: 주소, type: str, unit: ""}
+    TMAP_CATE_MCLS_NM: {label: 분류, type: str, unit: ""}
+    TMAP_CATE_MCLS_CD: {label: 분류코드, type: str, unit: ""}
+    AGEG_DIV_CD: {label: 연령대, type: str, unit: ""}
+    SRCH_CNT_SUM: {label: 검색건수, type: float, unit: 건}
+    TOTAL_NUM: {label: 상위5개_검색건수_합, type: float, unit: 건}
+    SRCH_CNT_RATE: {label: 상위5개_내_비중, type: float, unit: "%"}
+
+MM_HO_HOT_001_004:
+  name: 검색 급등 관광지
+  screen: /datalab/portal/main/getMainForm.do
+  auth: public
+  params: []
+  fixed_params: {}
+  granularity: snapshot
+  section: 급등
+  query_axis: 전국
+  caution: >-
+    파라미터를 받지 않는다. 전년 같은 달 대비 내비게이션 검색이 가장
+    많이 는 관광지다. AGEG_DIV_CD에 '_'가 들어오는 행이 있는데 연령
+    구분이 없다는 뜻이지 오류가 아니다. 검색은 방문이 아니다.
+  columns:
+    RNK: {label: 순위, type: int, unit: ""}
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SGG_NM: {label: 시군구명, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    ITS_BRO_ID: {label: 관광지ID, type: str, unit: ""}
+    ITS_BRO_NM: {label: 관광지명, type: str, unit: ""}
+    ADDR_ROAD_NM: {label: 주소, type: str, unit: ""}
+    TMAP_CATE_MCLS_NM: {label: 분류, type: str, unit: ""}
+    TMAP_CATE_MCLS_CD: {label: 분류코드, type: str, unit: ""}
+    AGEG_DIV_CD: {label: 연령대, type: str, unit: ""}
+    SRCH_CNT: {label: 검색건수, type: float, unit: 건}
+    PREYR_SRCH_CNT: {label: 전년동월_검색건수, type: float, unit: 건}
+    GROW_RATE: {label: 증가율, type: float, unit: "%"}
+    # 밀리초 타임스탬프다(1786093221000 → 2026-08-07). 적재 일시로
+    # 보이지만 사이트가 그렇게 쓴다는 근거를 찾지 못해 단정하지 않는다.
+    LDNG_DT: {label: LDNG_DT_원값, type: float, unit: ""}
+
+# ─────────────────────────────────────────────────────────────────
+# 2026-08-24 추가 — 첫 화면 아래쪽 표 넷
+#
+# `MN_01_01_*` 카드가 "지금 전국이 어떤가"를 한 줄로 말한다면,
+# 이 `LN_01_01_04*` 는 그 아래에 붙는 표다. 넷 다 **파라미터를
+# 무시하고 늘 최신 값을 준다**(2026-08-24 확인).
+# ─────────────────────────────────────────────────────────────────
+
+LN_01_01_041:
+  name: 전국 방문자 수(현지인·외지인)
+  screen: /datalab/portal/main/getMainForm.do
+  auth: public
+  params: []
+  fixed_params: {}
+  granularity: snapshot
+  section: 전국요약
+  query_axis: 전국
+  caution: >-
+    두 행만 온다 — 현지인방문자(a)와 외지인방문자(b)다. **'전체'
+    행이 없으므로 둘을 더해야 전체가 된다**(2026-08-24 확인).
+    연인원이라 값이 인구보다 크다(현지인 91.7억 · 외지인 29.3억).
+    인구와 비교하지 마라. 기간 파라미터를 무시한다 — 어느 기간의
+    누적인지 사이트가 밝히지 않으므로 "몇 년치"라고 적지 마라.
+  columns:
+    TOU_DIV_CD: {label: 구분코드, type: str, unit: ""}
+    TOU_DIV_NM: {label: 구분, type: str, unit: ""}
+    TOU_NUM: {label: 방문자수, type: float, unit: 명}
+
+LN_01_01_042:
+  name: 전국 관광지출액 업종별
+  screen: /datalab/portal/main/getMainForm.do
+  auth: public
+  params: []
+  fixed_params: {}
+  granularity: snapshot
+  section: 전국요약
+  query_axis: 전국
+  caution: >-
+    **`KTO_TOB_MCLS_NM='전체'` 행이 합계다.** 걸러내지 않고 더하면
+    두 배가 된다 — 전체 155,100,352,221 과 나머지 일곱 행의 합이
+    1원 차이로 같다(2026-08-24 검산). 단위를 사이트가 표기하지
+    않는다. 값의 크기로 보아 원으로 보이나 확정하지 못했으므로
+    업종 사이의 비중으로 읽어라. 기간 파라미터를 무시한다.
+  columns:
+    KTO_TOB_MCLS_NM: {label: 업종, type: str, unit: ""}
+    CNSM_AMT: {label: 관광지출액, type: float, unit: ""}
+
+LN_01_01_043:
+  name: 전국 목적지 검색건수 상위 지역
+  screen: /datalab/portal/main/getMainForm.do
+  auth: public
+  params: []
+  fixed_params: {}
+  granularity: snapshot
+  section: 전국요약
+  query_axis: 전국
+  caution: >-
+    **`TDIV` 가 행의 성격을 가른다.** 2면 전국 합계(SIDO_NM='전체'),
+    1이면 개별 지역이다. 섞어 더하면 두 배가 된다(2026-08-24 확인).
+    지역 이름이 '인천광역시 중구'처럼 시도와 시군구를 한 문자열로
+    준다 — 다른 표의 시군구명과 그대로 맞추려 하면 어긋난다.
+    검색건수는 방문이 아니다. 기간 파라미터를 무시한다.
+  columns:
+    TDIV: {label: 행구분, type: float, unit: ""}
+    SIDO_NM: {label: 지역명, type: str, unit: ""}
+    SRCH_CNT: {label: 검색건수, type: float, unit: 건}
+
+LN_01_01_071:
+  name: 국내관광 관심도 추이(최근 24개월)
+  screen: /datalab/portal/main/getMainForm.do
+  auth: public
+  params: []
+  fixed_params: {}
+  granularity: month
+  section: 전국추이
+  query_axis: 전국
+  caution: >-
+    **기간 파라미터를 무시하고 늘 최근 24개월을 준다**(2026-08-24
+    조회에서 202408~202607). **최댓값이 100인 상대 지수다** — 가장
+    높은 달이 100이 되도록 맞춘 값이라 "관심도 100%"가 아니다.
+    절대량으로 옮기지 말고 달 사이의 높낮이로만 읽어라.
+    `KTO_CATE_SCLS_CD` 와 `_NM` 이 둘 다 '관심도(%)' 문자열로 온다 —
+    분류 코드가 아니다.
+  columns:
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    KTO_CATE_SCLS_CD: {label: 항목코드, type: str, unit: ""}
+    KTO_CATE_SCLS_NM: {label: 항목, type: str, unit: ""}
+    SRCH_RAT: {label: 관심도_지수, type: float, unit: ""}
+
+# ─────────────────────────────────────────────────────────────────
+# 2026-08-24 추가 — 관광활동 유형별 인기지역
+#
+# 넷이 한 세트다. 각각 다섯 시군구를 준다.
+#
+# **이름과 값이 맞아떨어지는 것을 확인했다.** 체류시간(STAY_TM, 분)이
+# 유형 이름 순서와 같다(2026-08-24, 각 유형 상위 세 곳):
+#
+#   체류형  2,562 · 1,861 · 1,798
+#   체험형  1,790 · 1,667 · 1,646
+#   휴식형    469 ·   588 ·   599
+#   경유형    328 ·   336 ·   374
+#
+# dnname 을 근거로 쓰지 않는다는 규칙이 서 있는 자리다 — 이름이
+# 맞다고 믿은 것이 아니라 값이 그 이름대로 줄지어 있었다.
+#
+# ── 넣지 않은 것 ────────────────────────────────────────────────
+# `LN_01_01_051`~`_056`(연령별 인기지역)은 뺐다. 값이 나오지만
+# `TOU_NUM_PER` 가 100을 넘고(10대 153.7 · 60대 432.5) **여섯 연령대
+# 모두 부천시 세 구가 상위를 차지한다**(2026-08-24 확인). 무엇에
+# 대한 비율인지, 왜 한 도시만 나오는지 확정하지 못했다.
+# ─────────────────────────────────────────────────────────────────
+
+LN_01_01_046:
+  name: 관광활동 유형별 인기지역 Top5(체류형)
+  screen: /datalab/portal/main/getMainForm.do
+  auth: public
+  params: []
+  fixed_params: {}
+  granularity: snapshot
+  section: 전국비교
+  query_axis: 전국
+  caution: >-
+    다섯 시군구만 온다. **체류시간이 가장 긴 쪽**이다(2026-08-24
+    상위 세 곳 2,562 · 1,861 · 1,798분). `STAY_TM` 단위는 분이다.
+    `TOU_NUM` 이 소수점까지 오는데 사이트가 이유를 밝히지 않으므로
+    반올림해 적되 그렇게 했다고 밝혀라. 기간 파라미터를 무시하고
+    늘 최신을 준다. 형제 셋(휴식형 047 · 경유형 048 · 체험형 049)과
+    **겹치는 지역이 있을 수 있으니 네 표를 더하지 마라.**
+  columns:
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    SGG_NM: {label: 지역명, type: str, unit: ""}
+    STAY_TM: {label: 평균_체류시간, type: float, unit: 분}
+    TOU_NUM: {label: 방문자수, type: float, unit: 명}
+
+LN_01_01_047:
+  name: 관광활동 유형별 인기지역 Top5(휴식형)
+  screen: /datalab/portal/main/getMainForm.do
+  auth: public
+  params: []
+  fixed_params: {}
+  granularity: snapshot
+  section: 전국비교
+  query_axis: 전국
+  caution: >-
+    다섯 시군구만 온다. 체류시간이 짧은 축이다(2026-08-24 상위 세
+    곳 469 · 588 · 599분) — 경유형(048)보다는 길다. `STAY_TM` 은
+    분이다. 기간 파라미터를 무시한다. 네 유형 표를 더하지 마라.
+  columns:
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    SGG_NM: {label: 지역명, type: str, unit: ""}
+    STAY_TM: {label: 평균_체류시간, type: float, unit: 분}
+    TOU_NUM: {label: 방문자수, type: float, unit: 명}
+
+LN_01_01_048:
+  name: 관광활동 유형별 인기지역 Top5(경유형)
+  screen: /datalab/portal/main/getMainForm.do
+  auth: public
+  params: []
+  fixed_params: {}
+  granularity: snapshot
+  section: 전국비교
+  query_axis: 전국
+  caution: >-
+    다섯 시군구만 온다. **체류시간이 가장 짧은 쪽**이다(2026-08-24
+    상위 세 곳 328 · 336 · 374분) — 서울 중구 · 부산 중구 · 대구
+    중구처럼 도심이 온다. `STAY_TM` 은 분이다. 기간 파라미터를
+    무시한다. 네 유형 표를 더하지 마라.
+  columns:
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    SGG_NM: {label: 지역명, type: str, unit: ""}
+    STAY_TM: {label: 평균_체류시간, type: float, unit: 분}
+    TOU_NUM: {label: 방문자수, type: float, unit: 명}
+
+LN_01_01_049:
+  name: 관광활동 유형별 인기지역 Top5(체험형)
+  screen: /datalab/portal/main/getMainForm.do
+  auth: public
+  params: []
+  fixed_params: {}
+  granularity: snapshot
+  section: 전국비교
+  query_axis: 전국
+  caution: >-
+    다섯 시군구만 온다. 체류시간이 긴 축이다(2026-08-24 상위 세 곳
+    1,790 · 1,667 · 1,646분) — 체류형(046)보다는 짧다. `STAY_TM` 은
+    분이다. 기간 파라미터를 무시한다. 네 유형 표를 더하지 마라.
+  columns:
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    SGG_NM: {label: 지역명, type: str, unit: ""}
+    STAY_TM: {label: 평균_체류시간, type: float, unit: 분}
+    TOU_NUM: {label: 방문자수, type: float, unit: 명}
+
+# ── 2026-08-24 추가 — 세대별 인기관광지 상세 ────────────────────
+# 위 주석이 `MM_HO_HOT_001_003` 을 언급만 하고 있었는데, 상세판
+# (`_DETAIL`)이 훨씬 쓸모 있다. **전국뿐 아니라 시군구로도 부를 수
+# 있다** — 강릉시로 물으면 경포해변·안목해변·주문진항이 온다.
+#
+# `discover.py capture` 로 알아낸 것: **전국은 `SGG_CD='98'`** 이다.
+# 빈 값이 아니다.
+
+MM_HO_HOT_001_003_DETAIL:
+  name: 세대별 인기관광지 30위
+  screen: /datalab/portal/loc/getPopuTourAttrac.do
+  auth: public
+  params: [SGG_CD, SGG_NM, BASE_YM1, BASE_YM2, tabDiv, srchAreaDate,
+           dispYn, AGEG_DIV_CD]
+  fixed_params: {SGG_CD: "98", SGG_NM: "전국", tabDiv: "1",
+                 srchAreaDate: "1", dispYn: "Y", AGEG_DIV_CD: "all"}
+  granularity: month
+  section: 인기
+  query_axis: 지역
+  caution: >-
+    **`TOTAL_NUM` 은 전국 검색 전체가 아니라 이 표 30곳의 합이다.**
+    2025-08~2026-07 전국이 5,181,526 인데 30곳 `HOHD_SRCH_CNT_SUM`
+    합과 정확히 같다(2026-08-24 검산). 그래서 `TOU_NUM_RATE` 는
+    **상위 30곳 안에서의 비중**이고 합이 100%다 — "에버랜드가 전국
+    검색의 9%"로 읽으면 크게 부푼다.
+    **전국은 `SGG_CD='98'` 이다**(빈 값이 아니다). 시군구 다섯 자리로
+    부르면 그 지역 30위가 온다(강릉시 → 경포해변·안목해변·주문진항).
+    `AGEG_DIV_CD` 는 `all`·`20`·`30`·`40`·`50`·`60` 이다 — 세대마다
+    표가 완전히 다르다(20대 여의도한강공원, 60대 코엑스·통도사).
+    **`TOU_NUM_RATE` 는 문자열이고 탭 문자가 붙어 온다**("9.0\t").
+    인출 계층이 서식 공백을 지우지만 숫자로 쓰려면 확인하라.
+    티맵 검색 기준이라 실제 방문이 아니다.
+  columns:
+    RNK: {label: 순위, type: float, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    ITS_BRO_ID: {label: 관광지ID, type: str, unit: ""}
+    MD5_POI_ID: {label: POI_해시, type: str, unit: ""}
+    ITS_BRO_NM: {label: 관광지명, type: str, unit: ""}
+    TMAP_CATE_MCLS_CD: {label: 카테고리코드, type: str, unit: ""}
+    TMAP_CATE_MCLS_NM: {label: 카테고리, type: str, unit: ""}
+    AGEG_DIV_CD: {label: 세대, type: str, unit: ""}
+    HOHD_SRCH_CNT_SUM: {label: 검색건수, type: float, unit: 건}
+    TOTAL_NUM: {label: 상위30곳_합, type: float, unit: 건}
+    TOU_NUM_RATE: {label: 상위30곳_대비_비중, type: str, unit: "%"}

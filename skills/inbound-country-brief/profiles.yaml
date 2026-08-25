@@ -1,0 +1,23 @@
+# 업종별 5축 가중치. 합이 100이 아니어도 되며 내부에서 정규화된다.
+# aliases 는 사용자가 실제로 쓰는 말이다. --profile 호텔 처럼 써도
+# 알아듣게 하려고 둔다. 프로필을 늘리면 여기도 함께 늘린다.
+duty_free_retail:
+  label: 면세·화장품·리테일
+  aliases: [면세점, 면세, 화장품, 리테일, 쇼핑, 유통, 뷰티]
+  weights: {volume: 25, momentum: 15, value: 35, access: 10, headroom: 15}
+lodging:
+  label: 숙박·호텔
+  aliases: [숙박, 호텔, 리조트, 게스트하우스, 펜션]
+  weights: {volume: 30, momentum: 20, value: 10, access: 20, headroom: 20}
+travel_ota:
+  label: 여행사·OTA
+  aliases: [여행사, OTA, 오티에이, 여행플랫폼, 패키지]
+  weights: {volume: 15, momentum: 30, value: 10, access: 20, headroom: 25}
+mice:
+  label: MICE
+  aliases: [마이스, 컨벤션, 국제회의, 전시회]
+  weights: {volume: 20, momentum: 20, value: 25, access: 25, headroom: 10}
+neutral:
+  label: 중립(동일 가중)
+  aliases: [중립, 기본, 일반, 모름]
+  weights: {volume: 20, momentum: 20, value: 20, access: 20, headroom: 20}

@@ -1,0 +1,376 @@
+# 한국관광 데이터랩 qid 카탈로그 — 관광불편신고·소비자 상담/위해
+#
+# 화면 두 곳이다.
+#   ts/getTourCplnForm    관광산업 분석 > 관광불편신고
+#   ts/getCustConInjForm  관광산업 분석 > 소비자 상담·위해
+#
+# 둘 다 로그인 없이 열리는데도 이 저장소에 한동안 없었다. 색인에는
+# 있었지만 필수 파라미터를 몰라 빈 본문만 받았기 때문이다. 무엇이
+# 더 필요했는지는 각 항목의 fixed_params 에 적었다.
+#
+# ── 산술로 확인한 것(2026-08-24) ────────────────────────────────
+# 불편신고 지표 일곱이 2024년 한 해에 대해 **모두 1,543건**으로
+# 맞아떨어진다. 시도별·유형별·국가별·히트맵이 같은 모집단이라는 뜻이다.
+#
+# 소비자 상담은 13,209건에서 세 지표가 일치한다(품목별 TS_01_09_001,
+# 지역별 TS_01_09_003, 추이 TS_01_10_001의 '전체' 행).
+# 소비자 위해는 3,853건에서 둘이 일치한다(TS_01_09_002의 DTL 합,
+# 지역별 TS_01_09_004).
+#
+# ── 합을 내면 두 배가 되는 자리가 셋 있다 ───────────────────────
+# **1. 대분류 값이 중분류 행마다 반복된다.**
+#   TS_01_09_001 · TS_01_09_002 · TS_01_12_005 가 그렇다.
+#   `TOU_NUM`(또는 `CNT`)은 그 행이 속한 **대분류의 합**이고
+#   `DTL_TOU_NUM`이 그 행 자신의 값이다. TOU_NUM 을 그냥 더하면
+#   위해 3,853건이 47,901건이 된다(12배). 합계는 DTL 쪽으로 내라.
+#
+# **2. '전체'라는 이름의 집계 행이 섞여 있다.**
+#   TS_01_12_003 은 KTO_DCLR_TYPE_MCLS_NM 이 '전체'인 행을 따로 주고,
+#   TS_01_10_001 · TS_01_10_004 는 SIDO_NM 이 '전체'(SIDO_CD 100)인
+#   행을 따로 준다. 걸러내지 않으면 정확히 두 배가 된다.
+#
+# **3. 시도 17개짜리와 18개짜리가 섞여 있다.**
+#   지도용 지표(TS_01_09_005)는 시도 17개만 주고 '해외 및 기타'를
+#   뺀다. 표용 지표(TS_01_09_003)는 18행을 준다. 2024년 상담 기준
+#   13,209 대 13,114로 95건 차이다. 두 표를 나란히 놓지 마라.
+#
+# ── 이름이 뜻과 다른 컬럼 ───────────────────────────────────────
+# `DPTR_REGN_NM`(TS_01_12_005)은 **지역이 아니다.** 불편신고 유형
+# 대분류다(쇼핑·숙박·기타…). 이름만 보고 지역으로 읽으면 "쇼핑이라는
+# 지역"이 생긴다.
+#
+# `OCRN_SIDO_NM`(TS_01_12_006)도 selectDiv 를 2로 주면 **국가명**이
+# 들어온다(중국 607건). 컬럼 이름은 그대로 시도다.
+#
+# `location`(TS_01_09_002)은 **장소가 아니다.** 위해를 무엇으로
+# 나눌지 고르는 축이다 — 화면 select 의 주석이 근거다:
+#   1 품목별 · 2 원인별 · 3 부위별 · 4 증상별 · 5 장소별
+# 다섯 값이 실제로 다른 표를 준다(2026-08-24: 62·38·40·37·3행).
+#
+# `*_SQRT` 컬럼은 값의 **제곱근**이다. 버블 차트의 반지름으로 쓰려고
+# 사이트가 미리 계산해 둔 것이다(1,304 → 36.0, 4,554 → 67.0).
+# 지표가 아니므로 리포트에 싣지 마라.
+#
+# ── 카탈로그에 넣지 않은 것 ─────────────────────────────────────
+# `TS_01_09_006`은 값이 나오지만 뺐다. 이름은 '광역시도별 소비자
+# 상담/위해 건수'인데 2024년 합이 상담 11,480 · 위해 926으로,
+# 확인된 모집단(13,209 · 3,853)과 맞지 않는다. 무엇을 기준으로 좁힌
+# 것인지 알아내지 못했고 지금 화면의 어떤 차트도 이 qid 를 부르지
+# 않는다. 그럴듯한 남의 숫자를 싣느니 없는 편이 낫다.
+#
+# ── 단위 ────────────────────────────────────────────────────────
+# 전부 **건**이다. 차트 정의가 근거다(area_treemap_chart(..., '건', ...)).
+#
+# 조회 가능 기간(2026-08-24 확인)
+#   불편신고        201801 ~ 202607
+#   소비자 상담·위해 201801 ~ 202603
+
+TS_01_12_001:
+  name: 시도별 관광불편신고 월별 추이
+  screen: /datalab/portal/ts/getTourCplnForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y", srchAreaDate: "1"}
+  granularity: month
+  section: 불편신고
+  query_axis: 전국
+  caution: >-
+    시도 열일곱 곳을 한꺼번에 준다. 지역을 고르는 파라미터가 없으므로
+    원하는 시도는 OCRN_SIDO_NM 으로 걸러라. 값이 0인 달은 행 자체가
+    오지 않는다 — 2024년 열두 달을 물어도 118행이다(2026-08-24 확인).
+    빠진 달을 0으로 채울지는 쓰는 쪽이 정하고, 채웠으면 채웠다고 적어라.
+  columns:
+    BASE_DATE: {label: 기준월, type: str, unit: ""}
+    OCRN_SIDO_NM: {label: 발생_시도명, type: str, unit: ""}
+    OCRN_SIDO_CD: {label: 발생_시도코드, type: str, unit: ""}
+    DCLR_CNT: {label: 신고_건수, type: float, unit: 건}
+
+TS_01_12_002:
+  name: 유형 대분류별 관광불편신고 월별 추이
+  screen: /datalab/portal/ts/getTourCplnForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y", srchAreaDate: "1"}
+  granularity: month
+  section: 불편신고
+  query_axis: 전국
+  caution: >-
+    KTO_DCLR_TYPE_LCLS_NM 이 신고 유형 대분류다(음식점·쇼핑·숙박·
+    분실/도난 등). 이 지표에는 코드 컬럼이 없고 이름만 온다.
+    건수가 0인 달·유형은 행이 오지 않는다.
+  columns:
+    BASE_DATE: {label: 기준월, type: str, unit: ""}
+    KTO_DCLR_TYPE_LCLS_NM: {label: 신고유형_대분류, type: str, unit: ""}
+    DCLR_CNT: {label: 신고_건수, type: float, unit: 건}
+
+TS_01_12_003:
+  name: 시도별·유형 중분류별 관광불편신고 월별 추이
+  screen: /datalab/portal/ts/getTourCplnForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y", srchAreaDate: "1"}
+  granularity: month
+  section: 불편신고
+  query_axis: 전국
+  caution: >-
+    **'전체' 행이 섞여 있다.** KTO_DCLR_TYPE_MCLS_NM 이 '전체'
+    (코드 0000)인 행은 그 시도·그 달의 합계이므로, 걸러내지 않고
+    더하면 정확히 두 배가 된다(2024년 1,543 → 3,086, 2026-08-24 확인).
+    행이 많다 — 2024년 열두 달이면 573행이다.
+  columns:
+    BASE_DATE: {label: 기준월, type: str, unit: ""}
+    OCRN_SIDO_NM: {label: 발생_시도명, type: str, unit: ""}
+    OCRN_SIDO_CD: {label: 발생_시도코드, type: str, unit: ""}
+    KTO_DCLR_TYPE_MCLS_CD: {label: 신고유형_중분류코드, type: str, unit: ""}
+    KTO_DCLR_TYPE_MCLS_NM: {label: 신고유형_중분류, type: str, unit: ""}
+    DCLR_CNT: {label: 신고_건수, type: float, unit: 건}
+
+TS_01_12_004:
+  name: 국적별 관광불편신고 월별 추이
+  screen: /datalab/portal/ts/getTourCplnForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y", srchAreaDate: "1"}
+  granularity: month
+  section: 불편신고
+  query_axis: 전국
+  caution: >-
+    신고한 사람의 국적이다. **'대한민국'이 들어 있다** — 내국인이
+    낸 신고도 이 통계에 포함된다는 뜻이므로 "외국인 불편신고"라고
+    적지 마라. 2024년에 31개국이 나왔다(2026-08-24 확인). OD 는
+    사이트가 쓰는 정렬 순서이며 순위가 아니다.
+  columns:
+    BASE_DATE: {label: 기준월, type: str, unit: ""}
+    NAT_NM: {label: 국적명, type: str, unit: ""}
+    DCLR_CNT: {label: 신고_건수, type: float, unit: 건}
+    OD: {label: 정렬순서, type: float, unit: ""}
+
+TS_01_12_005:
+  name: 유형별 관광불편신고 건수(대분류·중분류)
+  screen: /datalab/portal/ts/getTourCplnForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y", srchAreaDate: "1"}
+  granularity: period
+  section: 불편신고
+  query_axis: 전국
+  caution: >-
+    **DPTR_REGN_NM 은 지역이 아니라 신고유형 대분류다**(쇼핑·숙박·
+    기타…). 이름의 REGN 을 믿지 마라. DPTR_REGN_DTL_NM 이 중분류다
+    (가격시비 등). 기간 전체를 합친 한 장이라 BASE_DATE 가 없다.
+    **TOU_NUM 은 대분류 합이 중분류 행마다 반복된 값이다** — 그냥
+    더하면 1,543건이 8,102건이 된다. 합계는 DTL_TOU_NUM 으로 내라
+    (2026-08-24 확인). *_SQRT 는 버블 크기용 제곱근이다.
+  columns:
+    DPTR_REGN_CD: {label: 신고유형_대분류코드, type: str, unit: ""}
+    DPTR_REGN_NM: {label: 신고유형_대분류, type: str, unit: ""}
+    DPTR_REGN_DTL_CD: {label: 신고유형_중분류코드, type: str, unit: ""}
+    DPTR_REGN_DTL_NM: {label: 신고유형_중분류, type: str, unit: ""}
+    TOU_NUM: {label: 대분류_건수, type: float, unit: 건}
+    TOU_NUM_SQRT: {label: 대분류_건수_제곱근, type: float, unit: ""}
+    TOU_NUM_RATE: {label: 대분류_비중, type: float, unit: "%"}
+    DTL_TOU_NUM: {label: 중분류_건수, type: float, unit: 건}
+    DTL_TOU_NUM_SQRT: {label: 중분류_건수_제곱근, type: float, unit: ""}
+    DTL_TOU_NUM_RATE: {label: 대분류내_중분류_비중, type: float, unit: "%"}
+
+TS_01_12_006:
+  name: 관광불편신고 순위(지역 또는 국가)
+  screen: /datalab/portal/ts/getTourCplnForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, selectDiv]
+  fixed_params: {ALL_YN: "Y", srchAreaDate: "1", selectDiv: "1", cplnDiv: ""}
+  granularity: period
+  section: 불편신고
+  query_axis: 전국
+  caution: >-
+    **selectDiv 가 축을 바꾼다. 1이면 지역, 2면 국가다.** 그런데
+    컬럼 이름은 둘 다 OCRN_SIDO_NM 이라 국가를 시도로 읽기 쉽다
+    (selectDiv=2 로 부르면 첫 행이 '중국' 607건이다, 2026-08-24 확인).
+    표에 축을 반드시 함께 적어라. selectDiv 를 빼면 오류가 아니라
+    빈 본문이 온다. RATE 는 기간 전체 합 대비 백분율이다(합 99.9%,
+    반올림 때문에 100이 되지 않는다).
+  columns:
+    RK: {label: 순위, type: float, unit: ""}
+    OCRN_SIDO_NM: {label: 발생_시도명_또는_국적명, type: str, unit: ""}
+    DCLR_CNT: {label: 신고_건수, type: float, unit: 건}
+    RATE: {label: 비중, type: float, unit: "%"}
+
+TS_01_12_007:
+  name: 시도별 관광불편신고 건수(히트맵)
+  screen: /datalab/portal/ts/getTourCplnForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y", srchAreaDate: "1"}
+  granularity: period
+  section: 불편신고
+  query_axis: 전국
+  caution: >-
+    지도에 칠하려고 만든 표라 시도명이 짧다('부산', '광주'). 다른
+    표의 '부산광역시'와 문자열로 맞추려 하면 어긋난다 — PTL_SIDO_CD
+    (KR-26 꼴)로 이어라. 신고가 없는 시도는 행이 오지 않는다
+    (2024년 16행, 2026-08-24 확인).
+  columns:
+    OCRN_SIDO_NM: {label: 발생_시도명_약칭, type: str, unit: ""}
+    PTL_SIDO_CD: {label: 포털_시도코드, type: str, unit: ""}
+    DCLR_CNT: {label: 신고_건수, type: float, unit: 건}
+
+TS_01_09_001:
+  name: 품목별 소비자 상담 건수
+  screen: /datalab/portal/ts/getCustConInjForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y", srchAreaDate: "1"}
+  granularity: period
+  section: 소비자상담
+  query_axis: 전국
+  caution: >-
+    한국소비자원에 들어온 관광 관련 상담이다. 대분류 하나에 한 행씩
+    오고 그 대분류에서 가장 큰 중분류를 함께 준다(2024년 8행).
+    **CNT 는 대분류의 합이고 DTL_TOU_NUM 이 그 중분류의 값이다** —
+    중분류 전체를 보려면 이 지표로는 안 된다. LCLS_RATE 는 전체
+    대비, DTL_TOU_NUM_RATE 는 그 대분류 대비 백분율이다. 2024년
+    합계 13,209건으로 TS_01_09_003·TS_01_10_001 과 일치한다
+    (2026-08-24 확인).
+  columns:
+    KTO_TOB_LCLS_NM: {label: 품목_대분류, type: str, unit: ""}
+    KTO_TOB_MCLS_NM: {label: 품목_중분류, type: str, unit: ""}
+    CNT: {label: 대분류_상담건수, type: float, unit: 건}
+    LCLS_SQRT: {label: 대분류_건수_제곱근, type: float, unit: ""}
+    LCLS_RATE: {label: 대분류_비중, type: float, unit: "%"}
+    DTL_TOU_NUM: {label: 중분류_상담건수, type: float, unit: 건}
+    DTL_TOU_NUM_SQRT: {label: 중분류_건수_제곱근, type: float, unit: ""}
+    DTL_TOU_NUM_RATE: {label: 대분류내_중분류_비중, type: float, unit: "%"}
+
+TS_01_09_002:
+  name: 소비자 위해 건수(품목·원인·부위·증상·장소)
+  screen: /datalab/portal/ts/getCustConInjForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, location]
+  fixed_params: {ALL_YN: "Y", srchAreaDate: "1", location: "1"}
+  granularity: period
+  section: 소비자상담
+  query_axis: 전국
+  caution: >-
+    **location 은 장소가 아니라 위해를 나누는 축이다.** 화면 select
+    의 주석이 근거다 — 1 품목별 · 2 원인별 · 3 부위별 · 4 증상별 ·
+    5 장소별. 다섯 값이 실제로 다른 표를 준다(2024년 62·38·40·37·3행,
+    2026-08-24 확인). location 을 빼면 빈 본문이 온다.
+    **TOU_NUM 은 대분류 합이 중분류마다 반복된 값이다** — 더하면
+    3,853건이 47,901건이 된다(12배). 합계는 DTL_TOU_NUM 으로 내라.
+  columns:
+    KTO_TOB_LCLS_NM: {label: 대분류, type: str, unit: ""}
+    KTO_TOB_MCLS_NM: {label: 중분류, type: str, unit: ""}
+    TOU_NUM: {label: 대분류_위해건수, type: float, unit: 건}
+    TOU_NUM_SQRT: {label: 대분류_건수_제곱근, type: float, unit: ""}
+    TOU_NUM_RATE: {label: 대분류_비중, type: float, unit: "%"}
+    DTL_TOU_NUM: {label: 중분류_위해건수, type: float, unit: 건}
+    DTL_TOU_NUM_SQRT: {label: 중분류_건수_제곱근, type: float, unit: ""}
+    DTL_TOU_NUM_RATE: {label: 대분류내_중분류_비중, type: float, unit: "%"}
+
+TS_01_09_003:
+  name: 시도별 소비자 상담 건수(순위)
+  screen: /datalab/portal/ts/getCustConInjForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y", srchAreaDate: "1"}
+  granularity: period
+  section: 소비자상담
+  query_axis: 전국
+  caution: >-
+    18행이 온다 — 시도 열일곱에 '해외 및 기타'가 더해진 수다.
+    지도용인 TS_01_09_005 는 이 한 행을 빼고 17행을 주므로 합이
+    95건 어긋난다(2024년 13,209 대 13,114, 2026-08-24 확인).
+    SIDO_RATE 는 전체 대비 백분율, SIDO_SQRT 는 버블 크기용 제곱근이다.
+  columns:
+    RK: {label: 순위, type: float, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    CNT: {label: 상담_건수, type: float, unit: 건}
+    SIDO_SQRT: {label: 건수_제곱근, type: float, unit: ""}
+    SIDO_RATE: {label: 비중, type: float, unit: "%"}
+
+TS_01_09_004:
+  name: 시도별 소비자 위해 건수(순위)
+  screen: /datalab/portal/ts/getCustConInjForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y", srchAreaDate: "1"}
+  granularity: period
+  section: 소비자상담
+  query_axis: 전국
+  caution: >-
+    상담과 위해는 다른 통계다. 2024년 상담 13,209건 · 위해 3,853건이고
+    1위도 다르다(상담 경기도, 위해 인천광역시, 2026-08-24 확인).
+    나란히 놓을 때 어느 쪽인지 반드시 적어라. TS_01_09_002 를
+    location 없이 합친 값이 아니라 그 지표의 DTL_TOU_NUM 합과 같다.
+  columns:
+    RK: {label: 순위, type: float, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    CNT: {label: 위해_건수, type: float, unit: 건}
+    SIDO_SQRT: {label: 건수_제곱근, type: float, unit: ""}
+    SIDO_RATE: {label: 비중, type: float, unit: "%"}
+
+TS_01_09_005:
+  name: 시도별 소비자 상담·위해 건수(지도)
+  screen: /datalab/portal/ts/getCustConInjForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, selectDiv]
+  fixed_params: {ALL_YN: "Y", srchAreaDate: "1", selectDiv: "1"}
+  granularity: period
+  section: 소비자상담
+  query_axis: 전국
+  caution: >-
+    **selectDiv 가 무엇을 세는지 바꾼다. 1이면 상담, 2면 위해다**
+    (화면의 chart_16·chart_17 이 각각 그렇게 부른다). 컬럼 이름은
+    둘 다 CNT 이므로 표에 어느 쪽인지 적어라. selectDiv 를 빼면
+    빈 본문이 온다. **17행만 온다** — 지도에 칠할 수 없는 '해외 및
+    기타'가 빠져 있어 TS_01_09_003·004 보다 합이 작다
+    (2024년 상담 95건, 위해 270건 차이, 2026-08-24 확인).
+    SIDO_CD 는 KR-11 꼴이다.
+  columns:
+    SIDO_NM: {label: 시도명_약칭, type: str, unit: ""}
+    SIDO_CD: {label: 포털_시도코드, type: str, unit: ""}
+    CNT: {label: 상담_또는_위해_건수, type: float, unit: 건}
+
+TS_01_10_001:
+  name: 시도별·품목별 소비자 상담 월별 추이
+  screen: /datalab/portal/ts/getCustConInjForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y", srchAreaDate: "1"}
+  granularity: month
+  section: 소비자상담
+  query_axis: 전국
+  caution: >-
+    **SIDO_NM 이 '전체'(SIDO_CD 100)인 행은 합계다.** 걸러내지 않고
+    더하면 정확히 두 배가 된다 — 2024년 전체 행 합 13,209, 나머지 합
+    13,209 (2026-08-24 확인). 행이 많다(2024년 690행). 원하는 시도만
+    SIDO_CD 로 걸러 쓰라.
+  columns:
+    BASE_DATE: {label: 기준월, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    KTO_TOB_LCLS_CD: {label: 품목_대분류코드, type: str, unit: ""}
+    KTO_TOB_LCLS_NM: {label: 품목_대분류, type: str, unit: ""}
+    CNT: {label: 상담_건수, type: float, unit: 건}
+
+TS_01_10_004:
+  name: 시도별·품목별 소비자 위해 연도별 추이
+  screen: /datalab/portal/ts/getCustConInjForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y", srchAreaDate: "4"}
+  granularity: year
+  section: 소비자상담
+  query_axis: 전국
+  caution: >-
+    **연 단위 전용이다.** srchAreaDate 를 1(월간)로 두면 오류가 아니라
+    빈 본문이 온다. 그래서 BASE_YM1·BASE_YM2 에 '2024' 처럼 네 자리
+    연도를 넣는다(2026-08-24 확인). 화면은 이 qid 를 location 1~5 로
+    다섯 번 부르지만 **응답은 다섯 번 모두 같다** — 나누기는 화면이
+    한다. SIDO_NM 이 '전체'인 행은 합계이므로 걸러라.
+  columns:
+    BASE_DATE: {label: 기준연도, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    KTO_TOB_LCLS_NM: {label: 품목_대분류, type: str, unit: ""}
+    CNT: {label: 위해_건수, type: float, unit: 건}

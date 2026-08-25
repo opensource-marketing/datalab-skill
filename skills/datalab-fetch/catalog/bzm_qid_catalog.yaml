@@ -1,0 +1,411 @@
+# 한국관광 데이터랩 qid 카탈로그 — 관광사업체(공급) 영역
+#
+# 지역 카탈로그(loc_qid_catalog.yaml)와 같은 SGG_CD 축을 쓰지만 파라미터
+# 모양이 다르다. dispYn·tabDiv를 쓰지 않고 BASE_YM2 하나로 시점을 정한다.
+# 그래서 카탈로그를 나눴다.
+#
+# **이 계열은 저량(stock)이다.** 방문자 수 같은 유량(flow)과 나눌 때는
+# 기준 시점을 반드시 표기하라. "2026년 7월 시점 객실 520개"와
+# "2024년 한 해 숙박 방문자 수"를 아무 말 없이 나누면 안 된다.
+#
+# ── 이름을 믿지 마라 ──────────────────────────────────────────
+# 사이트 JS의 dnname이 실제 의미와 **뒤바뀌어** 있다.
+#   BZM_03_01_001_01  dnname "숙박시설 현황"  → 화면은 "총 숙박객실 수"
+#   BZM_03_02_001_01  dnname "숙박객실 현황"  → 화면은 "총 숙박시설 수"
+# 강릉시 2026-07 기준 각각 14,283과 520이다. 이름대로 읽었으면 객실과
+# 업체를 27배 뒤바꿨을 것이다. 아래 라벨은 화면 렌더링 문구를 따랐다.
+# ──────────────────────────────────────────────────────────────
+#
+# 조회 가능 기간: 201701~202607 (getSrchDteDivInitVal.do 확인)
+# BZM_02_02_001_01(개폐업 총계)은 HTTP 200에 0바이트를 돌려준다. 뺐다.
+
+BZM_02_01_001_01:
+  name: 관광사업체 총 수(시점)
+  screen: /datalab/portal/bzm/getBzmanApprvForm.do
+  auth: public
+  params: [SGG_CD, BASE_YM2]
+  fixed_params: {}
+  granularity: snapshot
+  section: 공급
+  columns:
+    SGG_CD: {label: 지역코드, type: str, unit: ""}
+    PTL_SIDO_CD: {label: 포털_지역코드, type: str, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 지역명, type: str, unit: ""}
+    NUM: {label: 사업체_수, type: float, unit: 개}
+    SUM_NUM: {label: 사업체_수_합계, type: float, unit: 개}
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+
+BZM_02_01_003:
+  # BASE_YM2를 주면 그 시점 한 해만(6행), 주지 않으면 연도별 전체가 온다.
+  # 추이를 보려면 BASE_YM2를 빼고 부르면 된다.
+  name: 관광사업체 업종별 분포
+  screen: /datalab/portal/bzm/getBzmanApprvForm.do
+  auth: public
+  params: [SGG_CD, BASE_YM2]
+  fixed_params: {}
+  granularity: snapshot
+  section: 공급
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    UPR_OPNG_SVC_NM: {label: 업종, type: str, unit: ""}
+    NUM: {label: 사업체_수, type: float, unit: 개}
+    PER: {label: 비중, type: float, unit: "%"}
+
+BZM_03_01_001_01:
+  name: 숙박 객실 수(시점)
+  caution: dnname은 "숙박시설 현황"이지만 화면은 "총 숙박객실 수"로 쓴다. 객실 수다.
+  screen: /datalab/portal/bzm/getBzmanLodgForm.do
+  auth: public
+  params: [SGG_CD, BASE_YM2]
+  fixed_params: {}
+  granularity: snapshot
+  section: 공급
+  columns:
+    SGG_CD: {label: 지역코드, type: str, unit: ""}
+    PTL_SIDO_CD: {label: 포털_지역코드, type: str, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 지역명, type: str, unit: ""}
+    NUM: {label: 객실_수, type: float, unit: 실}
+    SUM_NUM: {label: 객실_수_합계, type: float, unit: 실}
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+
+BZM_03_02_001_01:
+  name: 숙박시설 수(시점)
+  caution: dnname은 "숙박객실 현황"이지만 화면은 "총 숙박시설 수"로 쓴다. 업체 수다.
+  screen: /datalab/portal/bzm/getBzmanLodgForm.do
+  auth: public
+  params: [SGG_CD, BASE_YM2]
+  fixed_params: {}
+  granularity: snapshot
+  section: 공급
+  columns:
+    SGG_CD: {label: 지역코드, type: str, unit: ""}
+    PTL_SIDO_CD: {label: 포털_지역코드, type: str, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 지역명, type: str, unit: ""}
+    NUM: {label: 숙박시설_수, type: float, unit: 개}
+    SUM_NUM: {label: 숙박시설_수_합계, type: float, unit: 개}
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+
+BZM_03_01_002:
+  name: 숙박 업종별 객실 수
+  caution: 화면 문구는 "객실 업종별 추이"다. 값은 객실 수다.
+  screen: /datalab/portal/bzm/getBzmanLodgForm.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: snapshot
+  section: 공급
+  columns:
+    OPNG_SVC_NM: {label: 숙박업종, type: str, unit: ""}
+    BASE_YEAR: {label: 기준월, type: str, unit: ""}
+    NUM: {label: 객실_수, type: float, unit: 실}
+    OPNG_SVC_ID: {label: 업종코드, type: str, unit: ""}
+
+BZM_03_02_002:
+  name: 숙박 업종별 시설 수
+  caution: 화면 문구는 "업종별 숙박시설 수"다. 값은 업체 수다.
+  screen: /datalab/portal/bzm/getBzmanLodgForm.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: snapshot
+  section: 공급
+  columns:
+    OPNG_SVC_NM: {label: 숙박업종, type: str, unit: ""}
+    BASE_YEAR: {label: 기준월, type: str, unit: ""}
+    NUM: {label: 숙박시설_수, type: float, unit: 개}
+    OPNG_SVC_ID: {label: 업종코드, type: str, unit: ""}
+
+# ─────────────────────────────────────────────────────────────────
+# 2026-08-24 — **넣지 않기로 했다가 그 판단을 뒤집었다**
+#
+# `BZM_07_01_*`(관광숙박업, 화면 bzm/getBzmanTourismLodgForm)를
+# 한때 이렇게 적어 두고 뺐다.
+#
+#   BZM_07_01_002  전국 합 1,291,982실
+#   BZM_03_01_001  전국 합   879,593실
+#   → "47% 차이인데 기준 시점 컬럼이 없어 가릴 수 없다"
+#
+# **그 이유가 틀렸다.** 1,291,982 는 어느 쪽도 아닌 뒤섞인 값이었다 —
+# `srchGrdTyp` 를 안 보냈기 때문이다. 제대로 부르면 220,414실이고
+# 기준 시점 컬럼도 있다(`BASE_YEAR`). 아래에 넣었다.
+#
+# **"컬럼이 없다"고 적기 전에 파라미터를 다 보냈는지 본다.**
+#
+# ─────────────────────────────────────────────────────────────────
+# 2026-08-24 추가
+#
+# **시도 표가 16행이다.** 광주광역시와 전라남도가 따로 오지 않고
+# '전남광주' 하나로 온다. 다른 곳의 시도 표(17행)와 이름으로 이어
+# 붙이면 광주·전남이 사라진다. 야간관광 소비·검색 지표에서도 같은
+# 통합을 확인했다(2026-08-24).
+#
+# `PRE_NUM` 은 **직전 달의 NUM** 이다. 검산했다 —
+# 202412 의 PRE_NUM 125,766 이 202411 의 NUM 과 정확히 같다(경기).
+# ─────────────────────────────────────────────────────────────────
+
+BZM_03_01_001:
+  name: 시도별 숙박 객실 수
+  screen: /datalab/portal/bzm/getBzmanLodgForm.do
+  auth: public
+  params: [SGG_CD, BASE_YM2]
+  fixed_params: {}
+  granularity: snapshot
+  section: 공급
+  query_axis: 전국
+  caution: >-
+    **조회한 지역과 무관하게 전국 시도표가 온다**(2026-08-24 확인).
+    이름은 '숙박시설 현황'이지만 값은 **객실 수**다 — 이 계열은
+    dnname 이 뒤바뀌어 있다(카탈로그 머리말 참고). 시설 수는
+    BZM_03_02_001 이다. **16행이며 '전남광주'가 한 행이다.**
+    NUM 열여섯 행의 합이 SUM_NUM 과 같다(879,593, 2026-08-24 검산).
+    PRE_NUM 은 직전 달 값이다.
+  columns:
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명_약칭, type: str, unit: ""}
+    SIDO_FULL_NM: {label: 시도명, type: str, unit: ""}
+    PTL_SIDO_CD: {label: 포털_시도코드, type: str, unit: ""}
+    NUM: {label: 객실_수, type: float, unit: 실}
+    PRE_NUM: {label: 직전달_객실_수, type: float, unit: 실}
+    SUM_NUM: {label: 전국_합계, type: float, unit: 실}
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+
+BZM_03_02_001:
+  name: 시도별 숙박시설 수
+  screen: /datalab/portal/bzm/getBzmanLodgForm.do
+  auth: public
+  params: [SGG_CD, BASE_YM2]
+  fixed_params: {}
+  granularity: snapshot
+  section: 공급
+  query_axis: 전국
+  caution: >-
+    **조회한 지역과 무관하게 전국 시도표가 온다.** 이름은 '숙박객실
+    현황'이지만 값은 **업체 수**다. 객실 수는 BZM_03_01_001 이고
+    같은 시점에 29배 차이 난다(전국 879,593실 대 30,198곳,
+    2026-08-24). **16행이며 '전남광주'가 한 행이다.**
+    PRE_NUM 은 직전 달 값이다.
+  columns:
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명_약칭, type: str, unit: ""}
+    SIDO_FULL_NM: {label: 시도명, type: str, unit: ""}
+    PTL_SIDO_CD: {label: 포털_시도코드, type: str, unit: ""}
+    NUM: {label: 시설_수, type: float, unit: 개}
+    PRE_NUM: {label: 직전달_시설_수, type: float, unit: 개}
+    SUM_NUM: {label: 전국_합계, type: float, unit: 개}
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+
+BZM_03_01_003:
+  name: 숙박 객실 수 업종별 분포
+  screen: /datalab/portal/bzm/getBzmanLodgForm.do
+  auth: public
+  params: [SGG_CD, BASE_YM2]
+  fixed_params: {}
+  granularity: snapshot
+  section: 공급
+  query_axis: 지역
+  caution: >-
+    **값은 객실 수다**(형제 지표 BZM_03_02_003 이 시설 수). 강릉시
+    2024년 7행 합이 12,817실이고 PER 합이 100.0이다(2026-08-24 확인).
+    업종은 여관업·일반호텔·숙박업(생활)·관광호텔·숙박업 기타·
+    여인숙업·휴양콘도미니엄업 일곱이지만 **지역·해마다 달라질 수
+    있으니 개수를 못 박지 마라.** BASE_YEAR 가 연도이므로 월을 넣어도
+    그 해 값이 온다.
+  columns:
+    OPNG_SVC_NM: {label: 업종, type: str, unit: ""}
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    NUM: {label: 객실_수, type: float, unit: 실}
+    PER: {label: 비중, type: float, unit: "%"}
+
+BZM_03_02_003:
+  name: 숙박시설 수 업종별 분포
+  screen: /datalab/portal/bzm/getBzmanLodgForm.do
+  auth: public
+  params: [SGG_CD, BASE_YM2]
+  fixed_params: {}
+  granularity: snapshot
+  section: 공급
+  query_axis: 지역
+  caution: >-
+    **값은 업체 수다**(형제 지표 BZM_03_01_003 이 객실 수). 같은
+    지역·같은 해에 27배 차이 난다 — 강릉시 2024년 객실 12,817실
+    대 시설 472곳(2026-08-24 확인). 업종 순서가 두 지표에서 다르다
+    (객실은 여관업·일반호텔·숙박업(생활) 순, 시설은 여관업·
+    숙박업(생활)·일반호텔 순) — 행 번호로 짝짓지 말고 업종 이름으로
+    이어라. PER 합은 반올림 때문에 100.1 이 되기도 한다.
+  columns:
+    OPNG_SVC_NM: {label: 업종, type: str, unit: ""}
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    NUM: {label: 시설_수, type: float, unit: 개}
+    PER: {label: 비중, type: float, unit: "%"}
+
+BZM_02_01_001:
+  name: 시도별 관광사업체 수
+  screen: /datalab/portal/bzm/getBzmanApprvForm.do
+  auth: public
+  params: [SGG_CD, BASE_YM2]
+  fixed_params: {}
+  granularity: snapshot
+  section: 공급
+  query_axis: 전국
+  caution: >-
+    **조회한 지역과 무관하게 전국 시도표가 온다.** 형제 지표
+    `BZM_02_01_001_01` 이 한 지역의 값을 주는 것과 다르다.
+    **16행이며 '전남광주'가 한 행이다** — 광주광역시와 전라남도가
+    따로 오지 않는다(2026-08-24 확인). NUM 열여섯 행의 합이
+    SUM_NUM 과 같다(41,924). PRE_NUM 은 직전 달 값이다.
+  columns:
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명_약칭, type: str, unit: ""}
+    SIDO_FULL_NM: {label: 시도명, type: str, unit: ""}
+    PTL_SIDO_CD: {label: 포털_시도코드, type: str, unit: ""}
+    NUM: {label: 사업체_수, type: float, unit: 개}
+    PRE_NUM: {label: 직전달_사업체_수, type: float, unit: 개}
+    SUM_NUM: {label: 전국_합계, type: float, unit: 개}
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+
+BZM_02_01_002:
+  name: 관광사업체 업종별 수(대분류·세부업종)
+  screen: /datalab/portal/bzm/getBzmanApprvForm.do
+  auth: public
+  params: [SGG_CD, BASE_YM2]
+  fixed_params: {}
+  granularity: snapshot
+  section: 공급
+  query_axis: 지역
+  caution: >-
+    **두 층이 한 표에 섞여 있다.** `OPNG_SVC_NM='전체'` 인 행은
+    대분류(`UPR_OPNG_SVC_NM`)의 합계이고 나머지는 세부 업종이다 —
+    다 더하면 두 배가 된다. 강릉시 2024년으로 검산했다:
+    `UPR_OPNG_SVC_NM='전체'` 행이 379이고 나머지 여섯 대분류 합이
+    177+114+55+18+12+3 = 379다(2026-08-24).
+    행 수가 지역·해마다 다르다(강릉시 27행) — **개수를 못 박지 마라.**
+    `SORT1`·`SORT2` 는 사이트의 정렬 키다.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    UPR_OPNG_SVC_NM: {label: 업종_대분류, type: str, unit: ""}
+    OPNG_SVC_NM: {label: 세부업종, type: str, unit: ""}
+    NUM: {label: 사업체_수, type: float, unit: 개}
+    SORT1: {label: 정렬키1, type: float, unit: ""}
+    SORT2: {label: 정렬키2, type: float, unit: ""}
+
+# ── 2026-08-24 추가 — 관광숙박업 전국 현황 (BZM_07_01_*) ────────
+#
+# **한때 "넣지 않는다"고 적어 둔 자리다.** 그때 이유는 "전국 합이
+# 1,291,982실로 BZM_03_01_001(879,593실)과 47% 어긋나는데 기준 시점
+# 컬럼이 없어 가릴 수 없다"였다. **그 이유가 틀렸다.**
+#
+# 진짜 원인은 `srchGrdTyp` 를 몰라서였다. 이 파라미터가 **사업체 수와
+# 객실 수를 가른다**:
+#
+#   srchGrdTyp=VEND_NUM → 2024년 전국 2,731 개소
+#   srchGrdTyp=RM_NUM   → 2024년 전국 220,414 실
+#
+# **같은 qid 가 컬럼 이름까지 바꿔서 준다** — `VEND_NUM` 또는
+# `RM_NUM` 이다. 안 보내면 두 체계가 뒤섞인 값이 오고, 그것을
+# 객실 수로 읽었던 것이다. `discover.py capture` 로 브라우저 요청을
+# 잡아 알아냈다(2026-08-24).
+#
+# **`BZM_03_01_001`(879,593실)과 다른 것은 정상이다.** 이쪽은
+# 관광진흥법상 **관광숙박업**(호텔·콘도)만이고 저쪽은 모텔·민박을
+# 포함한 전체 숙박업이다. 두 숫자를 같은 표에 놓지 마라.
+#
+# 카탈로그에는 `srchGrdTyp: RM_NUM`(객실 수)을 기본으로 박았다.
+# 사업체 수가 필요하면 `--param srchGrdTyp=VEND_NUM` 으로 바꾼다 —
+# **그때는 컬럼 이름도 `VEND_NUM` 으로 바뀐다.**
+
+BZM_07_01_001:
+  name: 시도별 관광숙박업 객실 수(연간)
+  screen: /datalab/portal/bzm/getBzmanTourismLodgForm.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, srchGrdTyp]
+  fixed_params: {SGG_CD: "", srchGrdTyp: "RM_NUM"}
+  granularity: year
+  section: 공급
+  query_axis: 전국
+  caution: >-
+    **`srchGrdTyp` 가 무엇을 세는지 가른다** — `RM_NUM`(객실 수,
+    2024년 전국 220,414실) 또는 `VEND_NUM`(사업체 수, 2,731개소).
+    바꾸면 **응답 컬럼 이름도 함께 바뀐다.**
+    **16행짜리 시도표다** — 광주와 전남이 '전남광주통합특별시' 한
+    행으로 온다(2026-08-24 확인). 17행짜리 시도표와 이름으로 이어
+    붙이면 광주와 전남이 조용히 사라진다.
+    **관광숙박업(호텔·콘도)만이다.** 모텔·민박을 포함한
+    `BZM_03_01_001`(879,593실)과 다른 것이 정상이다.
+    조회 지역과 무관하게 전국이 온다.
+  columns:
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    PTL_SIDO_CD: {label: 포털_시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    PTL_SIDO_NM: {label: 포털_시도명, type: str, unit: ""}
+    RM_NUM: {label: 객실수, type: float, unit: 실}
+    VEND_NUM: {label: 사업체수, type: float, unit: 개소}
+
+BZM_07_01_002:
+  name: 시도별 관광숙박업 객실 수 비율(연간)
+  screen: /datalab/portal/bzm/getBzmanTourismLodgForm.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, srchGrdTyp]
+  fixed_params: {SGG_CD: "", srchGrdTyp: "RM_NUM"}
+  granularity: year
+  section: 공급
+  query_axis: 전국
+  caution: >-
+    `BZM_07_01_001` 과 같은 값에 비율을 붙인 것이다. **비율 합이
+    101~102% 로 온다**(소수 첫째 자리 반올림, 2026-08-24 확인) —
+    100 이 아니라고 오류로 보지 마라. 여기도 **16행짜리 시도표**다
+    ('전남광주통합특별시'). `srchGrdTyp` 로 객실/사업체가 갈리고
+    컬럼 이름도 함께 바뀐다.
+  columns:
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    RM_NUM: {label: 객실수, type: float, unit: 실}
+    RM_NUM_PER: {label: 객실수_비중, type: float, unit: "%"}
+    VEND_NUM: {label: 사업체수, type: float, unit: 개소}
+    VEND_NUM_PER: {label: 사업체수_비중, type: float, unit: "%"}
+
+BZM_07_01_003:
+  name: 업종별 관광숙박업 객실 수(연도별)
+  screen: /datalab/portal/bzm/getBzmanTourismLodgForm.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, srchGrdTyp]
+  fixed_params: {SGG_CD: "", srchGrdTyp: "RM_NUM"}
+  granularity: year
+  section: 공급
+  query_axis: 전국
+  caution: >-
+    **`TOB_NM='합계'` 행이 섞여 있다.** 걸러내지 않고 더하면 두 배가
+    된다 — 2024년 행을 다 더하면 440,828 인데 실제는 220,414 다
+    (2026-08-24 검산).
+    **기간 파라미터를 무시하고 여러 해를 한꺼번에 준다**(2019~2024,
+    54행). 응답의 `BASE_YEAR` 로 걸러라.
+    업종 여덟에 합계 하나다 — 관광호텔업·가족호텔업·소형호텔업·
+    수상관광호텔업·의료관광호텔업·전통호텔업·호스텔업·휴양콘도미니엄업.
+    `srchGrdTyp` 로 객실/사업체가 갈리고 컬럼 이름도 바뀐다.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    TOB_NM: {label: 업종, type: str, unit: ""}
+    RM_NUM: {label: 객실수, type: float, unit: 실}
+    VEND_NUM: {label: 사업체수, type: float, unit: 개소}
+
+BZM_07_01_004:
+  name: 전국 관광숙박업 객실 수 추이(연간)
+  screen: /datalab/portal/bzm/getBzmanTourismLodgForm.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, srchGrdTyp]
+  fixed_params: {SGG_CD: "", srchGrdTyp: "RM_NUM"}
+  granularity: year
+  section: 공급
+  query_axis: 전국
+  caution: >-
+    전국 한 줄짜리 추이다. 2019년 178,690실 → 2024년 220,414실
+    (사업체는 2,218 → 2,731개소, 2026-08-24 확인).
+    **기간 파라미터를 무시하고 여섯 해를 준다.**
+    `BZM_07_01_001` 의 시도 합과 같은 해 값이 맞는다.
+    `srchGrdTyp` 로 객실/사업체가 갈리고 컬럼 이름도 바뀐다.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    RM_NUM: {label: 객실수, type: float, unit: 실}
+    VEND_NUM: {label: 사업체수, type: float, unit: 개소}

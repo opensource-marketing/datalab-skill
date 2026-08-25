@@ -1,0 +1,533 @@
+# 데이터랩 사이트의 전체메뉴에서 읽은 화면 목록.
+# 손으로 고치지 마라 — discover.py menus --write 가 만든다.
+bda/getAreaSrchCnt:
+  label: 빅데이터 > 내비게이션 > 지역별 검색건수 비교
+  menu_cd: '10403020000002021100613'
+  menus:
+  - depth: 3
+    menu_cd: '10403020000002021100613'
+    path: 빅데이터 > 내비게이션 > 지역별 검색건수 비교
+  screen: bda/getAreaSrchCnt
+bda/getByLocgoCnsmAmt:
+  label: 빅데이터 > 신용카드 > 지역별 관광지출액
+  menu_cd: '10402010000002021100613'
+  menus:
+  - depth: 2
+    menu_cd: '10402000000002020120611'
+    path: 빅데이터 > 신용카드
+  - depth: 3
+    menu_cd: '10402010000002021100613'
+    path: 빅데이터 > 신용카드 > 지역별 관광지출액
+  screen: bda/getByLocgoCnsmAmt
+bda/getByRegnAna:
+  label: 빅데이터 > 이동통신 > 지역별 방문자수 비교
+  menu_cd: '10401020000002021100613'
+  menus:
+  - depth: 3
+    menu_cd: '10401020000002021100613'
+    path: 빅데이터 > 이동통신 > 지역별 방문자수 비교
+  screen: bda/getByRegnAna
+bda/getByRegnCmpr:
+  label: 빅데이터 > 신용카드 > 지역별 관광지출액 비교
+  menu_cd: '10402020000002021100613'
+  menus:
+  - depth: 3
+    menu_cd: '10402020000002021100613'
+    path: 빅데이터 > 신용카드 > 지역별 관광지출액 비교
+  screen: bda/getByRegnCmpr
+bda/getDomInqCnt:
+  label: 빅데이터 > 내비게이션 > 지역별 검색건수
+  menu_cd: '10403010000002021100613'
+  menus:
+  - depth: 2
+    menu_cd: '10403000000002020120611'
+    path: 빅데이터 > 내비게이션
+  - depth: 3
+    menu_cd: '10403010000002021100613'
+    path: 빅데이터 > 내비게이션 > 지역별 검색건수
+  screen: bda/getDomInqCnt
+bda/getInquiryBySexAndAge:
+  label: 지역별 분석 > 지역별 현황 > 성/연령별 방문ㆍ소비 현황
+  menu_cd: '10102050000002025112610'
+  menus:
+  - depth: 3
+    menu_cd: '10102050000002025112610'
+    path: 지역별 분석 > 지역별 현황 > 성/연령별 방문ㆍ소비 현황
+  screen: bda/getInquiryBySexAndAge
+bda/getMetcoAna:
+  label: 빅데이터 > 이동통신 > 지역별 방문자수
+  menu_cd: '10401010000002021100613'
+  menus:
+  - depth: 1
+    menu_cd: '10400000000002020120611'
+    path: 빅데이터
+  - depth: 2
+    menu_cd: '10401000000002020120611'
+    path: 빅데이터 > 이동통신
+  - depth: 3
+    menu_cd: '10401010000002021100613'
+    path: 빅데이터 > 이동통신 > 지역별 방문자수
+  screen: bda/getMetcoAna
+bda/getTourVisitCnt:
+  label: 빅데이터 > 내비게이션 > 지역별 관광지 검색순위
+  menu_cd: '10403040000002021100613'
+  menus:
+  - depth: 3
+    menu_cd: '10403040000002021100613'
+    path: 빅데이터 > 내비게이션 > 지역별 관광지 검색순위
+  screen: bda/getTourVisitCnt
+bdp/getHowPlatformForm:
+  label: 데이터랩 소개 > 한국관광 데이터랩 소개 > 한국관광 데이터랩이란?
+  menu_cd: '10601010000002020120611'
+  menus:
+  - depth: 1
+    menu_cd: '10600000000002020120611'
+    path: 데이터랩 소개
+  - depth: 2
+    menu_cd: '10601000000002020120611'
+    path: 데이터랩 소개 > 한국관광 데이터랩 소개
+  - depth: 3
+    menu_cd: '10601010000002020120611'
+    path: 데이터랩 소개 > 한국관광 데이터랩 소개 > 한국관광 데이터랩이란?
+  screen: bdp/getHowPlatformForm
+bzm/getBzmanApprvForm:
+  label: 관광산업 분석 > 관광사업체 현황 > 관광사업체 인허가 현황
+  menu_cd: '10252010000002022092815'
+  menus:
+  - depth: 1
+    menu_cd: '10250000000002022092815'
+    path: 관광산업 분석
+  - depth: 2
+    menu_cd: '10252000000002022092815'
+    path: 관광산업 분석 > 관광사업체 현황
+  - depth: 3
+    menu_cd: '10252010000002022092815'
+    path: 관광산업 분석 > 관광사업체 현황 > 관광사업체 인허가 현황
+  screen: bzm/getBzmanApprvForm
+bzm/getBzmanLodgForm:
+  label: 관광산업 분석 > 관광사업체 현황 > 숙박업종별 세부현황
+  menu_cd: '10252020000002022092815'
+  menus:
+  - depth: 3
+    menu_cd: '10252020000002022092815'
+    path: 관광산업 분석 > 관광사업체 현황 > 숙박업종별 세부현황
+  screen: bzm/getBzmanLodgForm
+bzm/getBzmanTourismLodgForm:
+  label: 관광산업 분석 > 관광사업체 현황 > 관광숙박업 현황(관광진흥법)
+  menu_cd: '10252030000002025011415'
+  menus:
+  - depth: 3
+    menu_cd: '10252030000002025011415'
+    path: 관광산업 분석 > 관광사업체 현황 > 관광숙박업 현황(관광진흥법)
+  screen: bzm/getBzmanTourismLodgForm
+bzm/getTursmCnsel:
+  label: 관광산업 분석 > 관광 VOC 현황 > 관광안내
+  menu_cd: '10254010000002022121910'
+  menus:
+  - depth: 2
+    menu_cd: '10254000000002022092815'
+    path: 관광산업 분석 > 관광 VOC 현황
+  - depth: 3
+    menu_cd: '10254010000002022121910'
+    path: 관광산업 분석 > 관광 VOC 현황 > 관광안내
+  screen: bzm/getTursmCnsel
+fes/getFesDataForm:
+  label: 테마별 분석 > 축제현황 > 문화관광축제 현황
+  menu_cd: '10351010000002024120600'
+  menus:
+  - depth: 1
+    menu_cd: '10350000000002024120600'
+    path: 테마별 분석
+  - depth: 2
+    menu_cd: '10351000000002024120600'
+    path: 테마별 분석 > 축제현황
+  - depth: 3
+    menu_cd: '10351010000002024120600'
+    path: 테마별 분석 > 축제현황 > 문화관광축제 현황
+  screen: fes/getFesDataForm
+getMetaInfoList:
+  label: 데이터랩 소개 > 한국관광 데이터랩 소개 > 데이터 설명
+  menu_cd: '10601080000002024111817'
+  menus:
+  - depth: 3
+    menu_cd: '10601080000002024111817'
+    path: 데이터랩 소개 > 한국관광 데이터랩 소개 > 데이터 설명
+  screen: getMetaInfoList
+loc/getAreaCampDataForm:
+  label: 테마별 분석 > 특화관광 테마 현황 > 캠핑관광 현황
+  menu_cd: '10353030000002024120600'
+  menus:
+  - depth: 3
+    menu_cd: '10353030000002024120600'
+    path: 테마별 분석 > 특화관광 테마 현황 > 캠핑관광 현황
+  screen: loc/getAreaCampDataForm
+loc/getAreaDataForm:
+  label: 지역별 분석 > 지역별 현황 > 지역별 관광 현황
+  menu_cd: '10102030000002020091512'
+  menus:
+  - depth: 2
+    menu_cd: '10102000000002020091510'
+    path: 지역별 분석 > 지역별 현황
+  - depth: 3
+    menu_cd: '10102030000002020091512'
+    path: 지역별 분석 > 지역별 현황 > 지역별 관광 현황
+  screen: loc/getAreaDataForm
+loc/getAreaFocTourBeta:
+  label: 지역별 분석 > 지역별 현황 > 외래객 지역별 방한현황
+  menu_cd: '10102100000002024111315'
+  menus:
+  - depth: 3
+    menu_cd: '10102100000002024111315'
+    path: 지역별 분석 > 지역별 현황 > 외래객 지역별 방한현황
+  screen: loc/getAreaFocTourBeta
+loc/getAreaVisitDataForm:
+  label: 지역별 분석 > 지역별 현황 > 방문자기준 지역방문현황
+  menu_cd: '10102080000002023111309'
+  menus:
+  - depth: 3
+    menu_cd: '10102080000002023111309'
+    path: 지역별 분석 > 지역별 현황 > 방문자기준 지역방문현황
+  screen: loc/getAreaVisitDataForm
+loc/getAreaWalkDataForm:
+  label: 테마별 분석 > 특화관광 테마 현황 > 걷기여행 현황
+  menu_cd: '10353040000002024120600'
+  menus:
+  - depth: 3
+    menu_cd: '10353040000002024120600'
+    path: 테마별 분석 > 특화관광 테마 현황 > 걷기여행 현황
+  screen: loc/getAreaWalkDataForm
+loc/getLocalDataForm:
+  label: 지역별 분석 > 지역별 현황 > 전국 현황
+  menu_cd: '10101000000002020091509'
+  menus:
+  - depth: 1
+    menu_cd: '10100000000002020090713'
+    path: 지역별 분석
+  - depth: 3
+    menu_cd: '10101000000002020091509'
+    path: 지역별 분석 > 지역별 현황 > 전국 현황
+  screen: loc/getLocalDataForm
+loc/getPoplDcrsForm:
+  label: 지역별 분석 > 인구감소지역 현황 > 인구감소지역 현황 지도
+  menu_cd: '10106010000002022082909'
+  menus:
+  - depth: 2
+    menu_cd: '10106000000002022082313'
+    path: 지역별 분석 > 인구감소지역 현황
+  - depth: 3
+    menu_cd: '10106010000002022082909'
+    path: 지역별 분석 > 인구감소지역 현황 > 인구감소지역 현황 지도
+  screen: loc/getPoplDcrsForm
+loc/getPoplDcrsFormView:
+  label: 지역별 분석 > 인구감소지역 현황 > 지역별 관광대체 효과
+  menu_cd: '10106020000002022082909'
+  menus:
+  - depth: 3
+    menu_cd: '10106020000002022082909'
+    path: 지역별 분석 > 인구감소지역 현황 > 지역별 관광대체 효과
+  screen: loc/getPoplDcrsFormView
+loc/getPoplDcrsRegionStatusForm:
+  label: 지역별 분석 > 인구감소지역 현황 > 인구감소지역 프로파일링
+  menu_cd: '10103050000002025072809'
+  menus:
+  - depth: 3
+    menu_cd: '10103050000002025072809'
+    path: 지역별 분석 > 인구감소지역 현황 > 인구감소지역 프로파일링
+  screen: loc/getPoplDcrsRegionStatusForm
+loc/getPoplDcrsSpendForm:
+  label: 지역별 분석 > 인구감소지역 현황 > 지역별 관광/비관광 소비 현황
+  menu_cd: '10106040000002023113009'
+  menus:
+  - depth: 3
+    menu_cd: '10106040000002023113009'
+    path: 지역별 분석 > 인구감소지역 현황 > 지역별 관광/비관광 소비 현황
+  screen: loc/getPoplDcrsSpendForm
+loc/getPopuTourAttrac:
+  label: 지역별 분석 > 지역별 현황 > 인기관광지 현황
+  menu_cd: '10102090000002024111817'
+  menus:
+  - depth: 3
+    menu_cd: '10102090000002024111817'
+    path: 지역별 분석 > 지역별 현황 > 인기관광지 현황
+  screen: loc/getPopuTourAttrac
+loc/getTourActivateForm:
+  label: 지역별 분석 > 관광수요 지수 > 관광수요 지수
+  menu_cd: '10107000000002022092018'
+  menus:
+  - depth: 2
+    menu_cd: '10107010000002024112517'
+    path: 지역별 분석 > 관광수요 지수
+  - depth: 3
+    menu_cd: '10107000000002022092018'
+    path: 지역별 분석 > 관광수요 지수 > 관광수요 지수
+  screen: loc/getTourActivateForm
+loc/getTourDataFormBeta:
+  label: 지역별 분석 > 관광지별 현황 > 관광지별 분석
+  menu_cd: '10103020000002022121314'
+  menus:
+  - depth: 2
+    menu_cd: '10103000000002020120614'
+    path: 지역별 분석 > 관광지별 현황
+  - depth: 3
+    menu_cd: '10103020000002022121314'
+    path: 지역별 분석 > 관광지별 현황 > 관광지별 분석
+  screen: loc/getTourDataFormBeta
+loc/getTourDataFormView2:
+  label: 지역별 분석 > 관광지별 현황 > 관광지별 성/연령 방문 집중률
+  menu_cd: '10103030000002022121314'
+  menus:
+  - depth: 3
+    menu_cd: '10103030000002022121314'
+    path: 지역별 분석 > 관광지별 현황 > 관광지별 성/연령 방문 집중률
+  screen: loc/getTourDataFormView2
+loc/getTourLocalDataForm:
+  label: 지역별 분석 > 지역별 현황 > 중심-연관 관광지 지도
+  menu_cd: '10102040000002022091417'
+  menus:
+  - depth: 3
+    menu_cd: '10102040000002022091417'
+    path: 지역별 분석 > 지역별 현황 > 중심-연관 관광지 지도
+  screen: loc/getTourLocalDataForm
+main/getMainForm:
+  label: 첫 화면
+  menu_cd: ''
+  menus:
+  - depth: 1
+    menu_cd: ''
+    path: 첫 화면
+  screen: main/getMainForm
+myd/myFstvList:
+  label: 테마별 분석 > 축제현황 > 행사/축제 DIY 맞춤 분석
+  menu_cd: '10351020000002024120600'
+  menus:
+  - depth: 3
+    menu_cd: '10351020000002024120600'
+    path: 테마별 분석 > 축제현황 > 행사/축제 DIY 맞춤 분석
+  screen: myd/myFstvList
+nat/getContAnaForm:
+  label: 국가별 분석 > 방한여행 현황 > 국가별 정보
+  menu_cd: '10201050000002023110101'
+  menus:
+  - depth: 3
+    menu_cd: '10201050000002023110101'
+    path: 국가별 분석 > 방한여행 현황 > 국가별 정보
+  screen: nat/getContAnaForm
+nat/getForAirForm:
+  label: 국가별 분석 > 방한여행 현황 > 방한항공 운항현황
+  menu_cd: '10201040000002024010301'
+  menus:
+  - depth: 3
+    menu_cd: '10201040000002024010301'
+    path: 국가별 분석 > 방한여행 현황 > 방한항공 운항현황
+  screen: nat/getForAirForm
+nat/getForTourDashForm:
+  label: 국가별 분석 > 세계여행 현황
+  menu_cd: '10202000000002020091510'
+  menus:
+  - depth: 2
+    menu_cd: '10202000000002020091510'
+    path: 국가별 분석 > 세계여행 현황
+  screen: nat/getForTourDashForm
+nat/getForTourForm:
+  label: 국가별 분석 > 방한여행 현황 > 국가별 방한현황(통계)
+  menu_cd: '10201010000002020091510'
+  menus:
+  - depth: 1
+    menu_cd: '10200000000002020091510'
+    path: 국가별 분석
+  - depth: 2
+    menu_cd: '10201000000002020091510'
+    path: 국가별 분석 > 방한여행 현황
+  - depth: 3
+    menu_cd: '10201010000002020091510'
+    path: 국가별 분석 > 방한여행 현황 > 국가별 방한현황(통계)
+  screen: nat/getForTourForm
+nat/getForTourFormReport:
+  label: 국가별 분석 > 세계여행 현황 > 세계여행 종합현황
+  menu_cd: '10202010000002023110101'
+  menus:
+  - depth: 3
+    menu_cd: '10202010000002023110101'
+    path: 국가별 분석 > 세계여행 현황 > 세계여행 종합현황
+  screen: nat/getForTourFormReport
+nat/getNatFocTourAna:
+  label: 국가별 분석 > 방한여행 현황 > 국가별 방한현황(빅데이터)
+  menu_cd: '10201070000002024120321'
+  menus:
+  - depth: 3
+    menu_cd: '10201070000002024120321'
+    path: 국가별 분석 > 방한여행 현황 > 국가별 방한현황(빅데이터)
+  screen: nat/getNatFocTourAna
+nat/getOseaTourForm:
+  label: 국가별 분석 > 국민 해외여행 현황 > 국민 해외여행 현황
+  menu_cd: '10203000000002020091510'
+  menus:
+  - depth: 2
+    menu_cd: '10203010000002024112718'
+    path: 국가별 분석 > 국민 해외여행 현황
+  - depth: 3
+    menu_cd: '10203000000002020091510'
+    path: 국가별 분석 > 국민 해외여행 현황 > 국민 해외여행 현황
+  screen: nat/getOseaTourForm
+nat/getTrendTourForm:
+  label: 국가별 분석 > 글로벌 소셜 미디어 > 방한여행 트렌드
+  menu_cd: '10205010000002022103117'
+  menus:
+  - depth: 2
+    menu_cd: '10205000000002022103117'
+    path: 국가별 분석 > 글로벌 소셜 미디어
+  - depth: 3
+    menu_cd: '10205010000002022103117'
+    path: 국가별 분석 > 글로벌 소셜 미디어 > 방한여행 트렌드
+  screen: nat/getTrendTourForm
+nat/getYearReportForm:
+  label: 국가별 분석 > 세계여행 현황 > 국가별 세계여행
+  menu_cd: '10202020000002023110101'
+  menus:
+  - depth: 3
+    menu_cd: '10202020000002023110101'
+    path: 국가별 분석 > 세계여행 현황 > 국가별 세계여행
+  screen: nat/getYearReportForm
+theme/getKorWaveSearch:
+  label: 테마별 분석 > 특화관광 테마 현황 > 한류관광 현황
+  menu_cd: '10353020000002024120600'
+  menus:
+  - depth: 3
+    menu_cd: '10353020000002024120600'
+    path: 테마별 분석 > 특화관광 테마 현황 > 한류관광 현황
+  screen: theme/getKorWaveSearch
+theme/getMarineTourSearch:
+  label: 테마별 분석 > 특화관광 테마 현황 > 해양관광 현황
+  menu_cd: '10353050000002025062513'
+  menus:
+  - depth: 3
+    menu_cd: '10353050000002025062513'
+    path: 테마별 분석 > 특화관광 테마 현황 > 해양관광 현황
+  screen: theme/getMarineTourSearch
+theme/getMedicalTourSearch:
+  label: 테마별 분석 > 고부가 관광 현황(외래객) > 의료관광 현황
+  menu_cd: '10352020000002024120600'
+  menus:
+  - depth: 3
+    menu_cd: '10352020000002024120600'
+    path: 테마별 분석 > 고부가 관광 현황(외래객) > 의료관광 현황
+  screen: theme/getMedicalTourSearch
+theme/getMiceScleSearch:
+  label: 테마별 분석 > 고부가 관광 현황(외래객) > MICE 관광 현황
+  menu_cd: '10352010000002024120600'
+  menus:
+  - depth: 2
+    menu_cd: '10352000000002024120600'
+    path: 테마별 분석 > 고부가 관광 현황(외래객)
+  - depth: 3
+    menu_cd: '10352010000002024120600'
+    path: 테마별 분석 > 고부가 관광 현황(외래객) > MICE 관광 현황
+  screen: theme/getMiceScleSearch
+theme/getNightTourSearch:
+  label: 테마별 분석 > 특화관광 테마 현황 > 야간관광 현황
+  menu_cd: '10353010000002024120600'
+  menus:
+  - depth: 2
+    menu_cd: '10353000000002024120600'
+    path: 테마별 분석 > 특화관광 테마 현황
+  - depth: 3
+    menu_cd: '10353010000002024120600'
+    path: 테마별 분석 > 특화관광 테마 현황 > 야간관광 현황
+  screen: theme/getNightTourSearch
+ts/getCustConInjForm:
+  label: 관광산업 분석 > 관광 VOC 현황 > 소비자 상담/위해
+  menu_cd: '10254030000002022122209'
+  menus:
+  - depth: 3
+    menu_cd: '10254030000002022122209'
+    path: 관광산업 분석 > 관광 VOC 현황 > 소비자 상담/위해
+  screen: ts/getCustConInjForm
+ts/getDomTourExmn:
+  label: 관광통계/실태조사 > 여행실태조사 > 국민여행조사
+  menu_cd: '10503010000002020120611'
+  menus:
+  - depth: 2
+    menu_cd: '10503000000002020120611'
+    path: 관광통계/실태조사 > 여행실태조사
+  - depth: 3
+    menu_cd: '10503010000002020120611'
+    path: 관광통계/실태조사 > 여행실태조사 > 국민여행조사
+  screen: ts/getDomTourExmn
+ts/getDtrmcNatiCust2Form:
+  label: 관광통계/실태조사 > 관광통계 > 국민 해외관광객
+  menu_cd: '10501020000002020120611'
+  menus:
+  - depth: 3
+    menu_cd: '10501020000002020120611'
+    path: 관광통계/실태조사 > 관광통계 > 국민 해외관광객
+  screen: ts/getDtrmcNatiCust2Form
+ts/getEntcnyFrgnCust2Form:
+  label: 관광통계/실태조사 > 관광통계 > 방한 외래관광객
+  menu_cd: '10501010000002020120611'
+  menus:
+  - depth: 1
+    menu_cd: '10500000000002020120611'
+    path: 관광통계/실태조사
+  - depth: 2
+    menu_cd: '10501000000002020120611'
+    path: 관광통계/실태조사 > 관광통계
+  - depth: 3
+    menu_cd: '10501010000002020120611'
+    path: 관광통계/실태조사 > 관광통계 > 방한 외래관광객
+  screen: ts/getEntcnyFrgnCust2Form
+ts/getKorTursmBalcForm:
+  label: 관광통계/실태조사 > 관광통계 > 관광수지
+  menu_cd: '10501030000002020120611'
+  menus:
+  - depth: 3
+    menu_cd: '10501030000002020120611'
+    path: 관광통계/실태조사 > 관광통계 > 관광수지
+  screen: ts/getKorTursmBalcForm
+ts/getMusTrsmForm:
+  label: 국가별 분석 > 방한여행 현황 > 무슬림 방한현황
+  menu_cd: '10201060000002023110101'
+  menus:
+  - depth: 3
+    menu_cd: '10201060000002023110101'
+    path: 국가별 분석 > 방한여행 현황 > 무슬림 방한현황
+  screen: ts/getMusTrsmForm
+ts/getNewCrusStatsForm:
+  label: 관광통계/실태조사 > 관광통계 > 크루즈통계
+  menu_cd: '10501210000002025082110'
+  menus:
+  - depth: 3
+    menu_cd: '10501210000002025082110'
+    path: 관광통계/실태조사 > 관광통계 > 크루즈통계
+  screen: ts/getNewCrusStatsForm
+ts/getOseaTourExmn:
+  label: 관광통계/실태조사 > 여행실태조사 > 외래관광객조사
+  menu_cd: '10503020000002020120611'
+  menus:
+  - depth: 3
+    menu_cd: '10503020000002020120611'
+    path: 관광통계/실태조사 > 여행실태조사 > 외래관광객조사
+  screen: ts/getOseaTourExmn
+ts/getPotTourExmn:
+  label: 관광통계/실태조사 > 여행실태조사 > 잠재 방한여행객 조사
+  menu_cd: '10503040000002020120611'
+  menus:
+  - depth: 3
+    menu_cd: '10503040000002020120611'
+    path: 관광통계/실태조사 > 여행실태조사 > 잠재 방한여행객 조사
+  screen: ts/getPotTourExmn
+ts/getTourCplnForm:
+  label: 관광산업 분석 > 관광 VOC 현황 > 관광불편신고
+  menu_cd: '10254020000002022122209'
+  menus:
+  - depth: 3
+    menu_cd: '10254020000002022122209'
+    path: 관광산업 분석 > 관광 VOC 현황 > 관광불편신고
+  screen: ts/getTourCplnForm
+ts/getWldTursmStatsForm:
+  label: 관광통계/실태조사 > 관광통계 > 세계관광통계
+  menu_cd: '10501080000002021100613'
+  menus:
+  - depth: 3
+    menu_cd: '10501080000002021100613'
+    path: 관광통계/실태조사 > 관광통계 > 세계관광통계
+  screen: ts/getWldTursmStatsForm

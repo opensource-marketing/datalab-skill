@@ -1,0 +1,571 @@
+# 한국관광 데이터랩 qid 카탈로그 — 성·연령별 조회(읍면동 단위)
+#
+# 화면: bda/getInquiryBySexAndAge (빅데이터 > 성/연령별 조회)
+#
+# ── 이 카탈로그가 새로 여는 것 ──────────────────────────────────
+# **읍면동이다.** 이 저장소의 다른 모든 지역 지표는 시군구가 가장
+# 잘게 나눈 단위였다. 여기서는 강릉시가 읍면동 21곳으로 갈라진다
+# (경포동·초당동·주문진읍…). 게다가 성별과 연령대로 다시 자를 수 있다.
+#
+# 그래서 "강릉 어디에 20대가 모이나"에 답할 수 있다. 시군구까지만
+# 있을 때는 답할 수 없던 질문이다.
+#
+# ── 방문자와 소비가 서로 다른 코드 체계를 쓴다 ──────────────────
+# 이 카탈로그에서 가장 조용히 틀리는 자리다. **파라미터 이름이 같은데
+# 받는 값이 다르다.**
+#
+#            방문자 SE_AG_01_*        소비 SE_AG_02_*
+#   GEN_CD    1 남 · 2 여              M 남 · W 여
+#   AGEG_DIV_CD  0009 1019 2029 …      10 20 30 … 80
+#              7000(70대)까지 8구간     80(80대)까지 8구간
+#
+# 틀린 체계를 보내면 오류가 아니다. **빈 본문이 오거나(그나마 낫다)
+# 그냥 무시된 채 전체 값이 온다.** `SE_AG_02_24_001` 이 후자다 —
+# GEN_CD 에 무엇을 넣어도 같은 응답을 준다(2026-08-24 확인). "남성
+# 관광소비"라고 적은 채 전체 소비가 실린다.
+#
+# 산술로 확인했다(강릉시 2024년, 초당동):
+#   소비 남 67,813,271,610 + 여 60,249,270,056 = 128,062,541,666 = 전체
+#
+# ── P_ 가 붙은 컬럼이 진짜 값이다 ───────────────────────────────
+# 분해 지표(`_03_`·`_04_`·`_22_`·`_23_`)는 한 읍면동을 여러 행으로
+# 준다. 그런데 **`TOU_NUM`·`CARD_COMPT_AMT` 는 그 행이 아니라 그
+# 읍면동 전체의 값이 행마다 반복된 것**이다.
+#
+#   경포동 2024년: TOU_NUM 7,579,498 이 여덟 행에 똑같이 실려 있다.
+#   그냥 더하면 60,635,984 — 여덟 배다.
+#
+# 그 행의 값은 `P_TOU_NUM`(또는 `P_CARD_COMPT_AMT`)이고, 어느
+# 갈래인지는 `P_GEN_NM`·`P_AGEG_DIV_NM` 이 말한다. 여덟 행의
+# `P_TOU_NUM` 합이 `P_TOT_TOU_NUM` 과 정확히 같다(2026-08-24 확인).
+#
+# ── 단위가 컬럼마다 다르다 ──────────────────────────────────────
+#   TOU_NUM · P_TOU_NUM            명
+#   CARD_COMPT_AMT · CNSM_AMT      천원  (차트 정의 ' 천원')
+#   P_CARD_COMPT_AMT               **원**
+#   P_TOT_CARD_COMPT_AMT           **원**
+#   CNSM_AMT_TOT                   **원**
+#
+# 같은 표 안에서 천원과 원이 섞여 있다. 초당동 2024년 소비가
+# 128,062,542(천원)이면서 128,062,541,666(원)으로 함께 실린다.
+# 나란히 놓으면 1000배 틀린다.
+#
+# ── 짝을 이룬 지표가 서로 다른 것을 준다 ────────────────────────
+# `_001` 과 `_002` 는 아무 필터도 걸지 않으면 **응답이 같다.**
+# 필터를 걸면 갈린다(강릉 2024, 경포동):
+#
+#   GEN_CD=1(남성)로 부르면
+#     SE_AG_01_03_001  남성 3,749,462 안에서의 연령 분포(20대 903,162)
+#     SE_AG_01_03_002  성별 선택을 무시한 전체 7,579,498 의 연령 분포
+#                      (20대 1,955,295)
+#
+# 화면은 둘을 나란히 그린다("선택한 집단 안에서" 대 "전체에서").
+# **`_002` 를 쓰면서 "남성 20대"라고 적으면 두 배 넘게 틀린다.**
+# 교차 검산: 903,162 는 SE_AG_01_04_001 을 20대로 불렀을 때의 남성
+# 값과 정확히 같다(2026-08-24 확인).
+#
+# ── 카탈로그에 넣지 않은 것 ─────────────────────────────────────
+# `SE_AG_01_02_001`(순위 차트)과 `SE_AG_02_21_001`(소비 순위)은
+# 히트맵 지표와 응답이 완전히 같아 뺐다. 다만 `SE_AG_01_02_001` 은
+# 성별과 연령을 **동시에** 걸면 빈 배열을 준다 — 화면이 한 번에 한
+# 가지만 거는 자리에 쓰기 때문이다.
+#
+# `SE_AG_03_*`(내비게이션 검색)은 값이 나오지만 뺐다.
+#
+# **처음 적은 이유는 틀렸다.** "강원 1,178 대 전국 16,574,973" 이라고
+# 적었는데, 그것은 **창이 짧아 생긴 착시**였다. 2024년 한 해로 물으면
+# 값이 거의 없고(강릉 2024-02 가 75), `2010~2026` 으로 넓게 물으면
+# 정상 크기가 온다(강릉 2025-08 이 560,956). 2026-08-24 재확인.
+#
+# 그래도 넣지 않은 이유는 **이미 있는 내비 지표와 값이 다르기**
+# 때문이다. 같은 달·같은 시군구를 견주면 열 달 모두 어긋난다.
+#
+#   2025-08 강릉시   SE_AG_03_03_004  560,956
+#                    BDT_03_01_003_4  824,947   (검증된 지표)
+#
+# 대략 3분의 2 수준인데 비율이 일정하지도 않다. 성·연령이 식별된
+# 검색만 세는 것으로 보이나 사이트가 밝히지 않는다. 두 지표를 같은
+# "내비 검색건수"로 쓰면 어느 쪽을 집었느냐로 3분의 1이 갈린다.
+#
+# ── 방문자는 외지인만이다 ───────────────────────────────────────
+# `TOU_DIV_NM` 이 '외지인' 하나로 고정이다. 화면 코드도 이 값을
+# '외지인 방문자수'라고 부른다. **현지인은 들어 있지 않다.**
+# 연인원이므로 인구와 비교하지 마라.
+
+SE_AG_01_01_001:
+  name: 읍면동별 외지인 방문자 수
+  screen: /datalab/portal/bda/getInquiryBySexAndAge.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, GEN_CD, AGEG_DIV_CD]
+  fixed_params: {GEN_CD: "all", GEN_CD_NM: "전체", AGEG_DIV_CD: "all",
+                 AGEG_DIV_NM: "전체", SEARCH_TYPE: "TOU_NUM",
+                 UNIT_CD: "adong", dispYn: "Y", tabDiv: "1",
+                 srchAreaDate: "1", sggIntgYnFlag: "N"}
+  granularity: period
+  section: 성연령
+  query_axis: 지역
+  caution: >-
+    **읍면동 단위다.** 강릉시를 부르면 21행이 온다(2026-08-24 확인).
+    행 수는 시군구마다 다르다. `GEN_CD` 는 1 남 · 2 여, `AGEG_DIV_CD`
+    는 0009·1019·2029·3039·4049·5059·6069·7000 이다 — **소비 지표와
+    체계가 다르다**(그쪽은 M/W 와 10·20…). 둘을 함께 걸면 그 교차
+    집단의 값이 온다(남성 20대). 값은 외지인 방문자 연인원이며 현지인은
+    빠져 있다. RNK 는 그 시군구 안에서의 읍면동 순위다.
+  columns:
+    RN: {label: 행번호, type: float, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    SGG_NM: {label: 시군구명, type: str, unit: ""}
+    ADONG_CD: {label: 읍면동코드, type: str, unit: ""}
+    ADONG_NM: {label: 읍면동명, type: str, unit: ""}
+    PTL_MAP_ID: {label: 포털_지도ID, type: str, unit: ""}
+    TOU_DIV_CD: {label: 방문자구분코드, type: str, unit: ""}
+    TOU_DIV_NM: {label: 방문자구분, type: str, unit: ""}
+    GEN_CD: {label: 조회_성별코드, type: str, unit: ""}
+    GEN_NM: {label: 조회_성별, type: str, unit: ""}
+    AGEG_DIV_CD: {label: 조회_연령코드, type: str, unit: ""}
+    AGEG_DIV_NM: {label: 조회_연령, type: str, unit: ""}
+    TOU_NUM: {label: 방문자수, type: float, unit: 명}
+    RNK: {label: 읍면동_순위, type: float, unit: ""}
+
+SE_AG_01_03_001:
+  name: 읍면동별 방문자 연령 분포(선택한 성별 안에서)
+  screen: /datalab/portal/bda/getInquiryBySexAndAge.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, GEN_CD, AGEG_DIV_CD]
+  fixed_params: {GEN_CD: "all", GEN_CD_NM: "전체", AGEG_DIV_CD: "all",
+                 AGEG_DIV_NM: "전체", SEARCH_TYPE: "TOU_NUM",
+                 UNIT_CD: "adong", dispYn: "Y", tabDiv: "1",
+                 srchAreaDate: "1", sggIntgYnFlag: "N"}
+  granularity: period
+  section: 성연령
+  query_axis: 지역
+  caution: >-
+    한 읍면동이 연령 여덟 갈래로 갈려 온다(강릉 21동 × 8 = 168행,
+    2026-08-24 확인). **값은 `P_TOU_NUM` 이다.** `TOU_NUM` 은 그
+    읍면동 전체 값이 여덟 행에 반복된 것이라 더하면 여덟 배가 된다
+    (경포동 7,579,498 → 60,635,984). `P_TOU_NUM` 여덟 행의 합이
+    `P_TOT_TOU_NUM` 과 같고 `P_RATE` 합이 100이다.
+    **`GEN_CD` 를 걸면 그 성별 안에서의 연령 분포를 준다** —
+    성별을 무시한 전체 분포가 필요하면 SE_AG_01_03_002 다.
+  columns:
+    RN: {label: 행번호, type: float, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    SGG_NM: {label: 시군구명, type: str, unit: ""}
+    ADONG_CD: {label: 읍면동코드, type: str, unit: ""}
+    ADONG_NM: {label: 읍면동명, type: str, unit: ""}
+    PTL_MAP_ID: {label: 포털_지도ID, type: str, unit: ""}
+    TOU_DIV_CD: {label: 방문자구분코드, type: str, unit: ""}
+    TOU_DIV_NM: {label: 방문자구분, type: str, unit: ""}
+    GEN_CD: {label: 조회_성별코드, type: str, unit: ""}
+    GEN_NM: {label: 조회_성별, type: str, unit: ""}
+    AGEG_DIV_CD: {label: 조회_연령코드, type: str, unit: ""}
+    AGEG_DIV_NM: {label: 조회_연령, type: str, unit: ""}
+    TOU_NUM: {label: 읍면동_전체_방문자수, type: float, unit: 명}
+    RNK: {label: 읍면동_순위, type: float, unit: ""}
+    P_GEN_CD: {label: 분해_성별코드, type: str, unit: ""}
+    P_GEN_NM: {label: 분해_성별, type: str, unit: ""}
+    P_AGEG_DIV_CD: {label: 분해_연령코드, type: str, unit: ""}
+    P_AGEG_DIV_NM: {label: 분해_연령, type: str, unit: ""}
+    P_TOU_NUM: {label: 방문자수, type: float, unit: 명}
+    P_TOT_TOU_NUM: {label: 분해_모수, type: float, unit: 명}
+    P_RATE: {label: 구성비, type: float, unit: "%"}
+
+SE_AG_01_03_002:
+  name: 읍면동별 방문자 연령 분포(성별 선택과 무관)
+  screen: /datalab/portal/bda/getInquiryBySexAndAge.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, GEN_CD, AGEG_DIV_CD]
+  fixed_params: {GEN_CD: "all", GEN_CD_NM: "전체", AGEG_DIV_CD: "all",
+                 AGEG_DIV_NM: "전체", SEARCH_TYPE: "TOU_NUM",
+                 UNIT_CD: "adong", dispYn: "Y", tabDiv: "1",
+                 srchAreaDate: "1", sggIntgYnFlag: "N"}
+  granularity: period
+  section: 성연령
+  query_axis: 지역
+  caution: >-
+    **`GEN_CD` 를 걸어도 성별로 좁히지 않는다.** 남성으로 불러도
+    `P_GEN_NM` 이 '전체'이고 모수가 전체 그대로다(경포동 2024년
+    7,579,498, 2026-08-24 확인). 화면이 "선택한 집단"과 "전체"를
+    나란히 그리려고 쓰는 짝이다. 좁힌 값이 필요하면
+    SE_AG_01_03_001 을 써라 — 같은 자리에서 3,749,462 가 온다.
+    값은 `P_TOU_NUM` 이고 `TOU_NUM` 은 행마다 반복되는 총계다.
+  columns:
+    RN: {label: 행번호, type: float, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    SGG_NM: {label: 시군구명, type: str, unit: ""}
+    ADONG_CD: {label: 읍면동코드, type: str, unit: ""}
+    ADONG_NM: {label: 읍면동명, type: str, unit: ""}
+    PTL_MAP_ID: {label: 포털_지도ID, type: str, unit: ""}
+    TOU_DIV_CD: {label: 방문자구분코드, type: str, unit: ""}
+    TOU_DIV_NM: {label: 방문자구분, type: str, unit: ""}
+    GEN_CD: {label: 조회_성별코드, type: str, unit: ""}
+    GEN_NM: {label: 조회_성별, type: str, unit: ""}
+    AGEG_DIV_CD: {label: 조회_연령코드, type: str, unit: ""}
+    AGEG_DIV_NM: {label: 조회_연령, type: str, unit: ""}
+    TOU_NUM: {label: 읍면동_전체_방문자수, type: float, unit: 명}
+    RNK: {label: 읍면동_순위, type: float, unit: ""}
+    P_GEN_CD: {label: 분해_성별코드, type: str, unit: ""}
+    P_GEN_NM: {label: 분해_성별, type: str, unit: ""}
+    P_AGEG_DIV_CD: {label: 분해_연령코드, type: str, unit: ""}
+    P_AGEG_DIV_NM: {label: 분해_연령, type: str, unit: ""}
+    P_TOU_NUM: {label: 방문자수, type: float, unit: 명}
+    P_TOT_TOU_NUM: {label: 분해_모수, type: float, unit: 명}
+    P_RATE: {label: 구성비, type: float, unit: "%"}
+
+SE_AG_01_04_001:
+  name: 읍면동별 방문자 성별 분포(선택한 연령 안에서)
+  screen: /datalab/portal/bda/getInquiryBySexAndAge.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, GEN_CD, AGEG_DIV_CD]
+  fixed_params: {GEN_CD: "all", GEN_CD_NM: "전체", AGEG_DIV_CD: "all",
+                 AGEG_DIV_NM: "전체", SEARCH_TYPE: "TOU_NUM",
+                 UNIT_CD: "adong", dispYn: "Y", tabDiv: "1",
+                 srchAreaDate: "1", sggIntgYnFlag: "N"}
+  granularity: period
+  section: 성연령
+  query_axis: 지역
+  caution: >-
+    한 읍면동이 남·여 두 행으로 갈려 온다(강릉 21동 × 2 = 42행).
+    값은 `P_TOU_NUM` 이고 `TOU_NUM` 은 두 행에 반복되는 총계다.
+    **`AGEG_DIV_CD` 를 걸면 그 연령 안에서의 남녀 분포를 준다** —
+    경포동 20대는 남 903,162 · 여 1,052,133 이고 합이 1,955,295 로
+    SE_AG_01_03_001 의 20대 값과 정확히 같다(2026-08-24 교차확인).
+    연령 선택을 무시한 전체 분포가 필요하면 SE_AG_01_04_002 다.
+  columns:
+    RN: {label: 행번호, type: float, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    SGG_NM: {label: 시군구명, type: str, unit: ""}
+    ADONG_CD: {label: 읍면동코드, type: str, unit: ""}
+    ADONG_NM: {label: 읍면동명, type: str, unit: ""}
+    PTL_MAP_ID: {label: 포털_지도ID, type: str, unit: ""}
+    TOU_DIV_CD: {label: 방문자구분코드, type: str, unit: ""}
+    TOU_DIV_NM: {label: 방문자구분, type: str, unit: ""}
+    GEN_CD: {label: 조회_성별코드, type: str, unit: ""}
+    GEN_NM: {label: 조회_성별, type: str, unit: ""}
+    AGEG_DIV_CD: {label: 조회_연령코드, type: str, unit: ""}
+    AGEG_DIV_NM: {label: 조회_연령, type: str, unit: ""}
+    TOU_NUM: {label: 읍면동_전체_방문자수, type: float, unit: 명}
+    RNK: {label: 읍면동_순위, type: float, unit: ""}
+    P_GEN_CD: {label: 분해_성별코드, type: str, unit: ""}
+    P_GEN_NM: {label: 분해_성별, type: str, unit: ""}
+    P_AGEG_DIV_CD: {label: 분해_연령코드, type: str, unit: ""}
+    P_AGEG_DIV_NM: {label: 분해_연령, type: str, unit: ""}
+    P_TOU_NUM: {label: 방문자수, type: float, unit: 명}
+    P_TOT_TOU_NUM: {label: 분해_모수, type: float, unit: 명}
+    P_RATE: {label: 구성비, type: float, unit: "%"}
+
+SE_AG_01_04_002:
+  name: 읍면동별 방문자 성별 분포(연령 선택과 무관)
+  screen: /datalab/portal/bda/getInquiryBySexAndAge.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, GEN_CD, AGEG_DIV_CD]
+  fixed_params: {GEN_CD: "all", GEN_CD_NM: "전체", AGEG_DIV_CD: "all",
+                 AGEG_DIV_NM: "전체", SEARCH_TYPE: "TOU_NUM",
+                 UNIT_CD: "adong", dispYn: "Y", tabDiv: "1",
+                 srchAreaDate: "1", sggIntgYnFlag: "N"}
+  granularity: period
+  section: 성연령
+  query_axis: 지역
+  caution: >-
+    **`AGEG_DIV_CD` 를 걸어도 연령으로 좁히지 않는다.** 20대로
+    불러도 `P_AGEG_DIV_NM` 이 '전체'이고 남 3,749,462 · 여 3,830,036
+    이 온다(경포동 2024년, 2026-08-24 확인). 좁힌 값은
+    SE_AG_01_04_001 에 있다. 값은 `P_TOU_NUM` 이다.
+  columns:
+    RN: {label: 행번호, type: float, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    SGG_NM: {label: 시군구명, type: str, unit: ""}
+    ADONG_CD: {label: 읍면동코드, type: str, unit: ""}
+    ADONG_NM: {label: 읍면동명, type: str, unit: ""}
+    PTL_MAP_ID: {label: 포털_지도ID, type: str, unit: ""}
+    TOU_DIV_CD: {label: 방문자구분코드, type: str, unit: ""}
+    TOU_DIV_NM: {label: 방문자구분, type: str, unit: ""}
+    GEN_CD: {label: 조회_성별코드, type: str, unit: ""}
+    GEN_NM: {label: 조회_성별, type: str, unit: ""}
+    AGEG_DIV_CD: {label: 조회_연령코드, type: str, unit: ""}
+    AGEG_DIV_NM: {label: 조회_연령, type: str, unit: ""}
+    TOU_NUM: {label: 읍면동_전체_방문자수, type: float, unit: 명}
+    RNK: {label: 읍면동_순위, type: float, unit: ""}
+    P_GEN_CD: {label: 분해_성별코드, type: str, unit: ""}
+    P_GEN_NM: {label: 분해_성별, type: str, unit: ""}
+    P_AGEG_DIV_CD: {label: 분해_연령코드, type: str, unit: ""}
+    P_AGEG_DIV_NM: {label: 분해_연령, type: str, unit: ""}
+    P_TOU_NUM: {label: 방문자수, type: float, unit: 명}
+    P_TOT_TOU_NUM: {label: 분해_모수, type: float, unit: 명}
+    P_RATE: {label: 구성비, type: float, unit: "%"}
+
+SE_AG_01_05_001:
+  name: 시군구 외지인 방문자 수 월별 추이(성·연령 선택)
+  screen: /datalab/portal/bda/getInquiryBySexAndAge.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, GEN_CD, AGEG_DIV_CD]
+  fixed_params: {GEN_CD: "all", GEN_CD_NM: "전체", AGEG_DIV_CD: "all",
+                 AGEG_DIV_NM: "전체", SEARCH_TYPE: "TOU_NUM",
+                 UNIT_CD: "adong", dispYn: "Y", tabDiv: "1",
+                 srchAreaDate: "1", sggIntgYnFlag: "N"}
+  granularity: month
+  section: 성연령
+  query_axis: 지역
+  caution: >-
+    이 하나만 읍면동이 아니라 **시군구 전체**의 달별 값이다.
+    성·연령을 걸면 그 집단만 준다 — 강릉 2024년 1월이 전체
+    2,674,620 · 남 1,416,651 · 여 1,257,969 이고 남+여가 전체와
+    정확히 맞는다(2026-08-24 확인). 값은 외지인 연인원이다.
+  columns:
+    BASE_DATE: {label: 기준월, type: str, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    SGG_NM: {label: 시군구명, type: str, unit: ""}
+    TOU_DIV_CD: {label: 방문자구분코드, type: str, unit: ""}
+    TOU_DIV_NM: {label: 방문자구분, type: str, unit: ""}
+    TOU_NUM: {label: 방문자수, type: float, unit: 명}
+
+SE_AG_02_20_001:
+  name: 읍면동별 관광소비액
+  screen: /datalab/portal/bda/getInquiryBySexAndAge.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, GEN_CD, AGEG_DIV_CD]
+  fixed_params: {GEN_CD: "all", GEN_CD_NM: "전체", AGEG_DIV_CD: "all",
+                 AGEG_DIV_NM: "전체", SEARCH_TYPE: "TOU_NUM",
+                 UNIT_CD: "adong", dispYn: "Y", tabDiv: "1",
+                 srchAreaDate: "1", sggIntgYnFlag: "N"}
+  granularity: period
+  section: 성연령
+  query_axis: 지역
+  caution: >-
+    **성·연령 코드가 방문자 지표와 다르다.** 여기서는 `GEN_CD` 가
+    M(남)·W(여)이고 `AGEG_DIV_CD` 가 10·20·…·80 이다. 방문자 쪽
+    코드(1·2, 2029 등)를 보내면 빈 본문이 온다(2026-08-24 확인).
+    값은 **천원**이다 — 강릉 초당동 2024년 128,062,542천원.
+    KTO_TOB_MCLS_NM 이 '관광총소비'면 업종 합계 행이다.
+  columns:
+    RN: {label: 행번호, type: float, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    SGG_NM: {label: 시군구명, type: str, unit: ""}
+    ADONG_CD: {label: 읍면동코드, type: str, unit: ""}
+    ADONG_NM: {label: 읍면동명, type: str, unit: ""}
+    PTL_MAP_ID: {label: 포털_지도ID, type: str, unit: ""}
+    KTO_TOB_MCLS_CD: {label: 업종_중분류코드, type: str, unit: ""}
+    KTO_TOB_MCLS_NM: {label: 업종_중분류, type: str, unit: ""}
+    GEN_CD: {label: 조회_성별코드, type: str, unit: ""}
+    GEN_NM: {label: 조회_성별, type: str, unit: ""}
+    AGEG_DIV_CD: {label: 조회_연령코드, type: str, unit: ""}
+    AGEG_DIV_NM: {label: 조회_연령, type: str, unit: ""}
+    CARD_COMPT_AMT: {label: 카드소비액, type: float, unit: 천원}
+    RNK: {label: 읍면동_순위, type: float, unit: ""}
+
+SE_AG_02_22_001:
+  name: 읍면동별 소비 연령 분포(선택한 성별 안에서)
+  screen: /datalab/portal/bda/getInquiryBySexAndAge.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, GEN_CD, AGEG_DIV_CD]
+  fixed_params: {GEN_CD: "all", GEN_CD_NM: "전체", AGEG_DIV_CD: "all",
+                 AGEG_DIV_NM: "전체", SEARCH_TYPE: "TOU_NUM",
+                 UNIT_CD: "adong", dispYn: "Y", tabDiv: "1",
+                 srchAreaDate: "1", sggIntgYnFlag: "N"}
+  granularity: period
+  section: 성연령
+  query_axis: 지역
+  caution: >-
+    연령 여덟 갈래로 갈려 온다(강릉시 2024년 168행, 2026-08-24 확인).
+    소비 계열의 연령대는 **10대부터 80대까지**로 방문자 계열
+    (10대 미만 ~ 70대)과 구간이 다르다. 값은 `P_CARD_COMPT_AMT` 이고
+    **단위가 원**이다 — 같은 행의 `CARD_COMPT_AMT` 는 천원이라
+    1000배 어긋난다(2026-08-24 확인).
+    `GEN_CD` 를 M/W 로 걸면 그 성별 안에서의 분포를 준다.
+  columns:
+    RN: {label: 행번호, type: float, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    SGG_NM: {label: 시군구명, type: str, unit: ""}
+    ADONG_CD: {label: 읍면동코드, type: str, unit: ""}
+    ADONG_NM: {label: 읍면동명, type: str, unit: ""}
+    PTL_MAP_ID: {label: 포털_지도ID, type: str, unit: ""}
+    KTO_TOB_MCLS_CD: {label: 업종_중분류코드, type: str, unit: ""}
+    KTO_TOB_MCLS_NM: {label: 업종_중분류, type: str, unit: ""}
+    GEN_CD: {label: 조회_성별코드, type: str, unit: ""}
+    GEN_NM: {label: 조회_성별, type: str, unit: ""}
+    AGEG_DIV_CD: {label: 조회_연령코드, type: str, unit: ""}
+    AGEG_DIV_NM: {label: 조회_연령, type: str, unit: ""}
+    CARD_COMPT_AMT: {label: 읍면동_전체_카드소비액, type: float, unit: 천원}
+    RNK: {label: 읍면동_순위, type: float, unit: ""}
+    P_GEN_CD: {label: 분해_성별코드, type: str, unit: ""}
+    P_GEN_NM: {label: 분해_성별, type: str, unit: ""}
+    P_AGEG_DIV_CD: {label: 분해_연령코드, type: str, unit: ""}
+    P_AGEG_DIV_NM: {label: 분해_연령, type: str, unit: ""}
+    P_CARD_COMPT_AMT: {label: 카드소비액, type: float, unit: 원}
+    P_TOT_CARD_COMPT_AMT: {label: 분해_모수, type: float, unit: 원}
+    P_RATE: {label: 구성비, type: float, unit: "%"}
+
+SE_AG_02_22_002:
+  name: 읍면동별 소비 연령 분포(성별 선택과 무관)
+  screen: /datalab/portal/bda/getInquiryBySexAndAge.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, GEN_CD, AGEG_DIV_CD]
+  fixed_params: {GEN_CD: "all", GEN_CD_NM: "전체", AGEG_DIV_CD: "all",
+                 AGEG_DIV_NM: "전체", SEARCH_TYPE: "TOU_NUM",
+                 UNIT_CD: "adong", dispYn: "Y", tabDiv: "1",
+                 srchAreaDate: "1", sggIntgYnFlag: "N"}
+  granularity: period
+  section: 성연령
+  query_axis: 지역
+  caution: >-
+    **`GEN_CD` 를 M 으로 걸어도 좁히지 않는다.** `P_GEN_NM` 이
+    '전체'이고 모수가 128,062,541,666원 그대로다(초당동 2024년,
+    2026-08-24 확인). 좁힌 값은 SE_AG_02_22_001 에 있다
+    (같은 자리 67,813,271,610원). 값은 `P_CARD_COMPT_AMT`(원)다.
+  columns:
+    RN: {label: 행번호, type: float, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    SGG_NM: {label: 시군구명, type: str, unit: ""}
+    ADONG_CD: {label: 읍면동코드, type: str, unit: ""}
+    ADONG_NM: {label: 읍면동명, type: str, unit: ""}
+    PTL_MAP_ID: {label: 포털_지도ID, type: str, unit: ""}
+    KTO_TOB_MCLS_CD: {label: 업종_중분류코드, type: str, unit: ""}
+    KTO_TOB_MCLS_NM: {label: 업종_중분류, type: str, unit: ""}
+    GEN_CD: {label: 조회_성별코드, type: str, unit: ""}
+    GEN_NM: {label: 조회_성별, type: str, unit: ""}
+    AGEG_DIV_CD: {label: 조회_연령코드, type: str, unit: ""}
+    AGEG_DIV_NM: {label: 조회_연령, type: str, unit: ""}
+    CARD_COMPT_AMT: {label: 읍면동_전체_카드소비액, type: float, unit: 천원}
+    RNK: {label: 읍면동_순위, type: float, unit: ""}
+    P_GEN_CD: {label: 분해_성별코드, type: str, unit: ""}
+    P_GEN_NM: {label: 분해_성별, type: str, unit: ""}
+    P_AGEG_DIV_CD: {label: 분해_연령코드, type: str, unit: ""}
+    P_AGEG_DIV_NM: {label: 분해_연령, type: str, unit: ""}
+    P_CARD_COMPT_AMT: {label: 카드소비액, type: float, unit: 원}
+    P_TOT_CARD_COMPT_AMT: {label: 분해_모수, type: float, unit: 원}
+    P_RATE: {label: 구성비, type: float, unit: "%"}
+
+SE_AG_02_23_001:
+  name: 읍면동별 소비 성별 분포(선택한 연령 안에서)
+  screen: /datalab/portal/bda/getInquiryBySexAndAge.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, GEN_CD, AGEG_DIV_CD]
+  fixed_params: {GEN_CD: "all", GEN_CD_NM: "전체", AGEG_DIV_CD: "all",
+                 AGEG_DIV_NM: "전체", SEARCH_TYPE: "TOU_NUM",
+                 UNIT_CD: "adong", dispYn: "Y", tabDiv: "1",
+                 srchAreaDate: "1", sggIntgYnFlag: "N"}
+  granularity: period
+  section: 성연령
+  query_axis: 지역
+  caution: >-
+    남·여 두 행으로 갈려 온다(강릉 42행). 산술로 확인했다 —
+    초당동 2024년 남 67,813,271,610 + 여 60,249,270,056 =
+    128,062,541,666원(2026-08-24). `AGEG_DIV_CD` 를 20 으로 걸면
+    20대 안에서의 남녀가 온다(9,123,662,885 · 15,641,840,736).
+    **연령 코드는 10·20·…·80 이다** — 2029 를 보내면 빈 배열이 온다.
+  columns:
+    RN: {label: 행번호, type: float, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    SGG_NM: {label: 시군구명, type: str, unit: ""}
+    ADONG_CD: {label: 읍면동코드, type: str, unit: ""}
+    ADONG_NM: {label: 읍면동명, type: str, unit: ""}
+    PTL_MAP_ID: {label: 포털_지도ID, type: str, unit: ""}
+    KTO_TOB_MCLS_CD: {label: 업종_중분류코드, type: str, unit: ""}
+    KTO_TOB_MCLS_NM: {label: 업종_중분류, type: str, unit: ""}
+    GEN_CD: {label: 조회_성별코드, type: str, unit: ""}
+    GEN_NM: {label: 조회_성별, type: str, unit: ""}
+    AGEG_DIV_CD: {label: 조회_연령코드, type: str, unit: ""}
+    AGEG_DIV_NM: {label: 조회_연령, type: str, unit: ""}
+    CARD_COMPT_AMT: {label: 읍면동_전체_카드소비액, type: float, unit: 천원}
+    RNK: {label: 읍면동_순위, type: float, unit: ""}
+    P_GEN_CD: {label: 분해_성별코드, type: str, unit: ""}
+    P_GEN_NM: {label: 분해_성별, type: str, unit: ""}
+    P_AGEG_DIV_CD: {label: 분해_연령코드, type: str, unit: ""}
+    P_AGEG_DIV_NM: {label: 분해_연령, type: str, unit: ""}
+    P_CARD_COMPT_AMT: {label: 카드소비액, type: float, unit: 원}
+    P_TOT_CARD_COMPT_AMT: {label: 분해_모수, type: float, unit: 원}
+    P_RATE: {label: 구성비, type: float, unit: "%"}
+
+SE_AG_02_23_002:
+  name: 읍면동별 소비 성별 분포(연령 선택과 무관)
+  screen: /datalab/portal/bda/getInquiryBySexAndAge.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, GEN_CD, AGEG_DIV_CD]
+  fixed_params: {GEN_CD: "all", GEN_CD_NM: "전체", AGEG_DIV_CD: "all",
+                 AGEG_DIV_NM: "전체", SEARCH_TYPE: "TOU_NUM",
+                 UNIT_CD: "adong", dispYn: "Y", tabDiv: "1",
+                 srchAreaDate: "1", sggIntgYnFlag: "N"}
+  granularity: period
+  section: 성연령
+  query_axis: 지역
+  caution: >-
+    **`AGEG_DIV_CD` 를 걸어도 좁히지 않는다.** 20 으로 불러도
+    `P_AGEG_DIV_NM` 이 '전체'이고 남 67,813,271,610 · 여
+    60,249,270,056 이 온다(2026-08-24 확인). 좁힌 값은
+    SE_AG_02_23_001 에 있다. 값은 `P_CARD_COMPT_AMT`(원)다.
+  columns:
+    RN: {label: 행번호, type: float, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    SGG_NM: {label: 시군구명, type: str, unit: ""}
+    ADONG_CD: {label: 읍면동코드, type: str, unit: ""}
+    ADONG_NM: {label: 읍면동명, type: str, unit: ""}
+    PTL_MAP_ID: {label: 포털_지도ID, type: str, unit: ""}
+    KTO_TOB_MCLS_CD: {label: 업종_중분류코드, type: str, unit: ""}
+    KTO_TOB_MCLS_NM: {label: 업종_중분류, type: str, unit: ""}
+    GEN_CD: {label: 조회_성별코드, type: str, unit: ""}
+    GEN_NM: {label: 조회_성별, type: str, unit: ""}
+    AGEG_DIV_CD: {label: 조회_연령코드, type: str, unit: ""}
+    AGEG_DIV_NM: {label: 조회_연령, type: str, unit: ""}
+    CARD_COMPT_AMT: {label: 읍면동_전체_카드소비액, type: float, unit: 천원}
+    RNK: {label: 읍면동_순위, type: float, unit: ""}
+    P_GEN_CD: {label: 분해_성별코드, type: str, unit: ""}
+    P_GEN_NM: {label: 분해_성별, type: str, unit: ""}
+    P_AGEG_DIV_CD: {label: 분해_연령코드, type: str, unit: ""}
+    P_AGEG_DIV_NM: {label: 분해_연령, type: str, unit: ""}
+    P_CARD_COMPT_AMT: {label: 카드소비액, type: float, unit: 원}
+    P_TOT_CARD_COMPT_AMT: {label: 분해_모수, type: float, unit: 원}
+    P_RATE: {label: 구성비, type: float, unit: "%"}
+
+SE_AG_02_24_001:
+  name: 시군구 관광소비액 월별 추이(업종별)
+  screen: /datalab/portal/bda/getInquiryBySexAndAge.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, AGEG_DIV_CD]
+  fixed_params: {GEN_CD: "all", GEN_CD_NM: "전체", AGEG_DIV_CD: "all",
+                 AGEG_DIV_NM: "전체", SEARCH_TYPE: "TOU_NUM",
+                 UNIT_CD: "adong", dispYn: "Y", tabDiv: "1",
+                 srchAreaDate: "1", sggIntgYnFlag: "N"}
+  granularity: month
+  section: 성연령
+  query_axis: 지역
+  caution: >-
+    **`GEN_CD` 를 무시한다.** M 을 보내도 all 을 보내도 응답이 똑같다
+    (2026-08-24 확인) — 오류도 빈 배열도 아니라서 "남성 소비"라고 적은
+    채 전체 소비가 실린다. 성별로 나눈 소비가 필요하면
+    SE_AG_02_23_001 을 써라. `AGEG_DIV_CD` 는 10·20·…·80 체계로만
+    받는다. `CNSM_AMT` 는 **천원**, `CNSM_AMT_TOT` 는 **원**이다 —
+    두 컬럼이 1000배 차이 나며 `CNSM_AMT_RATE` 는 원 기준으로 계산된다.
+    읍면동이 아니라 시군구 전체의 달별 값이다.
+  columns:
+    BASE_DATE: {label: 기준월, type: str, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    SGG_NM: {label: 시군구명, type: str, unit: ""}
+    KTO_TOB_MCLS_CD: {label: 업종_중분류코드, type: str, unit: ""}
+    KTO_TOB_MCLS_NM: {label: 업종_중분류, type: str, unit: ""}
+    CNSM_AMT: {label: 소비액, type: float, unit: 천원}
+    CNSM_AMT_TOT: {label: 소비액_원단위, type: float, unit: 원}
+    CNSM_AMT_RATE: {label: 구성비, type: float, unit: "%"}

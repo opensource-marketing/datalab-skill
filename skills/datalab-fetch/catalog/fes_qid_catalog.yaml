@@ -1,0 +1,186 @@
+# 한국관광 데이터랩 qid 카탈로그 — 문화관광축제
+#
+# 조회 축이 `FSTV_ID`다(예: KCTF0063 정선아리랑제). 지역도 국가도 아니다.
+# 기간은 **연 단위**(BASE_YY1·BASE_YY2)라 월을 넣으면 안 된다.
+# `querySpace: FesDao`가 없으면 응답이 오지 않는다.
+#
+# FSTV_ID는 data/festival_codes.yaml에 있다. 데이터랩에 축제 목록 API가
+# 없어서(getFesList.do·getFesInfoList.do 모두 0바이트) 화면 HTML에 박힌
+# ID를 뽑아 한 번 만들어 둔 표다.
+#
+# LRFRN_DIV_NM 값이 지표마다 다르다.
+#   FE_01_01_007: 전체(99)
+#   FE_01_01_008: 현지인(0)·외지인(1)·외국인(2) 등
+# 구분을 확인하지 않고 행을 다 더하면 중복해서 센다.
+
+FE_01_01_005:
+  # TOT_LOCAL + TOT_OUT + TOT_FORE = TOTAL_COL 임을 확인했다
+  # (정선아리랑제 2018년: 71,747 + 44,245 + 0 = 115,992).
+  name: 축제 방문객 수(연도별, 현지인·외지인·외국인)
+  screen: /datalab/portal/fes/getFesDataForm.do
+  auth: public
+  params: [FSTV_ID, BASE_YY1, BASE_YY2]
+  fixed_params: {querySpace: "FesDao", fileWriteYn: "N"}
+  granularity: year
+  section: 규모
+  query_axis: 축제
+  caution: 기간이 연 단위다. BASE_YM이 아니라 BASE_YY를 쓴다.
+  columns:
+    FSTV_ID: {label: 축제ID, type: str, unit: ""}
+    FSTV_REPS_NM: {label: 축제명, type: str, unit: ""}
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    TOT_LOCAL: {label: 현지인_방문객, type: float, unit: 명}
+    TOT_OUT: {label: 외지인_방문객, type: float, unit: 명}
+    TOT_FORE: {label: 외국인_방문객, type: float, unit: 명}
+    TOTAL_COL: {label: 전체_방문객, type: float, unit: 명}
+    FSTV_PERD_CNT: {label: 축제_일수, type: int, unit: 일}
+    PRE_TOTAL: {label: 전년_전체_방문객, type: float, unit: 명}
+    PRE_TOTAL_AVG: {label: 전년_일평균_방문객, type: float, unit: 명}
+    LOCAL_TOU_NUM_RAT: {label: 현지인_비중, type: float, unit: "%"}
+    OUT_TOU_NUM_RAT: {label: 외지인_비중, type: float, unit: "%"}
+    FORE_TOU_NUM_RAT: {label: 외국인_비중, type: float, unit: "%"}
+    TOTAL_AVG: {label: 일평균_방문객, type: float, unit: 명}
+    TOTAL_AVG_VAR: {label: 일평균_증감, type: float, unit: 명}
+    PRE_VAL: {label: 전년값, type: float, unit: ""}
+    GROTH_VAL_RATE: {label: 증감률, type: float, unit: "%"}
+    GROTH_VAL: {label: 증감, type: float, unit: ""}
+    GROTH_MARK: {label: 증감표시, type: str, unit: ""}
+    DISP_YN: {label: 표시여부, type: str, unit: ""}
+
+FE_01_01_006:
+  name: 축제 방문객 성·연령 구성
+  screen: /datalab/portal/fes/getFesDataForm.do
+  auth: public
+  params: [FSTV_ID, BASE_YY1, BASE_YY2]
+  fixed_params: {querySpace: "FesDao", fileWriteYn: "N"}
+  granularity: period
+  section: 누구
+  query_axis: 축제
+  caution: M은 남성, W는 여성이다. 인원(TOT)과 비중(RAT)이 함께 온다.
+  columns:
+    FSTV_ID: {label: 축제ID, type: str, unit: ""}
+    FSTV_REPS_NM: {label: 축제명, type: str, unit: ""}
+    AGEG_DIV_NM: {label: 연령대, type: str, unit: ""}
+    SORT_STR: {label: 정렬순서, type: int, unit: ""}
+    M_TOT: {label: 남성_방문객, type: float, unit: 명}
+    W_TOT: {label: 여성_방문객, type: float, unit: 명}
+    M_TOU_NUM_RAT: {label: 남성_비중, type: float, unit: "%"}
+    W_TOU_NUM_RAT: {label: 여성_비중, type: float, unit: "%"}
+    DISP_YN: {label: 표시여부, type: str, unit: ""}
+
+FE_01_01_002:
+  name: 축제 방문객 거주지 분포
+  screen: /datalab/portal/fes/getFesDataForm.do
+  auth: public
+  params: [FSTV_ID, BASE_YY1, BASE_YY2]
+  fixed_params: {querySpace: "FesDao", fileWriteYn: "N"}
+  granularity: year
+  section: 어디서
+  query_axis: 축제
+  caution: LEV가 1이면 시도, 2면 시군구 단위 행이다. 섞어 더하면 두 번 센다.
+  columns:
+    LEV: {label: 단계, type: int, unit: ""}
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    FSTV_ID: {label: 축제ID, type: str, unit: ""}
+    FSTV_REPS_NM: {label: 축제명, type: str, unit: ""}
+    DPTR_SIDO_CD: {label: 거주_시도코드, type: str, unit: ""}
+    DPTR_SIDO_NM: {label: 거주_시도, type: str, unit: ""}
+    DPTR_SGG_CD: {label: 거주_시군구코드, type: str, unit: ""}
+    DPTR_SGG_NM: {label: 거주_시군구, type: str, unit: ""}
+    TOU_NUM_RAT: {label: 비중, type: float, unit: "%"}
+    SGG_CD: {label: 축제_지역코드, type: str, unit: ""}
+    SGG_NM: {label: 축제_지역명, type: str, unit: ""}
+    SIDO_NM: {label: 축제_시도, type: str, unit: ""}
+    PTL_SIDO_CD: {label: 포털_시도코드, type: str, unit: ""}
+
+FE_01_01_004_00:
+  name: 축제 기간 인기 장소(검색량)
+  screen: /datalab/portal/fes/getFesDataForm.do
+  auth: public
+  params: [FSTV_ID, BASE_YY1, BASE_YY2]
+  fixed_params: {querySpace: "FesDao", fileWriteYn: "N"}
+  granularity: period
+  section: 어디로
+  query_axis: 축제
+  caution: SRCH_CNT는 내비게이션 검색 건수이지 방문자 수가 아니다.
+  columns:
+    DIV_NM: {label: 구분, type: str, unit: ""}
+    ROWNUM: {label: 순위, type: int, unit: ""}
+    EMD_CD: {label: 읍면동코드, type: str, unit: ""}
+    EMD_NM: {label: 읍면동, type: str, unit: ""}
+    ITS_BRO_ID: {label: 장소ID, type: str, unit: ""}
+    ITS_BRO_NM: {label: 장소명, type: str, unit: ""}
+    ADDR_ROAD_NM: {label: 도로명주소, type: str, unit: ""}
+    KTO_CATE_SCLS_NM: {label: 분류, type: str, unit: ""}
+    SRCH_CNT: {label: 검색건수, type: float, unit: 건}
+
+FE_01_01_007:
+  # SUM_CNSM_AMT와 SUM_CNSM_AMT_1000이 함께 온다. 뒤엣것이 천원 단위다.
+  name: 축제 기간 소비액(전체)
+  screen: /datalab/portal/fes/getFesDataForm.do
+  auth: public
+  params: [FSTV_ID, BASE_YY1, BASE_YY2]
+  fixed_params: {querySpace: "FesDao", fileWriteYn: "N"}
+  granularity: year
+  section: 소비
+  query_axis: 축제
+  caution: >-
+    **다섯 갈래가 한꺼번에 온다** — 전체(99)·내국인(3)·외국인(2)·
+    외지인(1)·현지인(0). 다 더하면 두 번 이상 센다. 2026-08-23
+    화천산천어축제 2024년 산술로 확인했다: 현지인 10,103,755.8 +
+    외지인 2,477,035,216.4 = 내국인 2,487,138,972.2이고, 거기에
+    외국인 16,023,174.7을 더하면 전체 2,503,162,146.9다.
+    **구분 코드 체계가 신용카드 소비 지표(0 현지인·1 외지인·2 내국인)와
+    다르다** — 여기서 2는 외국인이고 3이 내국인이다. 그대로 옮겨 쓰면
+    외국인을 내국인으로 읽는다. 업종별은 FE_01_01_008이다.
+  columns:
+    FSTV_YEAR: {label: 기준연도, type: str, unit: ""}
+    FSTV_ID: {label: 축제ID, type: str, unit: ""}
+    FSTV_REPS_NM: {label: 축제_대표명, type: str, unit: ""}
+    FSTV_NM: {label: 축제명, type: str, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도, type: str, unit: ""}
+    SGG_NM: {label: 시군구, type: str, unit: ""}
+    ADONG_NM: {label: 행정동, type: str, unit: ""}
+    LRFRN_DIV_CD: {label: 구분코드, type: str, unit: ""}
+    LRFRN_DIV_NM: {label: 구분, type: str, unit: ""}
+    FSTV_PERD_CNT: {label: 축제_일수, type: int, unit: 일}
+    SUM_CNSM_AMT: {label: 소비액, type: float, unit: 원}
+    SUM_CNSM_AMT_1000: {label: 소비액_천원, type: float, unit: 천원}
+    SUM_CNSM_AMT_AVG: {label: 일평균_소비액, type: float, unit: 원}
+    SUM_CNSM_AMT_1000_AVG: {label: 일평균_소비액_천원, type: float, unit: 천원}
+
+FE_01_01_008:
+  name: 축제 기간 소비액(업종·구분별)
+  screen: /datalab/portal/fes/getFesDataForm.do
+  auth: public
+  params: [FSTV_ID, BASE_YY1, BASE_YY2]
+  fixed_params: {querySpace: "FesDao", fileWriteYn: "N"}
+  granularity: year
+  section: 소비
+  query_axis: 축제
+  caution: >-
+    구분과 업종이 교차된 행이다. **구분은 네 갈래이며 내국인이 함께
+    온다** — 현지인(0)·외지인(1)·외국인(2)·내국인(3). **내국인 =
+    현지인 + 외지인**이므로 넷을 다 더하면 내국인분을 두 번 센다.
+    2026-08-23 화천산천어축제 2024년의 네 업종 모두 오차 0으로
+    확인했다(예: 숙박업 3,197,891.3 + 55,601,821.0 = 58,799,712.3).
+    축제마다 오는 구분·업종 조합이 다르니 있는 것만 골라 읽어라.
+  columns:
+    FSTV_YEAR: {label: 기준연도, type: str, unit: ""}
+    FSTV_ID: {label: 축제ID, type: str, unit: ""}
+    FSTV_REPS_NM: {label: 축제_대표명, type: str, unit: ""}
+    FSTV_NM: {label: 축제명, type: str, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도, type: str, unit: ""}
+    SGG_NM: {label: 시군구, type: str, unit: ""}
+    ADONG_NM: {label: 행정동, type: str, unit: ""}
+    LRFRN_DIV_CD: {label: 구분코드, type: str, unit: ""}
+    LRFRN_DIV_NM: {label: 구분, type: str, unit: ""}
+    KTO_TOB_LCLS_CD: {label: 업종코드, type: str, unit: ""}
+    KTO_TOB_LCLS_NM: {label: 업종, type: str, unit: ""}
+    FSTV_PERD_CNT: {label: 축제_일수, type: int, unit: 일}
+    SUM_CNSM_AMT: {label: 소비액, type: float, unit: 원}
+    SUM_CNSM_AMT_1000: {label: 소비액_천원, type: float, unit: 천원}
+    SUM_CNSM_AMT_AVG: {label: 일평균_소비액, type: float, unit: 원}
+    SUM_CNSM_AMT_1000_AVG: {label: 일평균_소비액_천원, type: float, unit: 천원}

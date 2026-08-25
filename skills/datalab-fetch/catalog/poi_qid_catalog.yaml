@@ -1,0 +1,240 @@
+# 한국관광 데이터랩 qid 카탈로그 — 관광지(POI) 영역
+#
+# `{SKILLS_DIR}` = 이 스킬들이 설치된 디렉토리(이 스킬 폴더의 부모). 소스
+# 저장소와 배포본에서 실제 설치 위치가 다르므로, 아래 명령을 그대로 쓰기
+# 전에 이 값을 자신의 설치 경로로 바꿔라.
+#
+# 각 항목의 query_axis 필드가 조회 축을 못 박는다. 인바운드 카탈로그의
+# axis는 스코어링 축 **목록**이라 뜻이 다르다 — 섞지 마라.
+#
+# 조회 축이 `CONT_ID`다. 시군구도 국가도 아니고 **관광지 하나**를 가리킨다.
+# CONT_ID는 고정 표가 없다. LN_05_01_011로 지역을 좁혀 찾아야 한다.
+#   python3 {SKILLS_DIR}/datalab-fetch/scripts/poi.py 경포 --region 강릉시
+#
+# ── 이름에 속지 마라 ────────────────────────────────────────────
+# LN_05_01_002의 dnname은 "방문자 추이 예측"이고 컬럼도 TOU_NUM이지만,
+# 차트 축은 `집중률(%)`이다. 강릉경포해수욕장 값 94.02는 94명이 아니라
+# 94.02%다. 지역 단위의 LN_04_01_011과 똑같은 함정이다.
+# 근거: local_tour_chart_beta.js
+#   chart3 = lineSeriesPivotTour(chartId, ..., '집중률(%)', '%');
+# ────────────────────────────────────────────────────────────────
+#
+# LN_05_01_007은 화면 JS에서 주석 처리되어 있다("미사용로직인데 동작해서
+# 주석처리"라고 적혀 있다). 서버는 정상 응답한다(강릉경포해수욕장 100행).
+# 사이트가 더 이상 그리지 않는 지표이므로 값이 갑자기 끊길 수 있다.
+#
+# *_SQRT 컬럼은 앞 컬럼의 제곱근이다(차트 버블 크기용). 리포트에 쓰지 않는다.
+
+LN_05_01_011:
+  # 이 qid만 CONT_ID가 아니라 지역·이름으로 조회한다. 나머지 POI 지표의
+  # 입구다. recordCountPerPage를 키우면 한 번에 더 받는다.
+  name: 관광지 목록(지역·이름·분류로 검색)
+  screen: /datalab/portal/loc/getTourDataFormBeta.do
+  auth: public
+  params: [SIDO_CD, SGG_CD, CONT_NM, KTO_CATE_LCLS_CD, KTO_CATE_MCLS_CD,
+           BASE_YM1, BASE_YM2, firstIndex, pageIndex, recordCountPerPage,
+           orderSelect, orderValue, contentList, noTheme]
+  fixed_params: {firstIndex: "0", pageIndex: "1", recordCountPerPage: "500",
+                 orderSelect: "", orderValue: "asc", contentList: "전체",
+                 noTheme: "", CONT_NM: "", KTO_CATE_LCLS_CD: "",
+                 KTO_CATE_MCLS_CD: ""}
+  granularity: snapshot
+  section: 목록
+  query_axis: 지역
+  caution: 이 지표만 CONT_ID를 쓰지 않는다. SGG_CD(시군구 5자리)로 조회한다.
+  columns:
+    CONT_ID: {label: 관광지ID, type: str, unit: ""}
+    CONT_NM: {label: 관광지명, type: str, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    SGG_NM: {label: 시군구명, type: str, unit: ""}
+    KTO_CATE_LCLS_CD: {label: 대분류코드, type: str, unit: ""}
+    KTO_CATE_LCLS_NM: {label: 대분류, type: str, unit: ""}
+    KTO_CATE_MCLS_CD: {label: 중분류코드, type: str, unit: ""}
+    KTO_CATE_MCLS_NM: {label: 중분류, type: str, unit: ""}
+    KTO_CATE_SCLS_CD: {label: 소분류코드, type: str, unit: ""}
+    KTO_CATE_SCLS_NM: {label: 소분류, type: str, unit: ""}
+    # 아래 일곱은 2026-08-23에 카탈로그로 옮겼다. 그전에는 원본 영문명
+    # 그대로 나갔고 문자열 정리도 받지 못했다(RQMT_TM에 끝 공백이 남았다).
+    TAR_ADDR_NM: {label: 주소, type: str, unit: ""}
+    # 강릉 79곳이 128.455~129.068 · 37.608~38.146 범위였다. 경위도가 맞다.
+    XCRD: {label: 경도, type: float, unit: ""}
+    YCRD: {label: 위도, type: float, unit: ""}
+    KVK_TAR_ID: {label: 연계식별자, type: str, unit: ""}
+    # 79곳 중 두 곳만 채워져 있었다("2016열린관광지",
+    # "2023반려동물 친화관광지 100선"). 선정·인증 표시로 보인다.
+    CATE_NM: {label: 선정표시, type: str, unit: ""}
+    # 뜻을 확인하지 못했다. 이름은 콘텐츠 수·소요시간처럼 보이지만
+    # 사이트가 이 값을 어디에 쓰는지 확인하기 전에는 단정하지 않는다.
+    NO_CONT: {label: NO_CONT_원값, type: int, unit: ""}
+    RQMT_TM: {label: RQMT_TM_원값, type: str, unit: ""}
+
+LN_05_01_002:
+  name: 관광지 향후 방문 집중률
+  screen: /datalab/portal/loc/getTourDataFormBeta.do
+  auth: public
+  params: [CONT_ID]
+  fixed_params: {}
+  granularity: day
+  section: 예측
+  query_axis: 관광지
+  caution: TOU_NUM은 방문자 수가 아니라 집중률(%)이다. 차트 축이 '집중률(%)'이다.
+  columns:
+    BASE_YM: {label: 기준일, type: str, unit: ""}
+    TOU_NUM: {label: 방문_집중률, type: float, unit: "%"}
+
+LN_05_01_004_999:
+  name: 관광지 방문자 거주지 분포
+  screen: /datalab/portal/loc/getTourDataFormBeta.do
+  auth: public
+  params: [CONT_ID, BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: period
+  section: 누구
+  query_axis: 관광지
+  caution: 기간 합계다. 월별로 나뉘어 오지 않는다.
+  columns:
+    DPTR_REGN_NM: {label: 거주_시도, type: str, unit: ""}
+    DPTR_REGN_DTL_NM: {label: 거주_시군구, type: str, unit: ""}
+    TOU_NUM: {label: 시도_방문자수, type: float, unit: 명}
+    TOU_NUM_SQRT: {label: 시도_방문자수_제곱근, type: float, unit: ""}
+    TOU_NUM_RATE: {label: 시도_비중, type: float, unit: "%"}
+    DTL_TOU_NUM: {label: 시군구_방문자수, type: float, unit: 명}
+    DTL_TOU_NUM_SQRT: {label: 시군구_방문자수_제곱근, type: float, unit: ""}
+    DTL_TOU_NUM_RATE: {label: 시군구_비중, type: float, unit: "%"}
+
+LN_05_01_005:
+  # 남녀 대응 근거: 차트가 area_XYChartNoValue(..., '남성', '여성')로 불리고
+  # value1(=TOU_NUM_RAT1)을 -1 곱해 왼쪽에 그린다(인구 피라미드). 지역 단위
+  # LN_02_01_004에서 TOU_NUM1이 남성인 것과도 맞는다.
+  name: 관광지 선호 방문 연령(성별 비율)
+  screen: /datalab/portal/loc/getTourDataFormBeta.do
+  auth: public
+  params: [CONT_ID, BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: period
+  section: 누구
+  query_axis: 관광지
+  caution: 값은 인원이 아니라 비율(%)이다.
+  columns:
+    CD_NM: {label: 연령대, type: str, unit: ""}
+    TOU_NUM_RAT1: {label: 남성_비중, type: float, unit: "%"}
+    TOU_NUM_RAT2: {label: 여성_비중, type: float, unit: "%"}
+
+LN_05_02_002:
+  name: 관광지 내비게이션 검색량 추이(월별)
+  screen: /datalab/portal/loc/getTourDataFormBeta.do
+  auth: public
+  params: [CONT_ID, BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: month
+  section: 관심
+  query_axis: 관광지
+  caution: 검색건수는 방문자 수가 아니다.
+  columns:
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    SRCH_CNT: {label: 검색건수, type: float, unit: 건}
+
+LN_05_01_007:
+  name: 관광지 방문자의 중심 관광지 Top100
+  screen: /datalab/portal/loc/getTourDataFormBeta.do
+  auth: public
+  params: [CONT_ID, BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: period
+  section: 관심
+  query_axis: 관광지
+  caution: 화면 JS에서 주석 처리된 지표다. 서버는 응답하지만 예고 없이 끊길 수 있다.
+  columns:
+    RK: {label: 순위, type: int, unit: ""}
+    CNTRL_TAR_NM: {label: 중심관광지명, type: str, unit: ""}
+    CNTRL_TAR_ADDR_ROAD_NM: {label: 도로명주소, type: str, unit: ""}
+    CNTRL_CATE_NM_MIDL: {label: 중분류, type: str, unit: ""}
+    CON_ADDR: {label: 소재지, type: str, unit: ""}
+
+LN_05_01_013:
+  name: 관광지 연관 관광지 Top50
+  screen: /datalab/portal/loc/getTourDataFormBeta.do
+  auth: public
+  # 사이트 JS는 CNTRL_TAR_NM·SGG_CD·CATE_NM_LARGE·RLTN_CATE_NM_LARGE를
+  # 함께 보내지만, 하나씩 빼며 실호출해 보니 결과가 달라지지 않았다.
+  # 실제로 필요한 것은 CONT_ID와 기간뿐이다. BASE_YM1을 빼면 빈 배열이 온다.
+  # (처음에는 JS의 파라미터 목록을 그대로 옮겨 적어 "SGG_CD도 필요하다"고
+  #  썼는데, 확인해 보니 사실이 아니었다.)
+  params: [CONT_ID, BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: period
+  section: 관심
+  query_axis: 관광지
+  caution: CONT_ID와 기간만 있으면 된다. BASE_YM1이 없으면 빈 배열이 온다.
+  columns:
+    RNK_ROW: {label: 순위, type: int, unit: ""}
+    RLTN_POI_ID: {label: 연관_POI_ID, type: str, unit: ""}
+    MD5_POI_ID: {label: POI_ID, type: str, unit: ""}
+    RLTN_TAR_NM: {label: 연관_관광지명, type: str, unit: ""}
+    RLTN_SIDO_NM: {label: 연관_시도, type: str, unit: ""}
+    RLTN_SGG_NM: {label: 연관_시군구, type: str, unit: ""}
+    RLTN_TAR_ADDR_ROAD_NM: {label: 연관_도로명주소, type: str, unit: ""}
+    RLTN_CATE_NM_LARGE: {label: 연관_대분류, type: str, unit: ""}
+    RLTN_CATE_NM_MIDL: {label: 연관_중분류, type: str, unit: ""}
+    RLTN_CATE_NM_SML: {label: 연관_소분류, type: str, unit: ""}
+    RLTN_CATE_NM_DTIL: {label: 연관_세분류, type: str, unit: ""}
+
+LN_05_01_009:
+  name: 관광지 대분류 코드 목록
+  screen: /datalab/portal/loc/getTourDataFormBeta.do
+  auth: public
+  params: []
+  fixed_params: {}
+  granularity: snapshot
+  section: 목록
+  query_axis: 없음
+  caution: 파라미터가 없다. 분류 코드를 고를 때 쓴다.
+  columns:
+    KTO_CATE_LCLS_CD: {label: 대분류코드, type: str, unit: ""}
+    KTO_CATE_LCLS_NM: {label: 대분류, type: str, unit: ""}
+
+# ── 2026-08-24 추가 — 중심관광지 ────────────────────────────────
+# 조회 축이 여기만 **시군구**다(위의 것들은 `CONT_ID`). 그 지역
+# 관광 동선의 허브가 어디인지를 중심도로 매긴다.
+#
+# **여러 달을 물으면 100행에서 잘린다.** 강릉시를 202605~202607 로
+# 물으면 100행이 오는데 그중 99행이 202607 이고 202606 은 한 행뿐,
+# 202605 는 아예 없다. 한 달씩 물으면 각각 100행이 온다
+# (2026-08-24 확인). **달을 넘겨 견주려면 한 달씩 부른다.**
+
+LN_03_01_043:
+  name: 중심관광지 100위
+  screen: /datalab/portal/loc/getTourLocalDataForm.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, srchAreaDate]
+  fixed_params: {srchAreaDate: "1"}
+  granularity: month
+  section: 매력
+  query_axis: 지역
+  caution: >-
+    **한 달씩 불러라.** 여러 달을 물으면 100행에서 잘려 이전 달이
+    거의 사라진다 — 강릉 202605~202607 은 100행 중 99행이 202607
+    이었다(2026-08-24 확인).
+    `DGRE_CNTRL`(중심도)은 순위를 매기는 값이고 **단위가 없다.**
+    강릉 2026-07 은 강릉중앙시장 4.48 · 경포해변 2.95다. 배수로
+    읽지 마라 — 무엇을 정규화한 값인지 데이터랩이 밝히지 않았다.
+    **숙박시설이 함께 순위에 든다**(신라모노그램 3위, 세인트존스호텔
+    5위). 관광지만 보려면 `CNTRL_CATE_NM_LARGE` 로 걸러라.
+    좌표(`*_COORD`)가 함께 오므로 지도에 찍을 수 있다.
+  columns:
+    CNTRL_POI_ID: {label: 중심관광지ID, type: str, unit: ""}
+    MD5_POI_ID: {label: POI_해시, type: str, unit: ""}
+    CNTRL_SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    CNTRL_SIDO_NM: {label: 시도명, type: str, unit: ""}
+    CNTRL_SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    CNTRL_SGG_NM: {label: 시군구명, type: str, unit: ""}
+    CNTRL_POI_X_COORD: {label: 경도, type: float, unit: ""}
+    CNTRL_POI_Y_COORD: {label: 위도, type: float, unit: ""}
+    CNTRL_TAR_NM: {label: 중심관광지명, type: str, unit: ""}
+    CNTRL_CATE_NM_LARGE: {label: 대분류, type: str, unit: ""}
+    CNTRL_CATE_NM_MIDL: {label: 중분류, type: str, unit: ""}
+    DGRE_CNTRL: {label: 중심도, type: float, unit: ""}
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    RK: {label: 순위, type: float, unit: ""}

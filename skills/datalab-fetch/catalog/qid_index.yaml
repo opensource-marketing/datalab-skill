@@ -1,0 +1,7362 @@
+BDT_01_01_001:
+  commented: false
+  names:
+  - 방문자수 히트맵
+  params:
+  - SGG_CD
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_0012:
+  commented: false
+  names:
+  - 방문자수 히트맵
+  params:
+  - SGG_CD
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_001_1:
+  commented: false
+  names:
+  - 지역별 방문자수(기초지자체별)
+  - 지역별 방문자 수(기초지자체별)
+  - 외국인 지역별 방문자 수(기초지자체별)
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_001_11:
+  commented: false
+  names:
+  - 지역별 방문자수(광역별)
+  - 지역별 방문자 수(광역별)
+  - 외국인 지역별 방문자 수(광역별)
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - SGG_CD
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_001_12:
+  commented: false
+  names:
+  - 광역별 방문자 수
+  params:
+  - SGG_CD
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_001_4:
+  commented: false
+  names:
+  - 방문자 수 추이
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_001_42:
+  commented: false
+  names:
+  - 방문자 수 추이
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_002:
+  commented: false
+  names:
+  - 지역별 방문자 수
+  params:
+  - SGG_CD
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_0022:
+  commented: true
+  names:
+  - 지역별 방문자 수
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_002_036:
+  commented: false
+  names:
+  - 지역별 방문자 수
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_003:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_0032:
+  commented: true
+  names:
+  - 방문자 유출지
+  params:
+  - sgg_code
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_0032_1:
+  commented: true
+  names:
+  - 방문자 거주지
+  params: []
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_0032_2:
+  commented: false
+  names:
+  - 방문자 유입지
+  params:
+  - sgg_code
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_0032_4:
+  commented: true
+  names:
+  - 방문자 국가
+  params:
+  - SGG_CD
+  - sgg_code
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_003_1:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_003_2:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_003_4:
+  commented: false
+  names:
+  - 방문자 수 추이
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_003_42:
+  commented: false
+  names:
+  - 방문자 수 추이
+  params:
+  - ALL_YN
+  - SGG_CD
+  - sgg_code
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_004_1:
+  commented: false
+  names:
+  - 방문자수 히트맵
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_004_12:
+  commented: true
+  names:
+  - 방문자수 히트맵
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - SGG_CD
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_004_2:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_004_22:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_004_3:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_004_32:
+  commented: true
+  names:
+  - 방문자 유출지
+  params:
+  - SGG_CD
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_004_3_1:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_004_3_12:
+  commented: true
+  names:
+  - 방문자 거주지
+  params:
+  - SGG_CD
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_004_3_13:
+  commented: true
+  names:
+  - 방문자 유입지
+  params:
+  - SGG_CD
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_004_3_14:
+  commented: true
+  names:
+  - 방문자 국가
+  params:
+  - SGG_CD
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_004_3_4:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_004_3_5:
+  commented: false
+  names:
+  - 방문자 거주지
+  params: []
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_004_3_6:
+  commented: false
+  names:
+  - 방문자 유출지
+  params: []
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_004_3_6_9999:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_004_3_7:
+  commented: false
+  names:
+  - 방문자 국가
+  - 외국인 방문자 거주지(국가)
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - SGG_CD
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_004_3_8:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_004_3_9:
+  commented: false
+  names: []
+  params: []
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_004_4:
+  commented: false
+  names:
+  - 방문자 수 추이
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_004_42:
+  commented: false
+  names:
+  - 방문자 수 추이
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_005_1:
+  commented: false
+  names:
+  - 방문자수 히트맵
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_005_12:
+  commented: true
+  names:
+  - 방문자수 히트맵
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - SGG_CD
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_005_2:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_005_22:
+  commented: true
+  names:
+  - 지역별 방문자 수
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_005_4:
+  commented: false
+  names:
+  - 방문자 수 추이
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getMetcoAna
+BDT_01_01_005_42:
+  commented: false
+  names:
+  - 방문자 수 추이
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getMetcoAna
+BDT_01_03_001:
+  commented: false
+  names:
+  - 지역별 방문자 수 추이
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - txtADONG_ARR
+  - txtSGG_CD
+  - txtSIDO_ARR
+  screens:
+  - bda/getByRegnAna
+BDT_01_03_001_1:
+  commented: false
+  names: []
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - txtADONG_ARR
+  - txtSGG_CD
+  - txtSIDO_ARR
+  screens:
+  - bda/getByRegnAna
+BDT_01_03_003:
+  commented: false
+  names:
+  - 지역별 숙박방문자 수 추이
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - txtADONG_ARR
+  - txtSGG_CD
+  - txtSIDO_ARR
+  screens:
+  - bda/getByRegnAna
+BDT_01_03_003_1:
+  commented: false
+  names:
+  - 지역별 숙박방문자 수 추이
+  params: []
+  screens:
+  - bda/getByRegnAna
+BDT_01_03_004_1:
+  commented: false
+  names:
+  - 장기체류자 수 추이
+  params: []
+  screens:
+  - bda/getByRegnAna
+BDT_01_03_005:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - bda/getByRegnAna
+BDT_02_01_001_1:
+  commented: false
+  names:
+  - 관광소비 히트맵
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_001_11:
+  commented: false
+  names:
+  - 관광소비 히트맵
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_001_12:
+  commented: false
+  names:
+  - 업종별 지출액
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_001_13:
+  commented: false
+  names:
+  - 지역별 지출액
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_001_14:
+  commented: false
+  names: []
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_001_15:
+  commented: false
+  names:
+  - 관광소비 추이
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_001_2:
+  commented: false
+  names:
+  - 업종별 지출액
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_001_21:
+  commented: false
+  names:
+  - 관광소비 히트맵
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_001_22:
+  commented: false
+  names:
+  - 업종별 지출액
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_001_23:
+  commented: false
+  names:
+  - 지역별 지출액
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_001_24:
+  commented: false
+  names: []
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_001_25:
+  commented: false
+  names:
+  - 관광소비 추이
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_001_3:
+  commented: false
+  names:
+  - 지역별 지출액
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_001_31:
+  commented: false
+  names:
+  - 관광소비 히트맵
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_001_32:
+  commented: false
+  names:
+  - 업종별 지출액
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_001_33:
+  commented: false
+  names:
+  - 지역별 지출액
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_001_34:
+  commented: false
+  names: []
+  params: []
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_001_35:
+  commented: false
+  names:
+  - 관광소비 추이
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_001_4:
+  commented: false
+  names: []
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_001_41:
+  commented: false
+  names:
+  - 관광소비 히트맵
+  params:
+  - ALL_YN
+  - SGG_CD
+  - SGG_CD2
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_001_42:
+  commented: false
+  names:
+  - 업종별 지출액
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_001_43:
+  commented: false
+  names:
+  - 지역별 지출액
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_001_5:
+  commented: false
+  names:
+  - 관광소비 추이
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_1:
+  commented: false
+  names:
+  - 관광소비 히트맵
+  params:
+  - SGG_CD
+  - SGG_CD2
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_11:
+  commented: false
+  names:
+  - 관광소비 히트맵
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_11_1:
+  commented: false
+  names:
+  - 관광소비 히트맵
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_12:
+  commented: false
+  names:
+  - 업종별 지출액
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_12_1:
+  commented: false
+  names:
+  - 업종별 지출액
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_13:
+  commented: false
+  names:
+  - 지역별 지출액
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_13_1:
+  commented: false
+  names: []
+  params: []
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_14:
+  commented: false
+  names: []
+  params: []
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_15:
+  commented: false
+  names:
+  - 관광소비 추이
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_15_1:
+  commented: false
+  names:
+  - 관광소비 추이
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_2:
+  commented: false
+  names:
+  - 업종별 지출액
+  params:
+  - SGG_CD
+  - SGG_CD2
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_21:
+  commented: false
+  names:
+  - 관광소비 히트맵
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_21_1:
+  commented: false
+  names:
+  - 관광소비 히트맵
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_22:
+  commented: false
+  names:
+  - 업종별 지출액
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_22_1:
+  commented: false
+  names:
+  - 업종별 지출액
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_23:
+  commented: false
+  names:
+  - 지역별 지출액
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_23_1:
+  commented: false
+  names: []
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_24:
+  commented: false
+  names: []
+  params: []
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_25:
+  commented: false
+  names:
+  - 관광소비 추이
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_25_1:
+  commented: false
+  names:
+  - 관광소비 추이
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_3:
+  commented: false
+  names:
+  - 지역별 지출액
+  params:
+  - SGG_CD
+  - SGG_CD2
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_31:
+  commented: false
+  names:
+  - 관광소비 히트맵
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_31_1:
+  commented: false
+  names:
+  - 관광소비 히트맵
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_32:
+  commented: false
+  names:
+  - 업종별 지출액
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_32_1:
+  commented: false
+  names:
+  - 업종별 지출액
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_33:
+  commented: false
+  names:
+  - 지역별 지출액
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_34:
+  commented: false
+  names: []
+  params: []
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_35:
+  commented: false
+  names:
+  - 관광소비 추이
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_35_1:
+  commented: false
+  names:
+  - 관광소비 추이
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_4:
+  commented: false
+  names: []
+  params: []
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_41:
+  commented: false
+  names:
+  - 관광소비 히트맵
+  params:
+  - SGG_CD
+  - SGG_CD2
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_42:
+  commented: false
+  names:
+  - 업종별 지출액
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_43:
+  commented: false
+  names:
+  - 지역별 지출액
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_002_5:
+  commented: false
+  names:
+  - 관광소비 추이
+  params:
+  - ALL_YN
+  - SGG_CD
+  - SGG_CD2
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_003_1:
+  commented: false
+  names:
+  - 관광소비 히트맵
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_003_11:
+  commented: false
+  names:
+  - 관광소비 히트맵
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_003_12:
+  commented: false
+  names:
+  - 업종별 지출액
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_003_13:
+  commented: false
+  names:
+  - 지역별 지출액
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_003_14:
+  commented: false
+  names: []
+  params: []
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_003_15:
+  commented: false
+  names:
+  - 관광소비 추이
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_003_2:
+  commented: false
+  names:
+  - 업종별 지출액
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_003_21:
+  commented: false
+  names:
+  - 관광소비 히트맵
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_003_22:
+  commented: false
+  names:
+  - 업종별 지출액
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_003_23:
+  commented: false
+  names:
+  - 지역별 지출액
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_003_24:
+  commented: false
+  names: []
+  params: []
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_003_25:
+  commented: false
+  names:
+  - 관광소비 추이
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_003_3:
+  commented: false
+  names:
+  - 지역별 지출액
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_003_31:
+  commented: false
+  names:
+  - 관광소비 히트맵
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_003_32:
+  commented: false
+  names:
+  - 업종별 지출액
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_003_33:
+  commented: false
+  names:
+  - 지역별 지출액
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_003_34:
+  commented: false
+  names: []
+  params: []
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_003_35:
+  commented: false
+  names:
+  - 관광소비 추이
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_003_4:
+  commented: false
+  names: []
+  params: []
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_003_41:
+  commented: false
+  names:
+  - 관광소비 히트맵
+  params:
+  - ALL_YN
+  - SGG_CD
+  - SGG_CD2
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_003_42:
+  commented: false
+  names:
+  - 업종별 지출액
+  params:
+  - ALL_YN
+  - SGG_CD
+  - SGG_CD2
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_003_5:
+  commented: false
+  names:
+  - 관광소비 추이
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_004_1:
+  commented: false
+  names: []
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_004_11:
+  commented: false
+  names: []
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_004_21:
+  commented: false
+  names:
+  - 관광소비 히트맵
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_004_21_1:
+  commented: false
+  names:
+  - 관광소비 히트맵
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_004_31:
+  commented: false
+  names:
+  - 관광소비 히트맵
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_004_41:
+  commented: false
+  names: []
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_005_1:
+  commented: false
+  names:
+  - 관광소비 히트맵
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_005_2:
+  commented: false
+  names:
+  - 업종별 지출액
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_005_3:
+  commented: false
+  names: []
+  params:
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_01_005_5:
+  commented: false
+  names:
+  - 관광소비 추이
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getByLocgoCnsmAmt
+BDT_02_02_001:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - bda/getByRegnCmpr
+BDT_02_03_001:
+  commented: false
+  names:
+  - 지역별 내국인 지출액 (BC)
+  params: []
+  screens:
+  - bda/getByRegnCmpr
+BDT_02_03_001_1:
+  commented: false
+  names:
+  - 지역별 내국인 지출액
+  params: []
+  screens:
+  - bda/getByRegnCmpr
+BDT_02_03_001_2:
+  commented: false
+  names:
+  - 지역별 외국인 지출액
+  params: []
+  screens:
+  - bda/getByRegnCmpr
+BDT_02_03_001_3:
+  commented: true
+  names:
+  - 지역별 내국인 지출액
+  params: []
+  screens:
+  - bda/getByRegnCmpr
+BDT_02_03_002:
+  commented: false
+  names: []
+  params: []
+  screens:
+  - bda/getByRegnCmpr
+BDT_02_03_002_1:
+  commented: false
+  names: []
+  params: []
+  screens:
+  - bda/getByRegnCmpr
+BDT_02_03_002_2:
+  commented: false
+  names: []
+  params: []
+  screens:
+  - bda/getByRegnCmpr
+BDT_02_03_002_3:
+  commented: false
+  names: []
+  params: []
+  screens:
+  - bda/getByRegnCmpr
+BDT_03_01_001_1:
+  commented: true
+  names: []
+  params:
+  - AGEG_DIV_CD
+  - TYPE_CODE
+  screens:
+  - bda/getDomInqCnt
+  - bda/getInquiryBySexAndAge
+BDT_03_01_001_2:
+  commented: true
+  names: []
+  params:
+  - TYPE_CODE
+  screens:
+  - bda/getDomInqCnt
+  - bda/getInquiryBySexAndAge
+BDT_03_01_001_2_1:
+  commented: true
+  names: []
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getDomInqCnt
+BDT_03_01_001_3:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - bda/getDomInqCnt
+  - bda/getInquiryBySexAndAge
+BDT_03_01_001_4:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - bda/getDomInqCnt
+  - bda/getInquiryBySexAndAge
+BDT_03_01_001_5:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - bda/getDomInqCnt
+BDT_03_01_001_6:
+  commented: true
+  names: []
+  params:
+  - SGG_CD
+  screens:
+  - bda/getDomInqCnt
+BDT_03_01_002_3:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - bda/getDomInqCnt
+  - bda/getInquiryBySexAndAge
+BDT_03_01_002_4:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - bda/getDomInqCnt
+  - bda/getInquiryBySexAndAge
+BDT_03_01_002_5:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - bda/getDomInqCnt
+BDT_03_01_002_6:
+  commented: true
+  names: []
+  params:
+  - SGG_CD
+  screens:
+  - bda/getDomInqCnt
+BDT_03_01_003_1:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - bda/getDomInqCnt
+  - bda/getInquiryBySexAndAge
+BDT_03_01_003_3:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - bda/getDomInqCnt
+  - bda/getInquiryBySexAndAge
+BDT_03_01_003_4:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - bda/getDomInqCnt
+  - bda/getInquiryBySexAndAge
+BDT_03_01_003_5:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - bda/getDomInqCnt
+  - bda/getMetcoAna
+BDT_03_01_003_6:
+  commented: true
+  names: []
+  params:
+  - SGG_CD
+  screens:
+  - bda/getDomInqCnt
+BDT_03_01_004_1:
+  commented: false
+  names:
+  - 검색건수 히트맵
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - SGG_CD
+  - TMAP_CATE_MCLS_NM
+  screens:
+  - bda/getDomInqCnt
+BDT_03_01_004_2:
+  commented: false
+  names:
+  - 유형별 검색건수
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getDomInqCnt
+BDT_03_01_004_2_1:
+  commented: true
+  names: []
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getDomInqCnt
+BDT_03_01_004_4:
+  commented: false
+  names:
+  - 검색건수 추이
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getDomInqCnt
+BDT_03_02_001:
+  commented: false
+  names: []
+  params:
+  - CMPN_SGG_CD
+  screens:
+  - bda/getAreaSrchCnt
+BDT_03_02_002:
+  commented: false
+  names:
+  - 지역별 검색건수
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - txtADONG_ARR
+  - txtSGG_CD
+  - txtSIDO_ARR
+  screens:
+  - bda/getAreaSrchCnt
+BDT_03_04_002:
+  commented: false
+  names:
+  - 지역별 관광지 검색순위
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - SGG_CD
+  - SIDO_ARR
+  - TMAP_CATE_MCLS_CD
+  - txtSGG_CD
+  - txtSIDO_ARR
+  screens:
+  - bda/getTourVisitCnt
+BDT_03_04_003:
+  commented: false
+  names:
+  - 지역별 관광지 검색순위
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - SGG_CD
+  - SIDO_ARR
+  - TMAP_CATE_MCLS_CD
+  - txtSGG_CD
+  - txtSIDO_ARR
+  screens:
+  - bda/getTourVisitCnt
+BDT_KT_01_003_1:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - bda/getMetcoAna
+BDT_SKT_FRG_01_01_001:
+  commented: false
+  names:
+  - 외국인 방문자수 히트맵
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - SGG_CD
+  screens:
+  - bda/getMetcoAna
+BDT_SKT_FRG_01_01_002:
+  commented: false
+  names:
+  - 외국인 지역별 방문자 수
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - bda/getMetcoAna
+BDT_SKT_FRG_01_01_003:
+  commented: false
+  names:
+  - 외국인 방문자 수 추이
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - SGG_CD
+  screens:
+  - bda/getMetcoAna
+BDT_SKT_FRG_02_01_001:
+  commented: false
+  names:
+  - 외국인 지역별 방문자 수 추이
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - txtADONG_ARR
+  - txtSGG_CD
+  - txtSIDO_ARR
+  screens:
+  - bda/getByRegnAna
+BY_TH_KOR_WAVE_001_001:
+  names: []
+  params:
+  - PTL_NAT_CD
+  - RENAME
+  screens:
+  - theme/getKorWaveSearch
+BY_TH_KOR_WAVE_001_002:
+  names: []
+  params:
+  - RENAME
+  screens:
+  - theme/getKorWaveSearch
+BY_TH_KOR_WAVE_001_004:
+  names: []
+  params:
+  - RENAME
+  screens:
+  - theme/getKorWaveSearch
+BY_TH_KOR_WAVE_001_005:
+  names: []
+  params:
+  - RENAME
+  screens:
+  - theme/getKorWaveSearch
+BY_TH_KOR_WAVE_001_006:
+  names:
+  - 한류를 경험한
+  params:
+  - RENAME
+  screens:
+  - theme/getKorWaveSearch
+BY_TH_KOR_WAVE_001_007:
+  names:
+  - 한류를 경험한
+  params:
+  - RENAME
+  screens:
+  - theme/getKorWaveSearch
+BY_TH_KOR_WAVE_002_000:
+  names:
+  - 한류관광 관심도 추이 CSV 다운로드
+  - 한류관광 관심도 추이  CSV 다운로드
+  - 한류관광 관심도 추이
+  params:
+  - RENAME
+  screens:
+  - theme/getKorWaveSearch
+BY_TH_KOR_WAVE_002_001:
+  names:
+  - K-컬처 키워드 언급량 추이 CSV 다운로드
+  - K-컬쳐 키워드 언급량 추이
+  params:
+  - RENAME
+  screens:
+  - theme/getKorWaveSearch
+BY_TH_KOR_WAVE_002_002:
+  names:
+  - 키워드별 언급량 추이 CSV 다운로드
+  - 키워드별 언급량 추이
+  params:
+  - RENAME
+  screens:
+  - theme/getKorWaveSearch
+BY_TH_KOR_WAVE_002_003:
+  names:
+  - 키워드별 언급량 순위 CSV 다운로드
+  - 키워드별 언급량 순위
+  params:
+  - RENAME
+  screens:
+  - theme/getKorWaveSearch
+BY_TH_KOR_WAVE_002_004:
+  names:
+  - 키워드별 순위 변동 추이 CSV 다운로드
+  - 키워드별 순위 변동 추이
+  params:
+  - RENAME
+  screens:
+  - theme/getKorWaveSearch
+BY_TH_KOR_WAVE_003_001:
+  names:
+  - 외국인 한류 소비액 추이
+  params:
+  - RENAME
+  screens:
+  - theme/getKorWaveSearch
+BY_TH_KOR_WAVE_003_002:
+  names:
+  - 외국인 한류 소비액 업종별 추이
+  params:
+  - RENAME
+  screens:
+  - theme/getKorWaveSearch
+BY_TH_KOR_WAVE_003_003:
+  names:
+  - 외국인 한류 소비액 업종별 비율
+  params:
+  - RENAME
+  screens:
+  - theme/getKorWaveSearch
+BY_TH_KOR_WAVE_003_004:
+  names:
+  - 외국인 한류 소비건수 추이
+  params:
+  - RENAME
+  screens:
+  - theme/getKorWaveSearch
+BY_TH_KOR_WAVE_003_005:
+  names:
+  - 외국인 한류 소비건수 업종별 비율 추이
+  params:
+  - RENAME
+  screens:
+  - theme/getKorWaveSearch
+BY_TH_KOR_WAVE_003_006:
+  names:
+  - 외국인 한류 소비건수 업종별 비율
+  params:
+  - RENAME
+  screens:
+  - theme/getKorWaveSearch
+BY_TH_KOR_WAVE_DIV_001:
+  names: []
+  params: []
+  screens:
+  - theme/getKorWaveSearch
+BY_TH_MARINE_001_006_001:
+  names:
+  - '성연령별 방문자 XY챠트 행정동 10대 :'
+  - '성연령별 방문자 XY챠트 행정동 20대 :'
+  - '성연령별 방문자 XY챠트 행정동 30대 :'
+  - '성연령별 방문자 XY챠트 행정동 40대 :'
+  - '성연령별 방문자 XY챠트 행정동 50대 :'
+  - '성연령별 방문자 XY챠트 행정동 60대 :'
+  - '성연령별 방문자 XY챠트 행정동 70대 :'
+  params:
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  screens:
+  - theme/getMarineTourSearch
+BY_TH_MARINE_001_006_002:
+  names:
+  - '성연령별 방문자 XY챠트 행정동 전체 리스트:'
+  params: []
+  screens:
+  - theme/getMarineTourSearch
+BY_TH_MARINE_001_006_AGE1:
+  names:
+  - '연령별 인기지역 10대 :'
+  params: []
+  screens:
+  - theme/getMarineTourSearch
+BY_TH_MARINE_001_006_AGE2:
+  names:
+  - '연령별 인기지역 20대 :'
+  params:
+  - SGG_CD
+  - subSGG_CD
+  screens:
+  - theme/getMarineTourSearch
+BY_TH_MARINE_001_006_AGE3:
+  names:
+  - '연령별 인기지역 30대 :'
+  params:
+  - SGG_CD
+  - subSGG_CD
+  screens:
+  - theme/getMarineTourSearch
+BY_TH_MARINE_001_006_AGE4:
+  names:
+  - '연령별 인기지역 40대 :'
+  params:
+  - SGG_CD
+  - subSGG_CD
+  screens:
+  - theme/getMarineTourSearch
+BY_TH_MARINE_001_006_AGE5:
+  names:
+  - '연령별 인기지역 50대 :'
+  params:
+  - SGG_CD
+  - subSGG_CD
+  screens:
+  - theme/getMarineTourSearch
+BY_TH_MARINE_001_006_AGE6:
+  names:
+  - '연령별 인기지역 60대 :'
+  params:
+  - SGG_CD
+  - subSGG_CD
+  screens:
+  - theme/getMarineTourSearch
+BY_TH_MARINE_001_006_AGE7:
+  names:
+  - '연령별 인기지역 70대이상 :'
+  params:
+  - SGG_CD
+  - subSGG_CD
+  screens:
+  - theme/getMarineTourSearch
+BY_TH_MARINE_001_006_AGE_ALL:
+  names:
+  - '연령별 인기지역 전체 :'
+  params: []
+  screens:
+  - theme/getMarineTourSearch
+BY_TH_MARINE_001_008:
+  names:
+  - 국가별 외국인 방문 형황 [
+  - '국가별 외국인 방문 현황 :'
+  params:
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  screens:
+  - theme/getMarineTourSearch
+BY_TH_MARINE_001_009:
+  names:
+  - 방문자 성_연령별 분포 [
+  - '방문자 성/연령별 분포 :'
+  params:
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  screens:
+  - theme/getMarineTourSearch
+BY_TH_MARINE_001_010:
+  names:
+  - 내비게이션 검색 유형 비교 [
+  - '내비게이션 검색 유형 비교 :'
+  params:
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  screens:
+  - theme/getMarineTourSearch
+BY_TH_MARINE_001_011:
+  names:
+  - 관광지 검색순위 [
+  - '관광지 검색순위 Top100 :'
+  params:
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  screens:
+  - theme/getMarineTourSearch
+BY_TH_MARINE_101_001:
+  names:
+  - 방문자 수 히트맵
+  - '전국 방문자수 히트맵 :'
+  params:
+  - A03_list
+  - A_1
+  - A_2
+  - A_3
+  - BASE_YM1
+  - BASE_YM2
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  - disp_yeoan_all
+  screens:
+  - theme/getMarineTourSearch
+BY_TH_MARINE_101_002:
+  names:
+  - 방문자 수 추이 비교 [
+  - '방문자 수 추이 비교 :'
+  params:
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  screens:
+  - theme/getMarineTourSearch
+BY_TH_MARINE_101_004:
+  names:
+  - 방문자 증가율 Top5 [
+  - '방문자 수 증가율 Top5 :'
+  params:
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  screens:
+  - theme/getMarineTourSearch
+BY_TH_MARINE_101_005:
+  names:
+  - 관광지 검색순위 [
+  - '관광지 검색순위 Top100 :'
+  params:
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  screens:
+  - theme/getMarineTourSearch
+BY_TH_MARINE_101_007:
+  names:
+  - 외지인 방문자 거주지 분포 [
+  - '내국인 방문자 거주지 분포 :'
+  params:
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  screens:
+  - theme/getMarineTourSearch
+BY_TH_MARINE_201_001:
+  names:
+  - 관광소비 히트맵
+  - '관광소비 히트맵 :'
+  params:
+  - A03_list
+  - A_1
+  - A_2
+  - A_3
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  - disp_yeoan_all
+  screens:
+  - theme/getMarineTourSearch
+BY_TH_MARINE_201_002:
+  names:
+  - 관광소비 추이 비교 [
+  - '관광소비 추이 비교 :'
+  params:
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  - chart_2002_1_Data
+  screens:
+  - theme/getMarineTourSearch
+BY_TH_MARINE_201_003:
+  names:
+  - 관광소비 구성 비율 [
+  - '관광소비 구성 비율 :'
+  params:
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  - chart_2002_1_Data
+  screens:
+  - theme/getMarineTourSearch
+BY_TH_MARINE_201_004:
+  names:
+  - 성_연령별 외지인 관광소비 분포 [
+  - '성/연령별 내국인 관광소비 분포 :'
+  params:
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  screens:
+  - theme/getMarineTourSearch
+BY_TH_MARINE_201_005:
+  names:
+  - 외지인 관광소비 유형 [
+  - 외국인 관광소비 유형 [
+  - '내국인 관광소비 유형 :'
+  - '외국인 관광소비 유형 :'
+  params:
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  screens:
+  - theme/getMarineTourSearch
+BY_TH_MARINE_COMMON_DISP_CHECK:
+  names: []
+  params:
+  - A_2
+  - A_3
+  - disp_yeoan_all
+  screens:
+  - theme/getMarineTourSearch
+BY_TH_MEDIC_000_001:
+  names:
+  - 의료관광 관심도 추이
+  params:
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  screens:
+  - theme/getMedicalTourSearch
+BY_TH_MEDIC_001_001:
+  names:
+  - 국가별 외국인 환자 현황 추이
+  - 국가별 외국인 환자 현황
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - NAT_CD
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  screens:
+  - theme/getMedicalTourSearch
+BY_TH_MEDIC_001_002:
+  names:
+  - 국가별 외국인 환자 현황_Grid
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - NAT_CD
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  screens:
+  - theme/getMedicalTourSearch
+BY_TH_MEDIC_001_003:
+  names:
+  - 지역별 외국인 환자 현황 추이
+  - 지역별 외국인 환자 현황
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - NAT_CD
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  screens:
+  - theme/getMedicalTourSearch
+BY_TH_MEDIC_001_004:
+  names:
+  - 지역별 외국인 환자 현황_Grid
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - NAT_CD
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  screens:
+  - theme/getMedicalTourSearch
+BY_TH_MEDIC_002_001_AMT:
+  names:
+  - 외국인 의료 소비액(전체) 추이
+  params:
+  - NAT_CD
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  screens:
+  - theme/getMedicalTourSearch
+BY_TH_MEDIC_002_001_CNT:
+  names:
+  - 외국인 의료 소비건수(전체) 추이
+  - 외국인 소비건수(전체) 추이
+  params:
+  - NAT_CD
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  screens:
+  - theme/getMedicalTourSearch
+BY_TH_MEDIC_002_002_AMT:
+  names:
+  - 외국인 의료 소비액 진료과목별 비율 추이
+  params:
+  - NAT_CD
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  screens:
+  - theme/getMedicalTourSearch
+BY_TH_MEDIC_002_002_CNT:
+  names:
+  - 외국인 의료 소비건수 진료과목 비율 추이
+  - 외국인 의료 소비건수 진료과목별 비율 추이
+  params:
+  - NAT_CD
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  screens:
+  - theme/getMedicalTourSearch
+BY_TH_MEDIC_002_003_AMT:
+  names:
+  - 외국인 의료 소비액 진료과목별 비율
+  params:
+  - NAT_CD
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  screens:
+  - theme/getMedicalTourSearch
+BY_TH_MEDIC_002_003_CNT:
+  names:
+  - 외국인 의료 소비건수 진료과목별 비율
+  params:
+  - NAT_CD
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  screens:
+  - theme/getMedicalTourSearch
+BY_TH_MEDIC_003_001_AMT:
+  names: []
+  params:
+  - NAT_CD
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  - SHCARD_TOB_SCLS_CD
+  screens:
+  - theme/getMedicalTourSearch
+BY_TH_MEDIC_003_001_CNT:
+  names: []
+  params:
+  - NAT_CD
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  screens:
+  - theme/getMedicalTourSearch
+BY_TH_MEDIC_003_002_AMT:
+  names: []
+  params:
+  - NAT_CD
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  screens:
+  - theme/getMedicalTourSearch
+BY_TH_MEDIC_003_002_CNT:
+  names: []
+  params:
+  - NAT_CD
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  screens:
+  - theme/getMedicalTourSearch
+BY_TH_MEDIC_003_003_AMT:
+  names: []
+  params:
+  - NAT_CD
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  screens:
+  - theme/getMedicalTourSearch
+BY_TH_MEDIC_003_003_CNT:
+  names: []
+  params:
+  - NAT_CD
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  screens:
+  - theme/getMedicalTourSearch
+BY_TH_MEDIC_003_004_AMT:
+  names: []
+  params:
+  - KTO_CATE_SCLS_CD
+  - NAT_CD
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  - chart_init_19
+  screens:
+  - theme/getMedicalTourSearch
+BY_TH_MEDIC_003_004_CNT:
+  names: []
+  params:
+  - KTO_CATE_SCLS_CD
+  - NAT_CD
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  screens:
+  - theme/getMedicalTourSearch
+BY_TH_MEDIC_004_001_AMT:
+  names: []
+  params:
+  - KTO_CATE_SCLS_CD
+  - NAT_CD
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  - TYPE_CDODE
+  screens:
+  - theme/getMedicalTourSearch
+BY_TH_MEDIC_004_001_CNT:
+  names: []
+  params:
+  - KTO_CATE_SCLS_CD
+  - NAT_CD
+  - TYPE_CDODE
+  screens:
+  - theme/getMedicalTourSearch
+BY_TH_MEDIC_004_002_AMT:
+  names: []
+  params:
+  - KTO_CATE_SCLS_CD
+  - NAT_CD
+  - TYPE_CODE
+  screens:
+  - theme/getMedicalTourSearch
+BY_TH_MEDIC_004_002_CNT:
+  names: []
+  params:
+  - KTO_CATE_SCLS_CD
+  - NAT_CD
+  - TYPE_CODE
+  screens:
+  - theme/getMedicalTourSearch
+BY_TH_MEDIC_004_003_AMT:
+  names: []
+  params:
+  - KTO_CATE_SCLS_CD
+  - NAT_CD
+  - TYPE_CODE
+  screens:
+  - theme/getMedicalTourSearch
+BY_TH_MEDIC_004_003_CNT:
+  names: []
+  params:
+  - KTO_CATE_SCLS_CD
+  - NAT_CD
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  - TYPE_CODE
+  screens:
+  - theme/getMedicalTourSearch
+BY_TH_MICE_001_001:
+  names:
+  - 관광사업체 영업현황_전체
+  params:
+  - BASE_YM1
+  screens:
+  - theme/getMiceScleSearch
+BY_TH_MICE_001_002:
+  names:
+  - 관광사업체 영업현황_광역지자체
+  params:
+  - BASE_YM1
+  screens:
+  - theme/getMiceScleSearch
+BY_TH_MICE_001_003:
+  names:
+  - 관광사업체 영업현황_기초지자체
+  params:
+  - BASE_YM1
+  screens:
+  - theme/getMiceScleSearch
+BY_TH_MICE_001_004:
+  names:
+  - 업종별 국제회의업 사업체 수
+  - 영업현황 업종별 추이
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  - TAB_DIV
+  screens:
+  - theme/getMiceScleSearch
+BY_TH_MICE_001_005:
+  names:
+  - 국제회의업 업종별 분포
+  - 영업현황 업종별 분포
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - RENAME
+  - TAB_DIV
+  screens:
+  - theme/getMiceScleSearch
+BY_TH_MICE_002_001:
+  names:
+  - 개최건수 추이
+  params:
+  - RENAME
+  screens:
+  - theme/getMiceScleSearch
+BY_TH_MICE_002_002:
+  names:
+  - 참자가수 추이
+  params:
+  - RENAME
+  screens:
+  - theme/getMiceScleSearch
+BY_TH_MICE_003_001:
+  names:
+  - 매출액
+  params:
+  - RENAME
+  screens:
+  - theme/getMiceScleSearch
+BY_TH_MICE_003_002:
+  names:
+  - 종사자수
+  params:
+  - RENAME
+  screens:
+  - theme/getMiceScleSearch
+BY_TH_MICE_004_001:
+  names:
+  - 평균체류일
+  params:
+  - RENAME
+  screens:
+  - theme/getMiceScleSearch
+BY_TH_MICE_004_002:
+  names:
+  - MICE 행사 전반적 만족도
+  params:
+  - RENAME
+  screens:
+  - theme/getMiceScleSearch
+BY_TH_MICE_004_003:
+  names:
+  - 한국(개최지역) 만족도
+  params:
+  - RENAME
+  - rename_title
+  screens:
+  - theme/getMiceScleSearch
+BY_TH_MICE_004_004:
+  names:
+  - 1인당 소비액
+  params:
+  - RENAME
+  - chart_array_new1
+  - rename_title
+  screens:
+  - theme/getMiceScleSearch
+BY_TH_MICE_02_03_027:
+  names:
+  - 매출액
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - RENAME
+  screens:
+  - theme/getMiceScleSearch
+BY_TH_MICE_02_03_028:
+  names:
+  - 종사자수
+  params:
+  - RENAME
+  screens:
+  - theme/getMiceScleSearch
+BY_TH_MICE_02_03_029:
+  names:
+  - 개최건수 추이
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  screens:
+  - theme/getMiceScleSearch
+BY_TH_MICE_02_03_030:
+  names:
+  - 참가자수 추이
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - RENAME
+  screens:
+  - theme/getMiceScleSearch
+BY_TH_MICE_02_03_031:
+  names:
+  - 수행건수 추이
+  params:
+  - RENAME
+  screens:
+  - theme/getMiceScleSearch
+BY_TH_MICE_02_03_032:
+  names:
+  - 참가자수 추이
+  params:
+  - RENAME
+  screens:
+  - theme/getMiceScleSearch
+BY_TH_MICE_02_03_033:
+  names:
+  - 인센티브 여행 관련 매출액 추이
+  params:
+  - RENAME
+  screens:
+  - theme/getMiceScleSearch
+BY_TH_MICE_02_03_034:
+  names:
+  - 인센티브 여행 관련 근로자 추이
+  params:
+  - RENAME
+  screens:
+  - theme/getMiceScleSearch
+BY_TH_NIGHT_TOUR_001_001:
+  names: []
+  params: []
+  screens:
+  - theme/getNightTourSearch
+BY_TH_NIGHT_TOUR_001_002:
+  names:
+  - 전국 야간관광 방문객 비율 추이
+  params: []
+  screens:
+  - theme/getNightTourSearch
+BY_TH_NIGHT_TOUR_001_004:
+  names:
+  - 광역시_도별 야간관광 방문객 수 현황
+  params: []
+  screens:
+  - theme/getNightTourSearch
+BY_TH_NIGHT_TOUR_001_005:
+  names:
+  - 광역시_도별 야간관광 방문객 비율
+  params: []
+  screens:
+  - theme/getNightTourSearch
+BY_TH_NIGHT_TOUR_001_009:
+  names: []
+  params: []
+  screens:
+  - theme/getNightTourSearch
+BY_TH_NIGHT_TOUR_002_001:
+  names: []
+  params: []
+  screens:
+  - theme/getNightTourSearch
+BY_TH_NIGHT_TOUR_002_002:
+  names: []
+  params: []
+  screens:
+  - theme/getNightTourSearch
+BY_TH_NIGHT_TOUR_002_004:
+  names:
+  - 광역시_도별 야간관광 소비 현황
+  params: []
+  screens:
+  - theme/getNightTourSearch
+BY_TH_NIGHT_TOUR_002_005:
+  names:
+  - 광역시_도별 야간관광 소비 비율
+  params: []
+  screens:
+  - theme/getNightTourSearch
+BY_TH_NIGHT_TOUR_002_009:
+  names: []
+  params: []
+  screens:
+  - theme/getNightTourSearch
+BY_TH_NIGHT_TOUR_002_011:
+  names: []
+  params: []
+  screens:
+  - theme/getNightTourSearch
+BY_TH_NIGHT_TOUR_002_012:
+  names: []
+  params: []
+  screens:
+  - theme/getNightTourSearch
+BY_TH_NIGHT_TOUR_002_013:
+  names: []
+  params: []
+  screens:
+  - theme/getNightTourSearch
+BY_TH_NIGHT_TOUR_002_014:
+  names: []
+  params: []
+  screens:
+  - theme/getNightTourSearch
+BY_TH_NIGHT_TOUR_003_001:
+  names: []
+  params: []
+  screens:
+  - theme/getNightTourSearch
+BY_TH_NIGHT_TOUR_003_002:
+  names: []
+  params: []
+  screens:
+  - theme/getNightTourSearch
+BY_TH_NIGHT_TOUR_003_003:
+  names:
+  - 광역시_도별 야간관광 내비게이션 검색 현황
+  params: []
+  screens:
+  - theme/getNightTourSearch
+BY_TH_NIGHT_TOUR_003_004:
+  names:
+  - 광역시_도별 야간 내비게이션 검색 비율
+  params: []
+  screens:
+  - theme/getNightTourSearch
+BY_TH_NIGHT_TOUR_003_005:
+  names: []
+  params:
+  - chart_init_03_06
+  screens:
+  - theme/getNightTourSearch
+BY_TH_NIGHT_TOUR_003_006:
+  names: []
+  params: []
+  screens:
+  - theme/getNightTourSearch
+BZM_02_01_001:
+  names:
+  - 관광사업체 영업현황_전체
+  params:
+  - BASE_YM1
+  screens:
+  - bzm/getBzmanApprvForm
+BZM_02_01_001_01:
+  names:
+  - 관광사업체 영업현황_광역지자체
+  - 관광사업체 영업현황_기초지자체
+  params:
+  - BASE_YM1
+  screens:
+  - bzm/getBzmanApprvForm
+BZM_02_01_002:
+  names:
+  - 업종별 관광사업체 수
+  - 영업현황 업종별 추이
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  - TAB_DIV
+  screens:
+  - bzm/getBzmanApprvForm
+BZM_02_01_003:
+  names:
+  - 업종별 분포
+  - 영업현황 업종별 분포
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  - TAB_DIV
+  screens:
+  - bzm/getBzmanApprvForm
+BZM_02_02_001:
+  names:
+  - 관광사업체 개/폐업 현황
+  params:
+  - BASE_YM1
+  screens:
+  - bzm/getBzmanApprvForm
+BZM_02_02_001_01:
+  names:
+  - 관광사업체 개/폐업 현황
+  params:
+  - BASE_YM1
+  screens:
+  - bzm/getBzmanApprvForm
+BZM_02_02_002:
+  names:
+  - 관광사업체 개/폐업 업종별 추이
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  - TAB_DIV
+  screens:
+  - bzm/getBzmanApprvForm
+BZM_02_02_003:
+  names:
+  - 관광사업체 개/폐업 업종별 분포
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - RENAME
+  - SGG_NM
+  - TAB_DIV
+  screens:
+  - bzm/getBzmanApprvForm
+BZM_03_01_001:
+  names:
+  - 관광사업체 숙박시설 현황
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - MCLS_NM
+  screens:
+  - loc/getAreaCampDataForm
+  - bzm/getBzmanLodgForm
+BZM_03_01_001_01:
+  names:
+  - 관광사업체 숙박시설 현황
+  params:
+  - BASE_YM1
+  screens:
+  - bzm/getBzmanLodgForm
+BZM_03_01_002:
+  names:
+  - 업종별 추이
+  - 숙박객실 현황 업종별 추이
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  - TAB_DIV
+  screens:
+  - bzm/getBzmanLodgForm
+BZM_03_01_003:
+  names:
+  - 업종별 분포
+  - 숙박객실 현황 업종별 분포
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  - TAB_DIV
+  screens:
+  - bzm/getBzmanLodgForm
+BZM_03_02_001:
+  names:
+  - 관광사업체 숙박객실 현황
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - MCLS_NM
+  screens:
+  - loc/getAreaCampDataForm
+  - bzm/getBzmanLodgForm
+BZM_03_02_001_01:
+  names:
+  - 관광사업체 숙박객실 현황
+  params:
+  - BASE_YM1
+  screens:
+  - bzm/getBzmanLodgForm
+BZM_03_02_002:
+  names:
+  - 업종별 추이
+  - 숙박 영업 업종별 추이
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  - TAB_DIV
+  screens:
+  - bzm/getBzmanLodgForm
+BZM_03_02_003:
+  names:
+  - 업종별 분포
+  - 숙박 영업 업종별 분포
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  - TAB_DIV
+  screens:
+  - bzm/getBzmanLodgForm
+BZM_03_03_001:
+  names:
+  - 숙박시설 개/폐업 현황
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - MCLS_NM
+  screens:
+  - loc/getAreaCampDataForm
+  - bzm/getBzmanLodgForm
+BZM_03_03_001_01:
+  names:
+  - 숙박시설 개/폐업 현황
+  params:
+  - BASE_YM1
+  screens:
+  - bzm/getBzmanLodgForm
+BZM_03_03_002:
+  names:
+  - 숙박업체 개/폐업 업종별 추이
+  params:
+  - ALL_YN
+  - BASE_YM
+  - BASE_YM1
+  - BASE_YM2
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  - TAB_DIV
+  screens:
+  - bzm/getBzmanLodgForm
+BZM_03_03_003:
+  names:
+  - 숙박업체 개/폐업 업종별 분포
+  params:
+  - ALL_YN
+  - BASE_YM
+  - BASE_YM1
+  - BASE_YM2
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  - TAB_DIV
+  screens:
+  - bzm/getBzmanLodgForm
+BZM_04_01_001:
+  names:
+  - 관광안내 지도
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - GUID_TYPE_NM
+  screens:
+  - bzm/getTursmCnsel
+BZM_04_01_002:
+  names:
+  - 유형별 안내 건수
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - GUID_TYPE_NM
+  screens:
+  - bzm/getTursmCnsel
+BZM_04_01_003:
+  names:
+  - 어권별 안내 건수
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - GUID_TYPE_NM
+  screens:
+  - bzm/getTursmCnsel
+BZM_04_01_004:
+  names:
+  - 지역별, 유형별 안내
+  params:
+  - ALL_YN
+  - BASE_YM2
+  - GUID_TYPE_NM
+  screens:
+  - bzm/getTursmCnsel
+BZM_04_01_005:
+  names:
+  - 어권별, 유형별 안내
+  params:
+  - ALL_YN
+  - BASE_YM1
+  screens:
+  - bzm/getTursmCnsel
+BZM_06_01_001:
+  names:
+  - 업종별 평균 판매금액 비교 CSV 다운로드
+  - 업종별 평균 판매금액 비교
+  params:
+  - DOWNLOAD_YN
+  - IN_OUT_DIV
+  - SGG_CD
+  - SGG_CD2
+  screens:
+  - loc/getAreaDataForm
+BZM_06_01_002:
+  names:
+  - 업종별 평균 판매금액 비교(최고, 평균, 최저) CSV 다운로드
+  - 업종별 평균 판매금액 비교(최고, 평균, 최저)
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - SGG_CD
+  screens:
+  - loc/getAreaDataForm
+BZM_07_01_001:
+  names:
+  - 전국 광역시도별 사업체 현황 CSV 다운로드
+  - 전국 광역시도별 객실 현황 CSV 다운로드
+  - 전국 광역시도별 사업체 현황 지도
+  - 전국 광역시도별 객실 현황 지도
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - SGG_CD
+  screens:
+  - bzm/getBzmanTourismLodgForm
+BZM_07_01_002:
+  names:
+  - 전국 광역시도별 사업체 수 비율 CSV 다운로드
+  - 전국 광역시도별 객실 수 비율 CSV 다운로드
+  - 전국 광역시도별 사업체 수 비율
+  - 전국 광역시도별 객실 수 비율
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - SGG_CD
+  screens:
+  - bzm/getBzmanTourismLodgForm
+BZM_07_01_003:
+  names:
+  - 전국 관광숙박업 사업체 수 CSV 다운로드
+  - 전국 관광숙박업 객실 수 CSV 다운로드
+  - 지역별 관광숙박업 사업체 수 CSV 다운로드
+  - 지역별 관광숙박업 객실 수 CSV 다운로드
+  - 전국 관광숙박업 사업체 수(그리드)
+  - 전국 관광숙박업 객실 수(그리드)
+  - 지역별 관광숙박업 사업체 수(그리드)
+  - 지역별 관광숙박업 객실 수(그리드)
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - SGG_CD
+  screens:
+  - bzm/getBzmanTourismLodgForm
+BZM_07_01_004:
+  names:
+  - 전국 사업체 수 추이 CSV 다운로드
+  - 전국 객실 수 추이 CSV 다운로드
+  - 지역별 사업체 수 추이 CSV 다운로드
+  - 지역별 객실 수 추이 CSV 다운로드
+  - 전국 사업체 수 추이
+  - 전국 객실 수 추이
+  - 지역별 사업체 수 추이
+  - 지역별 객실 수 추이
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - SGG_CD
+  screens:
+  - bzm/getBzmanTourismLodgForm
+BZM_07_01_005:
+  names:
+  - 지역별 관광호텔업 등급별 업체 수 추이 CSV 다운로드
+  - 지역별 관광호텔업 등급별 객실 수 추이 CSV 다운로드
+  - 지역별 업체 수 추이
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - SGG_CD
+  screens:
+  - bzm/getBzmanTourismLodgForm
+FE_01_01_002:
+  names: []
+  params:
+  - BASE_YY1
+  - BASE_YY2
+  screens:
+  - fes/getFesDataForm
+FE_01_01_003_01:
+  names: []
+  params:
+  - ALL_YN
+  - BASE_YY1
+  - BASE_YY2
+  screens:
+  - fes/getFesDataForm
+FE_01_01_004_00:
+  names: []
+  params:
+  - ALL_YN
+  - BASE_YY1
+  - BASE_YY2
+  screens:
+  - fes/getFesDataForm
+FE_01_01_005:
+  names:
+  - 축제 방문객 수(연도별, 현지인·외지인·외국인)
+  params:
+  - BASE_YY1
+  - BASE_YY2
+  - FSTV_ID
+  screens:
+  - fes/getFesDataForm
+  via: capture
+FE_01_01_005_01:
+  names: []
+  params:
+  - BASE_YY1
+  - BASE_YY2
+  screens:
+  - fes/getFesDataForm
+FE_01_01_006:
+  names: []
+  params:
+  - BASE_YY1
+  - BASE_YY2
+  screens:
+  - fes/getFesDataForm
+FE_01_01_006_01:
+  commented: true
+  names: []
+  params:
+  - BASE_YY1
+  - BASE_YY2
+  screens:
+  - fes/getFesDataForm
+FE_01_01_007:
+  names: []
+  params:
+  - BASE_YY1
+  - BASE_YY2
+  screens:
+  - fes/getFesDataForm
+FE_01_01_008:
+  names: []
+  params:
+  - BASE_YY1
+  - BASE_YY2
+  screens:
+  - fes/getFesDataForm
+LN_01_01_001:
+  names:
+  - 지역 방문객수_여행 소비 추세
+  params: []
+  screens:
+  - loc/getLocalDataForm
+  - main/getMainForm
+LN_01_01_008:
+  names:
+  - 성·연령별방문자_연령별
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - loc/getLocalDataForm
+  - main/getMainForm
+  - theme/getMarineTourSearch
+LN_01_01_012:
+  names:
+  - 체류시간 및 숙박방문자 비율_연령별
+  params:
+  - ALL_YN
+  - SGG_CD
+  - validation_date_frm
+  screens:
+  - loc/getLocalDataForm
+  - main/getMainForm
+LN_01_01_016:
+  names:
+  - 방문자수
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - loc/getLocalDataForm
+  - main/getMainForm
+LN_01_01_017:
+  names:
+  - 관광지출액
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - loc/getLocalDataForm
+  - main/getMainForm
+LN_01_01_018:
+  names:
+  - 목적지검색건수
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - loc/getLocalDataForm
+  - main/getMainForm
+LN_01_01_019:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - loc/getLocalDataForm
+  - main/getMainForm
+LN_01_01_041:
+  names:
+  - 표_방문자수
+  params: []
+  screens:
+  - loc/getLocalDataForm
+  - main/getMainForm
+LN_01_01_042:
+  names:
+  - 표_관광지출액
+  params: []
+  screens:
+  - loc/getLocalDataForm
+  - main/getMainForm
+LN_01_01_043:
+  names:
+  - 표_목적지검색건수
+  params: []
+  screens:
+  - loc/getLocalDataForm
+  - main/getMainForm
+LN_01_01_044:
+  names:
+  - 표_방문자수최다지역
+  params: []
+  screens:
+  - loc/getLocalDataForm
+  - main/getMainForm
+LN_01_01_044_1:
+  names:
+  - 표_방문자증가율Top5
+  - 표_방문자수최다지역
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - loc/getLocalDataForm
+LN_01_01_045:
+  names:
+  - 표_관광지검색순위
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - loc/getLocalDataForm
+  - main/getMainForm
+LN_01_01_046:
+  names:
+  - 관광활동 유형별 인기지역 체류형
+  params:
+  - subSGG_CD
+  screens:
+  - loc/getLocalDataForm
+  - main/getMainForm
+LN_01_01_047:
+  names:
+  - 관광활동 유형별 인기지역 휴식형
+  params:
+  - SGG_CD
+  - subSGG_CD
+  screens:
+  - loc/getLocalDataForm
+  - main/getMainForm
+LN_01_01_048:
+  names:
+  - 관광활동 유형별 인기지역 경유형
+  params:
+  - SGG_CD
+  - subSGG_CD
+  screens:
+  - loc/getLocalDataForm
+  - main/getMainForm
+LN_01_01_049:
+  names:
+  - 관광활동 유형별 인기지역 체험형
+  params:
+  - SGG_CD
+  - subSGG_CD
+  screens:
+  - loc/getLocalDataForm
+  - main/getMainForm
+LN_01_01_050:
+  names: []
+  params:
+  - SGG_CD
+  - subSGG_CD
+  screens:
+  - loc/getLocalDataForm
+  - main/getMainForm
+LN_01_01_051:
+  names:
+  - 연령별 인기지역 10대
+  params:
+  - SGG_CD
+  - subSGG_CD
+  screens:
+  - loc/getLocalDataForm
+  - main/getMainForm
+LN_01_01_052:
+  names:
+  - 연령별 인기지역 20대
+  params:
+  - SGG_CD
+  - subSGG_CD
+  screens:
+  - loc/getLocalDataForm
+  - main/getMainForm
+LN_01_01_053:
+  names:
+  - 연령별 인기지역 30대
+  params:
+  - SGG_CD
+  - subSGG_CD
+  screens:
+  - loc/getLocalDataForm
+  - main/getMainForm
+LN_01_01_054:
+  names:
+  - 연령별 인기지역 40대
+  params:
+  - SGG_CD
+  - subSGG_CD
+  screens:
+  - loc/getLocalDataForm
+  - main/getMainForm
+LN_01_01_055:
+  names:
+  - 연령별 인기지역 50대
+  params:
+  - SGG_CD
+  - subSGG_CD
+  screens:
+  - loc/getLocalDataForm
+  - main/getMainForm
+LN_01_01_056:
+  names:
+  - 연령별 인기지역 60대
+  params:
+  - SGG_CD
+  - subSGG_CD
+  screens:
+  - loc/getLocalDataForm
+  - main/getMainForm
+LN_01_01_057:
+  names:
+  - 연령별 인기지역 70대이상
+  params:
+  - SGG_CD
+  - subSGG_CD
+  screens:
+  - loc/getLocalDataForm
+  - main/getMainForm
+LN_01_01_060:
+  names:
+  - 지역 방문자수_관광지출액 추세
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - loc/getLocalDataForm
+  - main/getMainForm
+LN_01_01_061:
+  names:
+  - 방문자 체류특성
+  - 관광활동 유형
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - loc/getLocalDataForm
+  - main/getMainForm
+LN_01_01_071:
+  names:
+  - 국내관광 관심도 추이
+  params:
+  - ALL_YN
+  - SGG_CD
+  - validation_date_frm
+  screens:
+  - loc/getLocalDataForm
+  - main/getMainForm
+LN_01_03_001_01:
+  names:
+  - 전국 방문현황 히트맵
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - NAT_CD
+  - SGG_CD
+  - SGG_CD2
+  screens:
+  - loc/getAreaVisitDataForm
+LN_01_03_001_02:
+  names:
+  - 방문 추이
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - NAT_CD
+  - SGG_CD
+  - SGG_CD2
+  screens:
+  - loc/getAreaVisitDataForm
+LN_01_03_002_01:
+  names:
+  - 전국 관광소비 현황
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - GEN_CD
+  - MCLS_CD
+  - NAT_CD
+  - SGG_CD
+  - SGG_CD2
+  - txtAGE_ARR
+  screens:
+  - loc/getAreaVisitDataForm
+LN_01_03_002_02:
+  names:
+  - 관광소비 추이
+  params:
+  - ALL_YN
+  - BASE_YM2
+  - GEN_CD
+  - MCLS_CD
+  - NAT_CD
+  - SGG_CD
+  - local_page
+  - txtAGE_ARR
+  screens:
+  - loc/getAreaVisitDataForm
+LN_01_03_002_03:
+  names:
+  - 관광소비 업종별 구분
+  params:
+  - ALL_YN
+  - NAT_CD
+  - SGG_CD
+  - txtAGE_ARR
+  screens:
+  - loc/getAreaVisitDataForm
+LN_01_03_003_01_001:
+  names:
+  - 캠핑장 영업현황
+  params:
+  - BASE_YM1
+  screens:
+  - loc/getAreaCampDataForm
+LN_01_03_003_01_002:
+  names:
+  - 캠핑장 영업현황
+  params:
+  - BASE_YM1
+  screens:
+  - loc/getAreaCampDataForm
+LN_01_03_003_01_003:
+  names:
+  - 캠핑장 업종별 분포
+  params:
+  - ALL_YN
+  - BASE_YM
+  - BASE_YM1
+  - BASE_YM2
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  - TAB_DIV
+  screens:
+  - loc/getAreaCampDataForm
+LN_01_03_003_02_001:
+  names:
+  - 캠핑장 개/폐업 현황
+  params:
+  - BASE_YM1
+  screens:
+  - loc/getAreaCampDataForm
+LN_01_03_003_02_002:
+  names:
+  - 캠핑장 개/폐업 현황
+  params:
+  - BASE_YM1
+  screens:
+  - loc/getAreaCampDataForm
+LN_01_03_003_02_003:
+  names:
+  - 캠핑장
+  - 캠핑장 개/폐업 업종별 추이
+  params:
+  - ALL_YN
+  - BASE_YM
+  - BASE_YM1
+  - BASE_YM2
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  - TAB_DIV
+  screens:
+  - loc/getAreaCampDataForm
+LN_01_03_003_02_004:
+  names:
+  - 캠핑장
+  - 캠핑장 개/폐업 업종별 분포
+  params:
+  - ALL_YN
+  - BASE_YM
+  - BASE_YM1
+  - BASE_YM2
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  - TAB_DIV
+  screens:
+  - loc/getAreaCampDataForm
+LN_01_03_003_03_001:
+  names:
+  - 전국 캠핑사이트 수
+  params:
+  - BASE_YM1
+  screens:
+  - loc/getAreaCampDataForm
+LN_01_03_003_03_002:
+  names:
+  - 지역별 캠핑사이트 수
+  params:
+  - BASE_YM1
+  screens:
+  - loc/getAreaCampDataForm
+LN_01_03_003_03_003:
+  names:
+  - 캠핑사이트 유형별 현황
+  params:
+  - ALL_YN
+  - BASE_YM
+  - BASE_YM1
+  - BASE_YM2
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  - TAB_DIV
+  screens:
+  - loc/getAreaCampDataForm
+LN_01_03_003_03_004:
+  names:
+  - 캠핑사이트 유형별 분포
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  - TAB_DIV
+  screens:
+  - loc/getAreaCampDataForm
+LN_01_03_003_04_001:
+  names:
+  - 검색건수 히트맵
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  - TAB_DIV
+  screens:
+  - loc/getAreaCampDataForm
+LN_01_03_003_04_002:
+  names:
+  - 지역별 검색건수 히트맵
+  params:
+  - BASE_YM1
+  screens:
+  - loc/getAreaCampDataForm
+LN_01_03_003_04_003:
+  names:
+  - 지역별 검색건수 추이
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  - TAB_DIV
+  screens:
+  - loc/getAreaCampDataForm
+LN_01_03_003_04_004:
+  names:
+  - 지역별 검색건수
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  - TAB_DIV
+  screens:
+  - loc/getAreaCampDataForm
+LN_01_03_004_01_001:
+  commented: false
+  names:
+  - 지역민 역내소비
+  - 지역민 역외소비
+  - 방문객 지역 내 신용카드 소비
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - SGG_CD
+  - SIDO_CD
+  screens:
+  - loc/getPoplDcrsRegionStatusForm
+  - loc/getPoplDcrsSpendForm
+LN_01_03_004_01_002:
+  commented: false
+  names:
+  - 지역주민 1인당 지역 내_외 소비액(추정)
+  params:
+  - ALL_YN
+  screens:
+  - loc/getPoplDcrsRegionStatusForm
+  - loc/getPoplDcrsSpendForm
+LN_01_03_004_01_003:
+  commented: false
+  names:
+  - 지역주민 관광분야 지역 내_외 소비 비율
+  - 지역주민 비관광분야 지역 내_외 소비 비율
+  params:
+  - ALL_YN
+  screens:
+  - loc/getPoplDcrsRegionStatusForm
+  - loc/getPoplDcrsSpendForm
+LN_02_01_004:
+  names:
+  - 방문자 성/연령 분포
+  - 방문자 성연령별 분포
+  params:
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+  - main/getMainForm
+LN_02_01_004_01:
+  names:
+  - 방문자 성연령별 분포
+  params:
+  - SGG_CD
+  screens:
+  - loc/getAreaDataForm
+LN_02_01_005:
+  names:
+  - 요일별 방문자 집중률 예측
+  - 요일/시간대 별 방문자 집중율
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - SGG_CD
+  - SGG_CD2
+  - SGG_NM
+  - SGG_PARAM_CODE
+  - subSGG_CD1
+  - subSGG_CD2
+  - subSGG_CD3
+  screens:
+  - loc/getAreaDataForm
+LN_02_01_005_1:
+  names:
+  - 요일/시간대 별 방문자 집중율
+  params: []
+  screens:
+  - loc/getAreaDataForm
+LN_02_01_007:
+  names:
+  - 성연령별 내국인 관광소비 분포
+  - 성/연령별 내국인 관광소비 분포
+  - 전국 대비 관광소비 추이_내국인
+  params:
+  - CHNL_NM
+  - DOWNLOAD_YN
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_02_01_009:
+  names:
+  - 내비게이션 목적지 유형별 검색량
+  params:
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+  - main/getMainForm
+LN_02_01_011:
+  names:
+  - 숙박일수별 방문자 수
+  params:
+  - SGG_CD
+  - SGG_NM
+  - SGG_PARAM_CODE
+  - chartId64_02
+  screens:
+  - loc/getAreaDataForm
+LN_02_01_011_001:
+  names:
+  - 숙박 방문자 비율(전체)
+  - 순 방문자 수 및 숙박 비율
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - RLTN_CATE_NM_LARGE
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_02_01_011_002:
+  names:
+  - 순 방문자 수 및 숙박 비율(외지인)
+  - 순 방문자 수 및 숙박 비율
+  - 숙박 방문자 비율(외지인)
+  params:
+  - RLTN_CATE_NM_LARGE
+  - SGG_CD
+  - SGG_PARAM_CODE
+  - chartId63_1
+  screens:
+  - loc/getAreaDataForm
+LN_02_01_011_003:
+  names:
+  - 숙박 방문자 비율(외국인)
+  - 순 방문자 수 및 숙박 비율(외국인)
+  params:
+  - RLTN_CATE_NM_LARGE
+  - SGG_CD
+  - SGG_PARAM_CODE
+  - chartId63_1
+  - chartId63_2
+  screens:
+  - loc/getAreaDataForm
+LN_02_01_012:
+  names:
+  - 평균 체류시간
+  params:
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_02_01_013:
+  names:
+  - 숙박 방문자 비율_평균 숙박일(전체)
+  params:
+  - SGG_CD
+  - SGG_PARAM_CODE
+  - chartId41_02
+  - chartId63_2
+  screens:
+  - loc/getAreaDataForm
+LN_02_01_013_01:
+  names:
+  - 평균 숙박일(외지인)
+  - 평균 숙박일
+  - 숙박 방문자 비율_평균 숙박일(외지인)
+  params:
+  - SGG_CD
+  - SGG_PARAM_CODE
+  - chartId64_01
+  screens:
+  - loc/getAreaDataForm
+LN_02_01_013_02:
+  names:
+  - 숙박 방문자 비율_평균 숙박일(외국인)
+  params:
+  - SGG_CD
+  - SGG_PARAM_CODE
+  - chartId64_01
+  - chartId64_02
+  screens:
+  - loc/getAreaDataForm
+LN_02_01_014:
+  commented: true
+  names:
+  - 숙박 방문자 수
+  params:
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_03_010_001:
+  commented: true
+  names:
+  - 관광사업체 현황_개업
+  params:
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_03_010_002:
+  commented: true
+  names:
+  - 관광사업체 현황_폐업
+  params:
+  - SGG_CD
+  screens:
+  - loc/getAreaDataForm
+LN_03_010_003:
+  names:
+  - 거리별 방문자 분포
+  params:
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_03_011_001:
+  names: []
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - SGG_CD
+  screens:
+  - loc/getPopuTourAttrac
+  - loc/getAreaDataForm
+LN_03_012_001_001:
+  names:
+  - 주요 유료관광지점 입장객 수_전체
+  params:
+  - CHNL_NM
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_03_012_001_002:
+  names:
+  - 주요 유료관광지점 입장객 수_내국인
+  params:
+  - SGG_CD
+  screens:
+  - loc/getAreaDataForm
+LN_03_012_001_003:
+  names:
+  - 주요 유료관광지점 입장객 수_외국인
+  params:
+  - SGG_CD
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_004:
+  names:
+  - 내비게이션 검색 유형 분포
+  params:
+  - DOWNLOAD_YN
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_004_001:
+  commented: true
+  names: []
+  params:
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_005:
+  names:
+  - 방문자 체류특성
+  - 평균 체류시간 추이(외지인)
+  params:
+  - IN_OUT_DIV
+  - SGG_CD
+  - SGG_CD2
+  - SGG_NM
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_006:
+  names:
+  - 숙박방문자 비율 추이(전체)
+  params:
+  - IN_OUT_DIV
+  - SGG_CD
+  - SGG_CD2
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_006_01:
+  names:
+  - 숙박방문자 비율 추이(외지인)
+  - 숙박방문자 비율 추이
+  params:
+  - IN_OUT_DIV
+  - SGG_CD
+  - SGG_CD2
+  - chartId06_01
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_006_02:
+  names:
+  - 숙박방문자 비율 추이(외국인)
+  params:
+  - IN_OUT_DIV
+  - SGG_CD
+  - SGG_CD2
+  - chartId06_01
+  - chartId06_02
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_007:
+  names:
+  - 평균 체류시간 추이(전체)
+  params:
+  - SGG_CD
+  - SGG_PARAM_CODE
+  - chartId06_02
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_007_01:
+  names:
+  - 평균 체류시간 추이(외지인)
+  - 평균 체류시간 추이
+  params:
+  - SGG_CD
+  - chartId07_01
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_007_02:
+  names:
+  - 평균 체류시간 추이(외국인)
+  params:
+  - SGG_CD
+  - chartId07_01
+  - chartId07_02
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_011:
+  names:
+  - 유입 목적지 유형 분포
+  params:
+  - IN_OUT_DIV
+  - SGG_CD
+  - SGG_CD2
+  - SGG_NM
+  - SGG_NM2
+  - SIDO_NM
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_012:
+  names:
+  - 유출 목적지 유형 분포
+  params:
+  - IN_OUT_DIV
+  - SGG_CD
+  - SGG_CD2
+  - SGG_NM
+  - SGG_NM2
+  - SIDO_NM
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_013:
+  names: []
+  params: []
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_014:
+  names: []
+  params: []
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_015:
+  names:
+  - 지역관광진단(유사지역)
+  - 지역관광진단 유사지역 비교
+  - 지역관광진단 유사지역 비교_비교지역설정
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - SGG_CD
+  - SGG_CD2
+  - SGG_NM
+  - SGG_NM2
+  - dn2_subSGG_CD3
+  - subSGG_CD
+  - subSGG_CD1
+  - subSGG_CD2
+  - subSGG_CD3
+  - subSGG_CD4
+  - subSGG_CD5
+  - subSGG_CD6
+  - subSGG_CD_2
+  - subSGG_NM3
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_019:
+  names:
+  - AI 관광 분석_방문자
+  params:
+  - ALL_YN
+  - IN_OUT_DIV
+  - P_BASE_YM1
+  - P_BASE_YM2
+  - P_GAP
+  - SGG_CD
+  - chart_init_19_Panel
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_020_999:
+  names: []
+  params:
+  - SIDO_NM
+  - chart_init_20_Panel
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_022:
+  names: []
+  params:
+  - ARRV_SGG_NM
+  - DPTR_REGN_DTL_NM
+  - chart_init_22_Panel
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_023_999:
+  names: []
+  params:
+  - ARRV_SGG_NM
+  - DPTR_REGN_DTL_NM
+  - GROW_RATE
+  - GROW_RATE_NM
+  - SGG_NM
+  - chart_init_23_Panel
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_025_999:
+  names: []
+  params: []
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_027_999:
+  names: []
+  params:
+  - ARRV_SGG_NM
+  - DPTR_REGN_DTL_NM
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_030:
+  names:
+  - AI 관광 분석_유사지역
+  params:
+  - ALL_YN
+  - DPTR_REGN_DTL_NM
+  - SIDO_NM
+  - dn2_subSGG_CD2
+  - dn2_subSGG_CD3
+  - dn_subSGG_CD1
+  - dn_subSGG_CD4
+  - subSGG_CD1
+  - subSGG_CD2
+  - subSGG_CD3
+  - subSGG_CD4
+  - subSGG_CD5
+  - subSGG_CD6
+  - subSGG_NM1
+  - subSGG_NM2
+  - subSGG_NM3
+  - subSGG_NM4
+  - subSGG_NM5
+  - subSGG_NM6
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_031:
+  names: []
+  params:
+  - DPTR_REGN_DTL_NM
+  - SIDO_NM
+  - dn2_subSGG_CD1
+  - subSGG_CD1
+  - subSGG_CD2
+  - subSGG_CD3
+  - subSGG_NM1
+  - subSGG_NM2
+  - subSGG_NM3
+  - subSGG_NM4
+  - subSGG_NM5
+  - subSGG_NM6
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_033:
+  names:
+  - AI 관광 분석_숙박_체류시간
+  params:
+  - ALL_YN
+  - DPTR_REGN_DTL_NM
+  - P_BASE_YM1
+  - P_BASE_YM2
+  - P_GAP
+  - SGG_CD
+  - SGG_NM
+  - SIDO_NM
+  - str_COMP_LODG_TOU_RAT
+  - str_COMP_STAY_TM
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_035_999:
+  names: []
+  params:
+  - DPTR_REGN_DTL_NM
+  - SIDO_NM
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_036:
+  names:
+  - 인기관광지_현지인
+  params:
+  - ITS_BRO_ID
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_037:
+  names:
+  - 인기관광지_외지인
+  params:
+  - CNTRL_TAR_NM
+  - ITS_BRO_ID
+  - POI_ID
+  - SGG_CD
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_037_02:
+  names: []
+  params:
+  - its_bro_nm
+  - srch_per
+  - srch_per_nm
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_038:
+  names:
+  - 인기관광지_전체
+  params:
+  - CATE_NM_LARGE
+  - CNTRL_TAR_NM
+  - POI_ID
+  - RLTN_CATE_NM_LARGE
+  - SGG_CD
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_039:
+  names:
+  - 지역맛집_현지인
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - CATE_NM_LARGE
+  - CNTRL_TAR_NM
+  - POI_ID
+  - RLTN_CATE_NM_LARGE
+  - SGG_CD
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_040:
+  names:
+  - 지역_맛집_외지인
+  - 지역맛집_외지인
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - CATE_NM_LARGE
+  - CNTRL_TAR_NM
+  - POI_ID
+  - RLTN_CATE_NM_LARGE
+  - SGG_CD
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_040_2:
+  names: []
+  params:
+  - dptr_regn_nm
+  - grow_rate_tou_num
+  - srch_per
+  - srch_per_nm
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_040_3:
+  names:
+  - 현지인 대비 외지인 방문율이 높은 음식 카테고리
+  params:
+  - grow_rate_nm
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_041:
+  names:
+  - 지역_맛집_전체
+  - 지역맛집_전체
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - CATE_NM_LARGE
+  - CNTRL_TAR_NM
+  - POI_ID
+  - RLTN_CATE_NM_LARGE
+  - SGG_CD
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_042:
+  names:
+  - 중심 관광지
+  - 중심관광지
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - CATE_NM_LARGE
+  - CNTRL_TAR_NM
+  - POI_ID
+  - RLTN_CATE_NM_LARGE
+  - SGG_CD
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_043:
+  names:
+  - 중심관광지
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - CATE_NM_LARGE
+  - CNTRL_TAR_NM
+  - POI_ID
+  - RLTN_CATE_NM_LARGE
+  - SGG_CD
+  - SGG_CD2
+  screens:
+  - loc/getTourLocalDataForm
+  - fes/getFesDataForm
+LN_03_01_043_01:
+  names:
+  - 중심관광지_인사이트
+  params: []
+  screens:
+  - loc/getTourLocalDataForm
+  - fes/getFesDataForm
+LN_03_01_045:
+  names:
+  - 내비게이션 검색 현지인_외지인 관심지점 비교
+  params:
+  - DOWNLOAD_YN
+  - SGG_CD
+  - SGG_NM2
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_046:
+  names:
+  - 내비게이션 검색 현지인_외지인 관심지점 비교 외지인
+  - 내비게이션 검색 현지인_외지인 관심지점 비교 (외지인)
+  params:
+  - DOWNLOAD_YN
+  - SGG_CD
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_048:
+  names: []
+  params:
+  - D1
+  - SGG_NM
+  - SIDO_NM
+  - TOU_CNT
+  - TOU_PER
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_049:
+  names: []
+  params:
+  - SGG_NM
+  - SIDO_NM
+  - TOU_CNT
+  - TOU_PER
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_051:
+  names: []
+  params:
+  - LY_TOU_PER
+  - LY_TOU_PER_TXT
+  - SGG_NM
+  - SIDO_NM
+  - TOU_PER
+  - TOU_PER_RK
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_052:
+  names:
+  - 숙박 유형별 방문자 비율(전체)
+  params:
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_052_01:
+  names:
+  - 숙박 유형별 방문자 비율(외지인)
+  - 숙박 유형별 방문자 비율
+  params:
+  - SGG_CD
+  - chartId41_01
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_052_02:
+  names:
+  - 숙박 유형별 방문자 비율(외국인)
+  params:
+  - SGG_CD
+  - chartId41_01
+  - chartId41_02
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_053:
+  names:
+  - 숙박 목적지 유입 지역 분포
+  params:
+  - SGG_CD
+  - chartId41_02
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_054:
+  names:
+  - 숙박 목적지 검색건수
+  params:
+  - SGG_CD
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_055:
+  names: []
+  params:
+  - SIDO_NM
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_056:
+  names: []
+  params:
+  - SIDO_NM
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_058:
+  names:
+  - AI 관광 분석_관광소비
+  params:
+  - ALL_YN
+  - P_BASE_YM1
+  - P_BASE_YM2
+  - P_GAP
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_059:
+  names: []
+  params:
+  - SGG_CD2
+  - SRCH_SIDO_NM
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_060:
+  names:
+  - 외국인 관심 관광지_영어권
+  - (영어권) 외국인 관심 관광지
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - CATE_NM_LARGE
+  - CNTRL_TAR_NM
+  - POI_ID
+  - RLTN_CATE_NM_LARGE
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_061:
+  names:
+  - 외국인 관심 관광지_일본어
+  - (일본어) 외국인 관심 관광지
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - CATE_NM_LARGE
+  - CNTRL_TAR_NM
+  - POI_ID
+  - RLTN_CATE_NM_LARGE
+  - SGG_CD
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_062:
+  names:
+  - 외국인 관심 관광지_중간체
+  - (중간체) 외국인 관심 관광지
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - CATE_NM_LARGE
+  - RLTN_CATE_NM_LARGE
+  - SGG_CD
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_063:
+  names:
+  - 외국인 관심 관광지_중번체
+  - (중번체) 외국인 관심 관광지
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - SGG_CD
+  - SGG_CD2
+  - SGG_NM
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_064:
+  names:
+  - 내국인 관심 관광지
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - CATE_NM_LARGE
+  - CNTRL_TAR_NM
+  - POI_ID
+  - RLTN_CATE_NM_LARGE
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_065:
+  names:
+  - 전년 동기 대비 유입 증감
+  params:
+  - IN_OUT_DIV
+  - P_BASE_YM1
+  - P_BASE_YM2
+  - SGG_CD
+  - SGG_CD2
+  - SGG_NM
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_066:
+  names: []
+  params:
+  - SGG_NM2
+  - SIDO_NM
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_067:
+  names:
+  - 외국인 방문 현황
+  params:
+  - DOWNLOAD_YN
+  - SGG_CD
+  - chartId45_1
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_068:
+  names:
+  - 외국인 관광소비 현황
+  params:
+  - CHNL_NM
+  - DOWNLOAD_YN
+  - SGG_CD
+  - chartId45_3
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_071:
+  names: []
+  params:
+  - SGG_CD
+  - SGG_NM
+  - SGG_NM2
+  - SIDO_NM
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_072:
+  names:
+  - 방문자 구성
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - DOWNLOAD_YN
+  - SGG_CD
+  - SGG_CD2
+  - SGG_NM
+  - SGG_PARAM_CODE
+  - SIDO_NM
+  - dn5_subSGG_CD1
+  - dn5_subSGG_CD2
+  - dn5_subSGG_CD3
+  - dn5_subSGG_NM1
+  - dn5_subSGG_NM2
+  - dn5_subSGG_NM3
+  - subSGG_CD1
+  - subSGG_CD2
+  - subSGG_CD3
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_073:
+  names: []
+  params:
+  - SGG_CD
+  - SGG_CD2
+  - dn5_subSGG_CD4
+  - dn5_subSGG_CD5
+  - dn5_subSGG_CD6
+  - dn5_subSGG_NM4
+  - dn5_subSGG_NM5
+  - dn5_subSGG_NM6
+  - dn6_subSGG_CD1
+  - dn6_subSGG_CD2
+  - dn6_subSGG_CD3
+  - dn6_subSGG_CD4
+  - dn6_subSGG_CD5
+  - dn6_subSGG_CD6
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_074:
+  names:
+  - 관광소비 업종별 비중 유사지역 비교
+  params:
+  - DOWNLOAD_YN
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_075:
+  names: []
+  params:
+  - SGG_CD
+  - SGG_NM
+  - SIDO_NM
+  - dn6_subSGG_CD4
+  - dn6_subSGG_CD5
+  - dn6_subSGG_CD6
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_076:
+  names:
+  - 내비게이션 검색 유형
+  params:
+  - DOWNLOAD_YN
+  - IN_OUT_DIV
+  - SGG_CD
+  - SGG_CD2
+  - SGG_NM
+  - SGG_PARAM_CODE
+  - dn7_subSGG_CD1
+  - dn7_subSGG_CD2
+  - dn7_subSGG_CD3
+  - dn7_subSGG_NM1
+  - dn7_subSGG_NM2
+  - dn7_subSGG_NM3
+  screens:
+  - loc/getAreaDataForm
+LN_03_01_078:
+  names:
+  - AI 관광 분석_지역 관광사업
+  params:
+  - SIDO_NM
+  screens:
+  - loc/getAreaDataForm
+LN_03_02_019:
+  names: []
+  params:
+  - ALL_YN
+  - IN_OUT_DIV
+  - P_BASE_YM1
+  - P_BASE_YM2
+  - P_GAP
+  - SGG_CD
+  - chart_init_19_Panel
+  screens:
+  - loc/getAreaDataForm
+LN_03_02_020_999:
+  names: []
+  params:
+  - SIDO_NM
+  - chart_init_20_Panel
+  screens:
+  - loc/getAreaDataForm
+LN_03_02_023_999:
+  names: []
+  params:
+  - ARRV_SGG_NM
+  - DPTR_REGN_DTL_NM
+  - GROW_RATE
+  - GROW_RATE_NM
+  - SGG_NM
+  - chart_init_23_Panel
+  screens:
+  - loc/getAreaDataForm
+LN_03_02_025_999:
+  names: []
+  params: []
+  screens:
+  - loc/getAreaDataForm
+LN_03_02_027_999:
+  names: []
+  params:
+  - ARRV_SGG_NM
+  screens:
+  - loc/getAreaDataForm
+LN_03_02_033:
+  names: []
+  params:
+  - ALL_YN
+  - DPTR_REGN_DTL_NM
+  - P_BASE_YM1
+  - P_BASE_YM2
+  - P_GAP
+  - SGG_CD
+  - SGG_NM
+  - SIDO_NM
+  - str_COMP_LODG_TOU_RAT
+  - str_COMP_STAY_TM
+  screens:
+  - loc/getAreaDataForm
+LN_03_02_043:
+  names: []
+  params:
+  - DIV_NM
+  - DIV_VALUE
+  - SIDO_NM
+  - chart_init_36_Panel
+  screens:
+  - loc/getAreaDataForm
+LN_03_02_048:
+  commented: true
+  names: []
+  params:
+  - SGG_NM
+  - SIDO_NM
+  - TOU_CNT
+  - TOU_PER
+  screens:
+  - loc/getAreaDataForm
+LN_03_02_050:
+  names: []
+  params:
+  - LY_TOU_PER
+  - LY_TOU_PER_TXT
+  - SGG_NM
+  - SIDO_NM
+  - TOU_PER
+  screens:
+  - loc/getAreaDataForm
+LN_03_02_056:
+  names: []
+  params:
+  - SIDO_NM
+  screens:
+  - loc/getAreaDataForm
+LN_03_02_058:
+  names: []
+  params:
+  - ALL_YN
+  - P_BASE_YM1
+  - P_BASE_YM2
+  - P_GAP
+  - SGG_CD
+  screens:
+  - loc/getAreaDataForm
+LN_03_02_059:
+  names: []
+  params:
+  - SGG_CD2
+  - SRCH_SIDO_NM
+  screens:
+  - loc/getAreaDataForm
+LN_03_02_065:
+  names: []
+  params:
+  - IN_OUT_DIV
+  - P_BASE_YM1
+  - P_BASE_YM2
+  - SGG_CD
+  - SGG_CD2
+  - SGG_NM
+  screens:
+  - loc/getAreaDataForm
+LN_03_03_050:
+  names: []
+  params:
+  - LY_TOU_PER
+  - LY_TOU_PER_TXT
+  - SGG_NM
+  - SIDO_NM
+  - TOU_PER
+  screens:
+  - loc/getAreaDataForm
+LN_03_03_058:
+  names:
+  - 전국 대비 관광소비 추이_내국인
+  params:
+  - DOWNLOAD_YN
+  - SGG_CD
+  - SGG_PARAM_CODE
+  - chartId07_02
+  screens:
+  - loc/getAreaDataForm
+LN_03_03_058_01:
+  names:
+  - 전국 대비 관광소비 추이_현지인
+  params:
+  - DOWNLOAD_YN
+  - SGG_CD
+  screens:
+  - loc/getAreaDataForm
+LN_03_03_058_02:
+  names:
+  - 전국 대비 관광소비 추이_외지인
+  params:
+  - CHNL_NM
+  - DOWNLOAD_YN
+  - SGG_CD
+  screens:
+  - loc/getAreaDataForm
+LN_03_03_059:
+  names:
+  - 전국 대비 관광소비 추이_외국인
+  params:
+  - CHNL_NM
+  - DOWNLOAD_YN
+  - SGG_CD
+  - chartId45_1
+  - chartId45_3
+  screens:
+  - loc/getAreaDataForm
+LN_04_00_001:
+  names:
+  - 지역관광 유형분류
+  params:
+  - BASE_YR
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_001:
+  names:
+  - 지역관광진단
+  params:
+  - dataSetRe_2001
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_002:
+  commented: true
+  names:
+  - 관광활동 유형
+  params:
+  - dataSetRe_2001
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_003:
+  names:
+  - 지역관광진단(전년동기대비)
+  - 관광진단 지표 현황 도표
+  params:
+  - MCLS_CD
+  - MCLS_NM
+  - POI_ID
+  - P_BASE_YM1
+  - P_BASE_YM2
+  - P_GAP
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_006:
+  names:
+  - 관광소비_내국인
+  params:
+  - DOWNLOAD_YN
+  - SGG_CD
+  - SGG_PARAM_CODE
+  - dn7_subSGG_CD4
+  - dn7_subSGG_CD5
+  - dn7_subSGG_CD6
+  - dn7_subSGG_NM4
+  - dn7_subSGG_NM5
+  - dn7_subSGG_NM6
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_006_001:
+  names:
+  - 관광소비_외국인
+  - 관광소비
+  params:
+  - CHNL_NM
+  - DOWNLOAD_YN
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_006_01:
+  names:
+  - 관광소비_현지인
+  params:
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_006_02:
+  names:
+  - 관광소비_외지인
+  params:
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_008:
+  names:
+  - 방문자 거주지 분포
+  params:
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_008_001:
+  commented: true
+  names:
+  - 관광소비_내국인
+  params:
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_008_002:
+  commented: true
+  names:
+  - 관광소비_외국인
+  params:
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_008_003:
+  names:
+  - 관광소비 추이_내국인
+  - 광소비 추이_내국인
+  params:
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_008_003_01:
+  names:
+  - 관광소비 추이_현지인
+  params:
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_008_003_02:
+  names:
+  - 관광소비 추이_외지인
+  params:
+  - DOWNLOAD_YN
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_008_004:
+  names:
+  - 관광소비 추이_외국인
+  params:
+  - DOWNLOAD_YN
+  - SGG_CD
+  - SGG_PARAM_CODE
+  - chart_init_52
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_008_010:
+  names: []
+  params:
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_009:
+  names:
+  - 방문자 수(연인원) 추이
+  - 방문자 수 추이
+  params:
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_010:
+  names:
+  - AI 관광 분석_연관지역
+  - 유입 유출
+  params:
+  - ALL_YN
+  - DPTR_REGN_DTL_NM
+  - DSTR_REGN_DTL_NM
+  - P_GAP
+  - SGG_CD
+  - SGG_PARAM_CODE
+  - SIDO_NM
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_010_999:
+  names:
+  - 유입 출발지 - 유출 목적지 분포
+  params:
+  - IN_OUT_DIV
+  - SGG_CD
+  - SGG_CD2
+  - SGG_NM
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_011:
+  names:
+  - 향후 30일간 지역 집중률
+  - 향후 30일간 방문자 수 예측
+  - 향후 30일간 방문자 추이 예측
+  - 향후 90일간 방문자 수 예측
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - SGG_CD
+  - SGG_CD2
+  - SGG_NM
+  - SGG_PARAM_CODE
+  - subSGG_CD1
+  - subSGG_CD2
+  - subSGG_CD3
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_011_001:
+  names:
+  - 유입도시 유형 분류-지역(거리기준)
+  - 유입도시 유형 분류(근거리기준)-지역
+  - 유입도시 유형 분류(근거리기준) 비교 -지역
+  params:
+  - DSTNC_CMPR_CD
+  - H
+  - H_DSTNC_CMPR_CD
+  - IN_OUT_DIV
+  - L
+  - L_DSTNC_CMPR_CD
+  - SGG_CD
+  - SGG_CD2
+  - chart_16002
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_011_002:
+  names:
+  - 유입도시 유형 분류-관광자원유형
+  - 유입도시 유형 분류-유형별 방문 관광자원
+  - 유입도시 유형 분류(근거리) - 유형별 방문 관광자원
+  - 유입도시 유형 분류(원거리) - 유형별 방문 관광자원
+  - 유입도시 유형 분류(근거리) 비교 - 유형별 방문 관광자원
+  - 유입도시 유형 분류(원거리)비교 - 유형별 방문 관광자원
+  params:
+  - IN_OUT_DIV
+  - SGG_CD
+  - SGG_CD2
+  - chart_15001
+  - chart_15002
+  - chart_15004
+  - chart_15005
+  - chart_16001
+  - chart_16004
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_011_003:
+  names:
+  - 유입도시 유형 분류-소비지출부문
+  - 유입도시 유형 분류-유형별 소비 업종
+  - 유입도시 유형 분류(근거리) - 유형별 소비 업종
+  - 유입도시 유형 분류(원거리)- 유형별 소비 업종
+  - 유입도시 유형 분류(근거리) 비교 - 유형별 소비 업종
+  - 유입도시 유형 분류(원거리)비교- 유형별 소비 업종
+  params:
+  - ALL_YN
+  - IN_OUT_DIV
+  - SGG_CD
+  - SGG_CD2
+  - chart_15001
+  - chart_15002
+  - chart_15004
+  - chart_15005
+  - chart_16001
+  - chart_16002
+  - chart_16004
+  - chart_16005
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_013:
+  names:
+  - 지역관광진단
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - CATE_NM_LARGE
+  - CNTRL_TAR_NM
+  - POI_ID
+  - P_BASE_YM1
+  - P_BASE_YM2
+  - P_GAP
+  - RLTN_CATE_NM_LARGE
+  - SGGCD1
+  - SGG_CD
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_016:
+  names:
+  - 방문자 거주지 분포
+  params:
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_018:
+  commented: true
+  names: []
+  params:
+  - SGG_CD
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_019:
+  names:
+  - SNS 언급량
+  - SNS언급량
+  - 소셜미디어_전체_블로그+인스타그램+언론+커뮤니티+트위터_SNS 언급량
+  params:
+  - CHNL_NM
+  - DOWNLOAD_YN
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_019_001:
+  names:
+  - 동반유형 언급량
+  - 소셜미디어_전체_블로그+인스타그램+언론+커뮤니티+트위터_동반유형 언급량
+  params:
+  - CHNL_NM
+  - DOWNLOAD_YN
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_019_002:
+  names:
+  - 여행유형_트렌드 언급량
+  - 여행유형/트렌드 언급량
+  - 소셜미디어_전체_블로그+인스타그램+언론+커뮤니티+트위터_여행유형_트렌드 언급량
+  params:
+  - CHNL_NM
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_019_003:
+  names:
+  - 동반유형 키워드
+  - 소셜미디어_전체_블로그+인스타그램+언론+커뮤니티+트위터_동반유형 키워드
+  params:
+  - CHNL_NM
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_019_003_02:
+  names:
+  - 소셜미디어_전체_블로그+인스타그램+언론+커뮤니티+트위터_여행유형_트렌드 언급량
+  params:
+  - its_bro_nm
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_019_004:
+  names:
+  - 여행유형_트렌드 키워드
+  - 여행유형/트렌드 키워드
+  - 소셜미디어_전체_블로그+인스타그램+언론+커뮤니티+트위터_여행유형_트렌드 키워드
+  params:
+  - CHNL_NM
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_019_004_02:
+  names:
+  - 소셜미디어_전체_블로그+인스타그램+언론+커뮤니티+트위터_동반유형 키워드
+  params:
+  - its_bro_nm
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_019_02:
+  names: []
+  params:
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_019_1:
+  names:
+  - SNS 인기키워드
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - CATE_NM_LARGE
+  - CNTRL_TAR_NM
+  - CONT_ID
+  - POI_ID
+  - SGG_CD
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+  - loc/getTourDataFormBeta
+  - loc/getTourDataFormView2
+LN_04_01_020:
+  names:
+  - 지역관광진단 방사형
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - CATE_NM_LARGE
+  - RLTN_CATE_NM_LARGE
+  - SGG_CD
+  screens:
+  - loc/getAreaDataForm
+LN_04_01_022:
+  commented: true
+  names:
+  - 방문자 수
+  params:
+  - SGG_CD
+  screens:
+  - loc/getAreaDataForm
+LN_05_01_002:
+  names:
+  - 방문자 추이 예측
+  params:
+  - CONT_ID
+  screens:
+  - loc/getTourDataFormBeta
+  - loc/getTourDataFormView2
+LN_05_01_003:
+  commented: true
+  names:
+  - 인기 요일_시간
+  params:
+  - CONT_ID
+  - DD
+  screens:
+  - loc/getTourDataFormBeta
+  - loc/getTourDataFormView2
+LN_05_01_004_999:
+  names:
+  - 방문자 거주지별 분포
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - CONT_ID
+  - DD
+  screens:
+  - loc/getTourDataFormBeta
+  - loc/getTourDataFormView2
+LN_05_01_005:
+  names:
+  - 선호 방문 연령
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - CONT_ID
+  screens:
+  - loc/getTourDataFormBeta
+  - loc/getTourDataFormView2
+LN_05_01_006_999:
+  commented: true
+  names: []
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - CONT_ID
+  - SGG_CD
+  screens:
+  - loc/getTourDataFormBeta
+  - loc/getTourDataFormView2
+LN_05_01_007:
+  commented: true
+  names:
+  - 중심 관광지
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - CONT_ID
+  screens:
+  - loc/getTourDataFormBeta
+  - loc/getTourDataFormView2
+LN_05_01_008:
+  names:
+  - 관광지별 성_연령 발문 집중률 조회
+  params:
+  - AGEG_DIV_CD
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - CONT_ID
+  - DOWNLOAD_YN
+  - GEN_CD
+  - KTO_CATE_LCLS_CD
+  - KTO_CATE_MCLS_CD
+  - MENU_CD
+  - NAT_CD
+  - SGG_CD
+  screens:
+  - loc/getTourDataFormBeta
+  - loc/getTourDataFormView2
+LN_05_01_009:
+  names: []
+  params: []
+  screens:
+  - loc/getTourDataFormBeta
+  - loc/getTourDataFormView2
+LN_05_01_010:
+  names: []
+  params: []
+  screens:
+  - loc/getTourDataFormBeta
+  - loc/getTourDataFormView2
+LN_05_01_011:
+  names: []
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - CONT_ID
+  screens:
+  - loc/getTourDataFormBeta
+  - loc/getTourDataFormView2
+LN_05_01_012:
+  names: []
+  params: []
+  screens:
+  - loc/getTourDataFormBeta
+LN_05_01_013:
+  names: []
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - CATE_NM_LARGE
+  - CNTRL_TAR_NM
+  - CONT_ID
+  - RLTN_CATE_NM_LARGE
+  - SGG_CD
+  screens:
+  - loc/getTourDataFormBeta
+  - loc/getTourDataFormView2
+LN_05_01_016:
+  names:
+  - 방문자수
+  params:
+  - BASE_YEAR1
+  - BASE_YEAR2
+  - RENAME
+  - SGG_CD
+  screens:
+  - loc/getPoplDcrsForm
+LN_05_02_002:
+  names:
+  - 내비게이션 목적지 검색량 추이
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - CONT_ID
+  screens:
+  - loc/getTourDataFormBeta
+  - loc/getTourDataFormView2
+LN_05_02_003:
+  names:
+  - 내비게이션 기준 체류시간 추이
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - CONT_ID
+  screens:
+  - loc/getTourDataFormBeta
+  - loc/getTourDataFormView2
+LN_06_01_001:
+  names:
+  - 인구감소지역
+  params:
+  - SGG_CD
+  - SIDO_CD
+  screens:
+  - loc/getPoplDcrsForm
+  - loc/getPoplDcrsFormView
+LN_06_01_002:
+  names:
+  - 인구감소_관련_주요_데이터
+  params: []
+  screens:
+  - loc/getPoplDcrsForm
+  - loc/getPoplDcrsFormView
+LN_06_01_003:
+  names: []
+  params: []
+  screens:
+  - loc/getPoplDcrsForm
+  - loc/getPoplDcrsFormView
+  - loc/getPoplDcrsRegionStatusForm
+  - loc/getPoplDcrsSpendForm
+LN_06_01_004:
+  names: []
+  params: []
+  screens:
+  - loc/getPoplDcrsForm
+  - loc/getPoplDcrsFormView
+  - loc/getPoplDcrsRegionStatusForm
+  - loc/getPoplDcrsSpendForm
+LN_06_01_005:
+  names: []
+  params: []
+  screens:
+  - loc/getPoplDcrsForm
+  - loc/getPoplDcrsFormView
+LN_06_01_006:
+  names: []
+  params: []
+  screens:
+  - loc/getPoplDcrsForm
+  - loc/getPoplDcrsFormView
+LN_06_01_007:
+  names: []
+  params: []
+  screens:
+  - loc/getPoplDcrsForm
+  - loc/getPoplDcrsFormView
+LN_06_01_008:
+  commented: false
+  names:
+  - 인구감소_관광_대체율_계산기
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - SGG_CD
+  screens:
+  - loc/getPoplDcrsFormView
+LN_06_01_009:
+  names: []
+  params: []
+  screens:
+  - loc/getPoplDcrsForm
+  - loc/getPoplDcrsFormView
+LN_06_01_010:
+  names: []
+  params: []
+  screens:
+  - loc/getPoplDcrsForm
+  - loc/getPoplDcrsFormView
+LN_06_01_011:
+  names: []
+  params: []
+  screens:
+  - loc/getPoplDcrsForm
+  - loc/getPoplDcrsFormView
+LN_06_01_012:
+  names: []
+  params: []
+  screens:
+  - loc/getPoplDcrsForm
+  - loc/getPoplDcrsFormView
+LN_06_01_013:
+  names: []
+  params: []
+  screens:
+  - loc/getPoplDcrsForm
+  - loc/getPoplDcrsFormView
+LN_06_01_014:
+  names: []
+  params: []
+  screens:
+  - loc/getPoplDcrsForm
+  - loc/getPoplDcrsFormView
+LN_07_01_001:
+  names: []
+  params:
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_07_01_002:
+  names:
+  - 방문자 거주지 분포
+  params:
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_07_01_003:
+  names: []
+  params:
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_07_01_004:
+  names: []
+  params:
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_07_01_005:
+  names: []
+  params:
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_07_01_006:
+  names:
+  - 관광소비
+  params:
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_07_01_007:
+  names:
+  - 관광소비
+  params:
+  - SGG_PARAM_CODE
+  - chart_init_adong_08
+  screens:
+  - loc/getAreaDataForm
+LN_07_01_008:
+  names: []
+  params:
+  - SGG_PARAM_CODE
+  screens:
+  - loc/getAreaDataForm
+LN_07_01_009:
+  names:
+  - 인기관광지_현지인
+  params:
+  - ITS_BRO_ID
+  screens:
+  - loc/getAreaDataForm
+LN_07_01_010:
+  names:
+  - 인기관광지_외지인
+  params:
+  - ITS_BRO_ID
+  screens:
+  - loc/getAreaDataForm
+LN_07_01_011:
+  names:
+  - 인기관광지_전체
+  params: []
+  screens:
+  - loc/getAreaDataForm
+LN_07_01_012:
+  names:
+  - 지역맛집_현지인
+  params: []
+  screens:
+  - loc/getAreaDataForm
+LN_07_01_013:
+  names:
+  - 지역맛집_외지인
+  params: []
+  screens:
+  - loc/getAreaDataForm
+LN_07_01_014:
+  names:
+  - 지역맛집_전체
+  params: []
+  screens:
+  - loc/getAreaDataForm
+LN_08_01_001:
+  names:
+  - 연관 관광지
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - CATE_NM_LARGE
+  - CNTRL_TAR_NM
+  - POI_ID
+  - RLTN_CATE_NM_LARGE
+  - SGG_CD
+  - SGG_CD2
+  - local_area_loc
+  - map_position
+  screens:
+  - loc/getAreaDataForm
+  - loc/getTourLocalDataForm
+  - fes/getFesDataForm
+LN_09_01_001:
+  names:
+  - 관광활성화지수
+  params: []
+  screens:
+  - loc/getTourActivateForm
+LN_09_01_002:
+  names:
+  - 관광활성화지수 추이
+  - 관광활성화율 추이
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - SGG_CD
+  screens:
+  - loc/getTourActivateForm
+LN_09_01_003:
+  names:
+  - 관광활성화지수 순위
+  params:
+  - ALL_YN
+  - SGG_CD
+  screens:
+  - loc/getTourActivateForm
+LN_09_01_004:
+  names:
+  - 관광활성화지수
+  params: []
+  screens:
+  - loc/getTourActivateForm
+LN_09_01_005:
+  names:
+  - 관광활성화지수 추이
+  - 관광활성화율 추이
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - SGG_CD
+  screens:
+  - loc/getTourActivateForm
+LN_09_01_006:
+  names:
+  - 관광활성화지수 순위
+  params:
+  - SGG_CD
+  screens:
+  - loc/getTourActivateForm
+LN_09_01_007:
+  names:
+  - 관광활성화지수 세부지표 핵심요인
+  - 관광활성화지수
+  params:
+  - SGG_CD
+  screens:
+  - loc/getTourActivateForm
+LN_09_01_007_01:
+  names:
+  - 관광활성화지수
+  params: []
+  screens:
+  - loc/getTourActivateForm
+LN_09_01_008:
+  names:
+  - 관광활성화지수 추이
+  - 관광활성화율 추이
+  params:
+  - SGG_CD
+  - TOU_DIV
+  screens:
+  - loc/getTourActivateForm
+LN_09_01_008_001:
+  names:
+  - 관광활성화 지수
+  params:
+  - BASE_YM1
+  screens:
+  - loc/getTourActivateForm
+LN_09_01_009:
+  names:
+  - 관광활성화 세부지표
+  params:
+  - SGG_CD
+  - TOU_DIV
+  screens:
+  - loc/getTourActivateForm
+LN_09_01_009_01:
+  names:
+  - 관광활성화 세부지표_전체
+  params:
+  - SGG_CD
+  - TOU_DIV
+  screens:
+  - loc/getTourActivateForm
+LN_10_01_001:
+  names:
+  - 외국인 방문자수 CSV 다운로드
+  - 외국인 방문자 수
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - SGG_CD
+  - grid_init_02
+  screens:
+  - loc/getAreaFocTourBeta
+LN_10_01_002:
+  names:
+  - 국가별 외국인 방문 현황 CSV 다운로드
+  - 국가별 외국인 방문 현황
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - SGG_CD
+  screens:
+  - loc/getAreaFocTourBeta
+LN_10_02_001:
+  names:
+  - 외국인 관광소비 추이 CSV 다운로드
+  - 외국인 관광소비 추이
+  params:
+  - ALL_YN
+  screens:
+  - loc/getAreaFocTourBeta
+LN_10_02_002:
+  names:
+  - 업종별 관광소비 추이 CSV 다운로드
+  - 업종별 관광소비 추이
+  params:
+  - ALL_YN
+  screens:
+  - loc/getAreaFocTourBeta
+LN_10_02_003:
+  names:
+  - 관광소비 유형 CSV 다운로드
+  - 업종별 관광소비 추이
+  params:
+  - ALL_YN
+  screens:
+  - loc/getAreaFocTourBeta
+LN_10_02_004:
+  names:
+  - 국가별 관광소비 유형 CSV 다운로드
+  - 국가별 관광소비 현황
+  params:
+  - ALL_YN
+  - zero_pay_data_check
+  screens:
+  - loc/getAreaFocTourBeta
+LN_11_01_010:
+  names:
+  - 지역화폐 관광소비 추이
+  params:
+  - ALL_YN
+  - CHNL_NM
+  - DOWNLOAD_YN
+  - SGG_CD
+  - SGG_PARAM_CODE
+  - chartId_20313
+  - chart_16005
+  screens:
+  - loc/getAreaDataForm
+LN_11_01_011:
+  names:
+  - 간편결제 - 임계치 적용 데이터 건수 조회
+  params:
+  - zero_pay_data_check
+  screens:
+  - loc/getAreaFocTourBeta
+LN_11_01_012:
+  names:
+  - 외국인 간편결제 업종별 관광소비 추이 CSV 다운로드
+  - 외국인 간편결제 업종별 관광소비 추이
+  params:
+  - ALL_YN
+  screens:
+  - loc/getAreaFocTourBeta
+LN_11_01_013:
+  names:
+  - 외국인 간편결제 국적별 관광소비 CSV 다운로드
+  - 외국인 간편결제 국적별 관광소비
+  params:
+  - ALL_YN
+  - area_foc_tour_page
+  screens:
+  - loc/getAreaFocTourBeta
+MM_HO_HOT_001_001:
+  commented: false
+  names: []
+  params: []
+  screens:
+  - main/getMainForm
+MM_HO_HOT_001_001_DETAIL:
+  names:
+  - 방문자 급등동네(내국인)
+  - 세대별 방문급등지역(내국인)
+  - 방문자 급등 동네(내국인)
+  params:
+  - AGEG_DIV_CD
+  - ALL_YN
+  screens:
+  - loc/getPopuTourAttrac
+MM_HO_HOT_001_001_DETAIL2:
+  names:
+  - 내국인 방문자 급등 동네
+  - 방문자 급등 동네(내국인)
+  params:
+  - AGEG_DIV_CD
+  - AGEG_DIV_NM
+  - GEN_CD
+  - GEN_CD_NM
+  - SGG_CD
+  screens:
+  - bda/getInquiryBySexAndAge
+MM_HO_HOT_001_002:
+  commented: false
+  names: []
+  params: []
+  screens:
+  - main/getMainForm
+MM_HO_HOT_001_002_DETAIL:
+  names:
+  - 방문자 급등동네(외국인)
+  - 세대별 방문급등지역(외국인)
+  - 방문자 급등 동네(외국인)
+  params:
+  - AGEG_DIV_CD
+  - ALL_YN
+  - localarea_beta
+  screens:
+  - loc/getPopuTourAttrac
+MM_HO_HOT_001_003:
+  commented: false
+  names: []
+  params: []
+  screens:
+  - main/getMainForm
+MM_HO_HOT_001_003_DETAIL:
+  names:
+  - 세대별 인기관광지(전체)
+  - 세대별 인기관광지(20대)
+  - 세대별 인기관광지(30대)
+  - 세대별 인기관광지(40대)
+  - 세대별 인기관광지(50대)
+  - 세대별 인기관광지(60대이상)
+  - 세대별 인기관광지(60대)
+  - 인기 관광지
+  - 세대별 인기관광지(
+  params:
+  - AGEG_DIV_CD
+  - AGEG_DIV_NM
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - GEN_CD
+  - GEN_CD_NM
+  - RENAME
+  - SGG_CD
+  - SGG_NM
+  - TAB_DIV
+  - TMAP_CATE_MCLS_NM
+  - TYPE_CODE
+  - chart_init_itsBroId_03
+  - local_page_beta
+  screens:
+  - loc/getPopuTourAttrac
+  - bda/getInquiryBySexAndAge
+MM_HO_HOT_001_004:
+  commented: false
+  names: []
+  params: []
+  screens:
+  - main/getMainForm
+MM_HO_HOT_001_004_DETAIL:
+  names:
+  - 세대별 핫플레이스(전체)
+  - 세대별 핫플레이스(20대)
+  - 세대별 핫플레이스(30대)
+  - 세대별 핫플레이스(40대)
+  - 세대별 핫플레이스(50대)
+  - 세대별 핫플레이스(60대이상)
+  - 세대별 핫플레이스(60대)
+  params:
+  - AGEG_DIV_CD
+  - ALL_YN
+  - chart_init_hotPlace_06
+  screens:
+  - loc/getPopuTourAttrac
+MM_HO_HOT_001_005_DETAIL:
+  names:
+  - 세대별 인기관광지(전체)
+  - 세대별 인기관광지(20대)
+  - 세대별 인기관광지(30대)
+  - 세대별 인기관광지(40대)
+  - 세대별 인기관광지(50대)
+  - 세대별 인기관광지(60대)
+  params:
+  - AGEG_DIV_CD
+  - chart_init_itsBroId_03
+  screens:
+  - loc/getTourDataFormBeta
+  - loc/getTourDataFormView2
+MN_01_01_020:
+  commented: false
+  names: []
+  params:
+  - DD
+  screens:
+  - main/getMainForm
+MN_01_01_021:
+  commented: false
+  names: []
+  params:
+  - DD
+  screens:
+  - main/getMainForm
+MN_01_01_022:
+  commented: false
+  names: []
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - DD
+  - SGG_CD
+  screens:
+  - main/getMainForm
+MN_01_01_023:
+  commented: false
+  names: []
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - main/getMainForm
+MN_01_01_024:
+  commented: false
+  names: []
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - TODAY_DT
+  screens:
+  - main/getMainForm
+MN_01_01_025:
+  names: []
+  params: []
+  screens:
+  - loc/getPopuTourAttrac
+  - loc/getAreaDataForm
+MN_01_01_026:
+  commented: false
+  names: []
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - CNFM_YM1
+  - CNFM_YM2
+  - TODAY_DT
+  screens:
+  - main/getMainForm
+MN_01_01_027:
+  commented: false
+  names: []
+  params:
+  - TODAY_DT
+  screens:
+  - main/getMainForm
+MN_01_01_028:
+  commented: false
+  names: []
+  params:
+  - TODAY_DT
+  screens:
+  - main/getMainForm
+MN_01_01_029:
+  commented: false
+  names: []
+  params:
+  - TODAY_DT
+  screens:
+  - main/getMainForm
+MN_01_01_030:
+  commented: false
+  names: []
+  params:
+  - TODAY_DT
+  screens:
+  - main/getMainForm
+MN_01_01_031:
+  commented: false
+  names: []
+  params:
+  - TODAY_DT
+  screens:
+  - main/getMainForm
+NAT_01_01_010:
+  names: []
+  params: []
+  screens:
+  - nat/getYearReportForm
+NAT_02_01_001:
+  names:
+  - 인바운드 여행객
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - NAT_CD
+  screens:
+  - nat/getForTourFormReport
+NAT_02_01_002:
+  names: []
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - nat/getForTourFormReport
+NAT_02_01_003:
+  names: []
+  params: []
+  screens:
+  - nat/getForTourFormReport
+NAT_02_01_004:
+  names:
+  - 관광수입
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - NAT_CD
+  screens:
+  - nat/getForTourFormReport
+NAT_02_01_005:
+  names: []
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - nat/getForTourFormReport
+NAT_02_01_006:
+  names: []
+  params:
+  - ALL_YN
+  - NAT_NM
+  screens:
+  - nat/getForTourFormReport
+  - nat/getYearReportForm
+NAT_02_01_007:
+  names: []
+  params: []
+  screens:
+  - nat/getForTourFormReport
+NAT_02_01_008:
+  names: []
+  params: []
+  screens:
+  - nat/getForTourFormReport
+NAT_02_01_009:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - nat/getForTourFormReport
+NAT_02_01_010:
+  names:
+  - 한국여행 경험 및 의향
+  params:
+  - ALL_YN
+  screens:
+  - nat/getForTourForm
+NAT_04_01_001:
+  names: []
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - NAT_CD
+  - NAT_NM
+  screens:
+  - nat/getYearReportForm
+NAT_04_01_001_01:
+  names: []
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - nat/getYearReportForm
+NAT_04_01_002:
+  names: []
+  params: []
+  screens:
+  - nat/getYearReportForm
+NAT_04_01_003:
+  names: []
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - NAT_CD
+  - NAT_NM
+  screens:
+  - nat/getYearReportForm
+NAT_04_01_003_01:
+  names: []
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - nat/getYearReportForm
+NAT_04_01_004:
+  names: []
+  params: []
+  screens:
+  - nat/getYearReportForm
+NAT_04_01_005:
+  names: []
+  params: []
+  screens:
+  - nat/getYearReportForm
+NAT_05_01_001:
+  names:
+  - 국민 해외관광객 추이
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - NAT_CD
+  screens:
+  - nat/getOseaTourForm
+NAT_05_01_002:
+  names:
+  - 국민 해외관광객 성연령별
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - NAT_CD
+  screens:
+  - nat/getOseaTourForm
+NAT_05_01_003:
+  names: []
+  params: []
+  screens:
+  - nat/getOseaTourForm
+NAT_05_01_004:
+  names:
+  - 관광지출
+  params:
+  - ALL_YN
+  screens:
+  - nat/getOseaTourForm
+NAT_05_01_005:
+  names:
+  - 1인당 관광지출
+  params:
+  - ALL_YN
+  screens:
+  - nat/getOseaTourForm
+NAT_06_01_001:
+  names: []
+  params:
+  - local_page
+  screens:
+  - nat/getContAnaForm
+NAT_06_01_002:
+  names: []
+  params: []
+  screens:
+  - nat/getContAnaForm
+NAT_06_01_003:
+  names: []
+  params: []
+  screens:
+  - nat/getContAnaForm
+NAT_06_01_004:
+  names: []
+  params: []
+  screens:
+  - nat/getContAnaForm
+NAT_06_01_005:
+  names: []
+  params: []
+  screens:
+  - nat/getContAnaForm
+NAT_07_01_001:
+  names: []
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - NAT_CD
+  screens:
+  - nat/getForTourDashForm
+NAT_07_01_002:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - nat/getForTourDashForm
+NAT_07_01_003:
+  names: []
+  params: []
+  screens:
+  - nat/getForTourDashForm
+NAT_07_01_004:
+  names: []
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - NAT_CD
+  screens:
+  - nat/getForTourDashForm
+NAT_07_01_005:
+  names: []
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - NAT_CD
+  screens:
+  - nat/getForTourDashForm
+NAT_07_01_006:
+  names: []
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - NAT_CD
+  screens:
+  - nat/getForTourDashForm
+NAT_07_01_007:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - nat/getForTourDashForm
+NAT_07_01_008:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - nat/getForTourDashForm
+NAT_07_01_009:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - nat/getForTourDashForm
+NAT_07_01_010:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - nat/getForTourDashForm
+NAT_07_01_011:
+  names: []
+  params: []
+  screens:
+  - nat/getForTourDashForm
+NAT_07_01_012:
+  names: []
+  params: []
+  screens:
+  - nat/getForTourDashForm
+NAT_07_01_013:
+  names: []
+  params: []
+  screens:
+  - nat/getForTourDashForm
+NAT_07_01_014:
+  names: []
+  params: []
+  screens:
+  - nat/getForTourDashForm
+NAT_07_01_015:
+  names: []
+  params: []
+  screens:
+  - nat/getForTourDashForm
+NAT_07_01_016:
+  names: []
+  params: []
+  screens:
+  - nat/getForTourDashForm
+NAT_07_01_017:
+  names: []
+  params: []
+  screens:
+  - nat/getForTourDashForm
+NAT_07_01_018:
+  names: []
+  params:
+  - ALL_YN
+  screens:
+  - nat/getForTourDashForm
+NAT_07_01_019:
+  names: []
+  params:
+  - ALL_YN
+  screens:
+  - nat/getForTourDashForm
+NAT_07_01_020:
+  names:
+  - 방한 관련 정보 획득을 위한 플랫폼(1순위 기준)
+  - 방한 관련 정보 획득을 위한 플랫폼
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - NAT_CD
+  - NAT_NM
+  screens:
+  - nat/getYearReportForm
+  - nat/getForTourDashForm
+NAT_07_01_021:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - nat/getForTourDashForm
+NAT_07_01_022:
+  names:
+  - 방한 관련 상품 구매를 위한 온라인 사이트(1순위 기준)
+  - 방한 관련 상품 구매를 위한 온라인 사이트
+  params:
+  - ALL_YN
+  screens:
+  - nat/getYearReportForm
+  - nat/getForTourDashForm
+NAT_07_01_025:
+  names:
+  - 한국 연상 이미지
+  - 한국연상이미지
+  params: []
+  screens:
+  - nat/getForTourDashForm
+NAT_07_01_026:
+  names:
+  - 한류 관심도
+  params:
+  - ALL_YN
+  screens:
+  - nat/getForTourDashForm
+NAT_08_01_001:
+  names: []
+  params: []
+  screens:
+  - nat/getForTourForm
+NAT_08_01_002:
+  names: []
+  params: []
+  screens:
+  - nat/getForTourForm
+NAT_08_01_003:
+  names: []
+  params: []
+  screens:
+  - nat/getForTourForm
+NAT_08_01_004:
+  names:
+  - 방한 외래관광객 추이
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - NAT_CD
+  screens:
+  - nat/getForTourForm
+NAT_08_01_005:
+  names:
+  - 방한 외래관광객 특성(성·연령별)
+  params:
+  - ALL_YN
+  screens:
+  - nat/getForTourForm
+NAT_08_01_006:
+  names:
+  - 방한 외래관광객 특성(목적별)
+  params:
+  - ALL_YN
+  screens:
+  - nat/getForTourForm
+NAT_08_01_007:
+  names:
+  - 방한 외래관광객 특성(교통수단별)
+  params:
+  - ALL_YN
+  screens:
+  - nat/getForTourForm
+NAT_08_01_008:
+  names:
+  - 관광수입
+  params: []
+  screens:
+  - nat/getForTourForm
+NAT_08_01_009:
+  names:
+  - 1인당 관광수입
+  params: []
+  screens:
+  - nat/getForTourForm
+NAT_08_01_010:
+  names: []
+  params: []
+  screens:
+  - nat/getForTourForm
+NAT_08_01_011:
+  names:
+  - 방한여행 요약(대륙별)
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - NAT_CD
+  screens:
+  - nat/getForTourForm
+NAT_08_01_012:
+  names:
+  - 방한여행 요약(국적별)
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - NAT_CD
+  screens:
+  - nat/getForTourForm
+NAT_08_01_013:
+  names:
+  - 방한여행 행태 및 만족도 평가
+  params:
+  - ALL_YN
+  screens:
+  - nat/getForTourForm
+NAT_08_01_014:
+  names:
+  - 방한 여행 이미지
+  params:
+  - ALL_YN
+  screens:
+  - nat/getForTourForm
+NAT_08_01_015:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - nat/getForTourForm
+NAT_08_01_016:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - nat/getForTourForm
+NAT_08_01_017:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - nat/getForTourForm
+NAT_08_01_018:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - nat/getForTourForm
+NAT_08_01_019:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - nat/getForTourForm
+NAT_08_01_020:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - nat/getForTourForm
+NAT_08_01_021:
+  names:
+  - 글로벌 방한관광객
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - NAT_CD
+  screens:
+  - nat/getForTourForm
+NAT_08_01_022:
+  names:
+  - 한국여행 경험 및 의향
+  params: []
+  screens:
+  - nat/getForTourDashForm
+NAT_08_01_023:
+  names:
+  - 해외여행 경험 및 의향
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - NAT_CD
+  screens:
+  - nat/getForTourFormReport
+  - nat/getYearReportForm
+NAT_08_01_026:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - nat/getForTourForm
+  - nat/getForTourDashForm
+NAT_08_01_027:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - nat/getForTourForm
+NAT_08_01_028:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - nat/getForTourDashForm
+NAT_08_01_029:
+  commented: true
+  names: []
+  params:
+  - ALL_YN
+  screens:
+  - nat/getForTourForm
+  - nat/getForTourDashForm
+NAT_08_01_030:
+  names:
+  - 방한여행 관심도 추이
+  params:
+  - ALL_YN
+  screens:
+  - nat/getForTourForm
+  - nat/getForTourDashForm
+NAT_09_01_001:
+  names:
+  - 한국 관광 관련 국가별 언급량 인게이지먼트 잠재적 노출량 합산표
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - NAT_CD
+  screens:
+  - nat/getTrendTourForm
+NAT_09_01_002:
+  names:
+  - 한국 관광 관련 언급량 인게이지먼트 추이 언급량
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - nat/getTrendTourForm
+NAT_09_01_003:
+  names:
+  - 한국 관광 관련 언급량, 인게이지먼트 추이 증가률
+  - 한국 관광 관련 언급량, 인게이지먼트 추이 증감률
+  params:
+  - ALL_YN
+  screens:
+  - nat/getTrendTourForm
+NAT_09_01_004:
+  names:
+  - 국가별 한국 관광 관련 언급 포지셔닝 맵
+  params: []
+  screens:
+  - nat/getTrendTourForm
+NAT_09_01_005:
+  names:
+  - 한국 관광 관련 긍부정 점유율 추이
+  params: []
+  screens:
+  - nat/getTrendTourForm
+NAT_09_01_006:
+  names:
+  - 한국 관광 관련 월별 해시태그 탑10
+  params:
+  - ALL_YN
+  screens:
+  - nat/getTrendTourForm
+NAT_09_01_007:
+  names:
+  - 글로벌 소셜미디어 점유율 추이
+  - 소셜미디어 점유율 추이
+  params:
+  - ALL_YN
+  screens:
+  - nat/getTrendTourForm
+NAT_09_02_001:
+  names:
+  - 한국 관광 관련 언급량, 인게이지먼트 추이 및 합산
+  - 한국 관광 관련 월별 언급량, 인게이지먼트 추이 및 합산
+  params:
+  - ALL_YN
+  screens:
+  - nat/getTrendTourForm
+NAT_09_02_002:
+  names:
+  - 한국 관광 관련 월별 언급량, 인게이지먼트 추이 증가률
+  - 한국 관광 관련 월별 언급량, 인게이지먼트 추이 및 합산
+  params:
+  - ALL_YN
+  screens:
+  - nat/getTrendTourForm
+NAT_09_02_003:
+  names:
+  - 한국 관광 관련 국가별 긍부정 점유율 추이
+  params:
+  - ALL_YN
+  screens:
+  - nat/getTrendTourForm
+NAT_10_01_001:
+  names: []
+  params: []
+  screens:
+  - nat/getForAirForm
+NAT_10_01_002:
+  names: []
+  params: []
+  screens:
+  - nat/getForAirForm
+NAT_10_01_003:
+  names: []
+  params: []
+  screens:
+  - nat/getForAirForm
+NAT_10_01_004:
+  names: []
+  params: []
+  screens:
+  - nat/getForAirForm
+NAT_10_01_005:
+  names: []
+  params: []
+  screens:
+  - nat/getForAirForm
+NAT_10_01_006:
+  names: []
+  params: []
+  screens:
+  - nat/getForAirForm
+NAT_10_02_001:
+  names: []
+  params: []
+  screens:
+  - nat/getForAirForm
+NAT_10_02_001_02:
+  names: []
+  params: []
+  screens:
+  - nat/getForAirForm
+NAT_10_02_001_03:
+  names: []
+  params:
+  - BASE_YM1
+  screens:
+  - nat/getForAirForm
+NAT_10_02_002:
+  names: []
+  params: []
+  screens:
+  - nat/getForAirForm
+NAT_10_02_003:
+  names: []
+  params:
+  - BASE_YM1
+  screens:
+  - nat/getForAirForm
+NAT_10_02_004:
+  names: []
+  params: []
+  screens:
+  - nat/getForAirForm
+NAT_11_01_001:
+  names:
+  - 전체 외국인 방문자수 및 증감률 CSV 다운로드
+  - 국가별 관광객 방문비율 CSV 다운로드
+  - 전체 외국인 방문자수 및 증감율
+  - 해당 국가 관광객 방문비율
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - nat/getNatFocTourAna
+NAT_11_01_002:
+  names:
+  - 관광객 지역별 방문비율 CSV 다운로드
+  - 관광객 지역별 방문비율
+  params:
+  - ALL_YN
+  - chart_init_04
+  screens:
+  - nat/getNatFocTourAna
+NAT_11_02_001:
+  names:
+  - 전체 외국인 신용카드 관광소비액 및 증감률 CSV 다운로드
+  - 국가별 외국인 신용카드 관광소비비율 CSV 다운로드
+  - 전체 외국인 신용카드 관광소비 및 증감률 CSV 다운로드
+  - 국가별 외국인 신용카드 관광소비 및 증감률 CSV 다운로드
+  - 전체 외국인 관광소비액 및 증감율
+  - 해당 국가 관광객 관광소비비율
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - nat/getNatFocTourAna
+NAT_11_02_002:
+  names:
+  - 관광객 지역별 신용카드 소비비율 CSV 다운로드
+  - 관광객 지역별 소비비율
+  params:
+  - ALL_YN
+  - chart_init_11
+  screens:
+  - nat/getNatFocTourAna
+NAT_11_02_003:
+  names:
+  - 관광객 업종별 신용카드 관광소비 추이 CSV 다운로드
+  - 업종별 관광소비 추이
+  params:
+  - ALL_YN
+  screens:
+  - nat/getNatFocTourAna
+NAT_11_02_004:
+  names:
+  - 관광객 신용카드 관광소비 유형 CSV 다운로드
+  - 관광소비 유형
+  params:
+  - ALL_YN
+  screens:
+  - nat/getNatFocTourAna
+NAT_11_03_007:
+  names:
+  - 감성 분석 추이 CSV 다운로드
+  - 감성 분석 추이
+  params:
+  - ALL_YN
+  screens:
+  - nat/getNatFocTourAna
+NAT_11_03_008:
+  names:
+  - 숙박유형별 감성 분석 감성 분석(비율) CSV 다운로드
+  - 숙박유형별 감성 분석 감성 분석(비율)
+  params:
+  - ALL_YN
+  screens:
+  - nat/getNatFocTourAna
+NAT_11_03_009:
+  names:
+  - 숙박유형별 감성 분석 긍정 주요 키워드 CSV 다운로드
+  - 숙박유형별 감성 분석 부정 주요 키워드 CSV 다운로드
+  - 숙박유형별 감성 분석 긍정 주요 키워드
+  - 숙박유형별 감성 분석 부정 주요 키워드
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - nat/getNatFocTourAna
+NAT_12_01_001:
+  names:
+  - 관광객 간편결제 업종별 관광소비 추이
+  - 간편결제 업종별 관광소비 비율 추이
+  params: []
+  screens:
+  - nat/getNatFocTourAna
+NAT_12_01_002:
+  names:
+  - 관광객 간편결제 관광소비 유형
+  - 간편결제 관광소비 유형
+  params: []
+  screens:
+  - nat/getNatFocTourAna
+NAT_12_01_003:
+  names:
+  - 관광객 간편결제 지역별 소비비율
+  - 간편결제 지역별 소비비율
+  params: []
+  screens:
+  - nat/getNatFocTourAna
+PD_01_01_001:
+  commented: false
+  names:
+  - 관관현황 및 일반형황:자원역량:관광지수
+  params: []
+  screens:
+  - loc/getPoplDcrsRegionStatusForm
+PD_01_01_003:
+  commented: false
+  names:
+  - 관관현황 및 일반형황:산업역량:관광산업 업종별 종사자 수 및 비중
+  params: []
+  screens:
+  - loc/getPoplDcrsRegionStatusForm
+PD_01_01_005:
+  commented: false
+  names:
+  - 지역관광 및 일반형황>인구특성:인구밀도
+  params: []
+  screens:
+  - loc/getPoplDcrsRegionStatusForm
+PD_01_01_006:
+  commented: false
+  names:
+  - 관관현황 및 일반형황:인구특성:인구감소지수
+  params: []
+  screens:
+  - loc/getPoplDcrsRegionStatusForm
+PD_01_01_007:
+  commented: false
+  names:
+  - 관관현황 및 일반형황:산업특성:산업별 종사자 비중
+  params: []
+  screens:
+  - loc/getPoplDcrsRegionStatusForm
+PD_01_01_007_01:
+  commented: false
+  names:
+  - 관관현황 및 일반형황:산업특성:산업별 종사자 비중
+  params: []
+  screens:
+  - loc/getPoplDcrsRegionStatusForm
+SE_AG_01_01_001:
+  names: []
+  params:
+  - GEN_CD
+  - GEN_NM
+  - SEARCH_TYPE
+  - UNIT_CD
+  - chart_01_01
+  screens:
+  - bda/getInquiryBySexAndAge
+SE_AG_01_02_001:
+  names: []
+  params:
+  - SEARCH_TYPE
+  - UNIT_CD
+  - chart_01_01
+  screens:
+  - bda/getInquiryBySexAndAge
+SE_AG_01_03_001:
+  names:
+  - 연령별 방문자 구성비
+  params:
+  - UNIT_CD
+  screens:
+  - bda/getInquiryBySexAndAge
+SE_AG_01_03_002:
+  names:
+  - 연령별 방문자 구성비
+  params:
+  - AGEG_DIV_CD
+  - AGEG_DIV_NM
+  - GEN_CD
+  - GEN_CD_NM
+  screens:
+  - bda/getInquiryBySexAndAge
+SE_AG_01_04_001:
+  names:
+  - 성별 방문자 구성비
+  params:
+  - UNIT_CD
+  screens:
+  - bda/getInquiryBySexAndAge
+SE_AG_01_04_002:
+  names:
+  - 성별 방문자 구성비
+  params:
+  - AGEG_DIV_CD
+  - AGEG_DIV_NM
+  - GEN_CD
+  - GEN_CD_NM
+  - SEARCH_TYPE
+  - UNIT_CD
+  screens:
+  - bda/getInquiryBySexAndAge
+SE_AG_01_05_001:
+  names:
+  - 방문자 수 추이
+  params:
+  - AGEG_DIV_CD
+  - AGEG_DIV_NM
+  - GEN_CD
+  - GEN_CD_NM
+  screens:
+  - bda/getInquiryBySexAndAge
+SE_AG_01_06_001:
+  names: []
+  params: []
+  screens:
+  - bda/getInquiryBySexAndAge
+SE_AG_02_20_001:
+  names: []
+  params:
+  - AGEG_DIV_CD
+  - AGEG_DIV_NM
+  - GEN_CD
+  - GEN_CD_NM
+  - MCLS_CD
+  - SEARCH_TYPE
+  - UNIT_CD
+  - chart_02_01
+  screens:
+  - bda/getInquiryBySexAndAge
+SE_AG_02_21_001:
+  names: []
+  params:
+  - GEN_CD
+  - GEN_CD_NM
+  - MCLS_CD
+  - SEARCH_TYPE
+  - UNIT_CD
+  - chart_02_01
+  screens:
+  - bda/getInquiryBySexAndAge
+SE_AG_02_22_001:
+  names:
+  - 연령별 소비금액 구성비
+  params:
+  - MCLS_CD
+  - SEARCH_TYPE
+  - UNIT_CD
+  screens:
+  - bda/getInquiryBySexAndAge
+SE_AG_02_22_002:
+  names:
+  - 연령별 소비금액 구성비
+  params:
+  - AGEG_DIV_CD
+  - AGEG_DIV_NM
+  - GEN_CD
+  - GEN_CD_NM
+  - SGG_CD
+  - TMAP_CATE_MCLS_NM
+  screens:
+  - bda/getInquiryBySexAndAge
+SE_AG_02_23_001:
+  names:
+  - 성별 소비금액 구성비
+  params:
+  - MCLS_CD
+  screens:
+  - bda/getInquiryBySexAndAge
+SE_AG_02_23_002:
+  names:
+  - 성별 소비금액 구성비
+  params:
+  - AGEG_DIV_CD
+  - AGEG_DIV_NM
+  - GEN_CD
+  - GEN_CD_NM
+  - SGG_CD
+  - TMAP_CATE_MCLS_NM
+  screens:
+  - bda/getInquiryBySexAndAge
+SE_AG_02_24_001:
+  names:
+  - 관광소비 추이
+  params:
+  - AGEG_DIV_CD
+  - AGEG_DIV_NM
+  - GEN_CD
+  - GEN_CD_NM
+  - TMAP_CATE_MCLS_NM
+  screens:
+  - bda/getInquiryBySexAndAge
+SE_AG_02_25_001:
+  names: []
+  params: []
+  screens:
+  - bda/getInquiryBySexAndAge
+SE_AG_03_01_001:
+  names: []
+  params:
+  - AGEG_DIV_CD
+  - AGEG_DIV_NM
+  - GEN_CD
+  - GEN_CD_NM
+  - SGG_CD
+  - TMAP_CATE_MCLS_NM
+  - TYPE_CODE
+  screens:
+  - bda/getInquiryBySexAndAge
+SE_AG_03_01_002:
+  names:
+  - 유형별 검색건수
+  params:
+  - SGG_CD
+  screens:
+  - bda/getInquiryBySexAndAge
+SE_AG_03_01_003:
+  names: []
+  params:
+  - SGG_CD
+  screens:
+  - bda/getInquiryBySexAndAge
+SE_AG_03_01_004:
+  names: []
+  params:
+  - AGEG_DIV_CD
+  - AGEG_DIV_NM
+  - GEN_CD
+  - GEN_CD_NM
+  - SGG_CD
+  screens:
+  - bda/getInquiryBySexAndAge
+SE_AG_03_02_003:
+  names: []
+  params:
+  - AGEG_DIV_CD
+  - SGG_CD
+  screens:
+  - bda/getInquiryBySexAndAge
+SE_AG_03_02_004:
+  names: []
+  params:
+  - AGEG_DIV_CD
+  - AGEG_DIV_NM
+  - GEN_CD
+  - GEN_CD_NM
+  - SGG_CD
+  screens:
+  - bda/getInquiryBySexAndAge
+SE_AG_03_03_001:
+  names:
+  - 검색건수 히트맵
+  params:
+  - AGEG_DIV_NM
+  - GEN_CD
+  - GEN_CD_NM
+  - SGG_CD
+  - TMAP_CATE_MCLS_NM
+  screens:
+  - bda/getInquiryBySexAndAge
+SE_AG_03_03_003:
+  names:
+  - 지역별 검색건수
+  params:
+  - AGEG_DIV_CD
+  - AGEG_DIV_NM
+  - SGG_CD
+  screens:
+  - bda/getInquiryBySexAndAge
+SE_AG_03_03_004:
+  names:
+  - 검색건수 추이
+  params:
+  - AGEG_DIV_CD
+  - AGEG_DIV_NM
+  - GEN_CD
+  - GEN_CD_NM
+  - SGG_CD
+  screens:
+  - bda/getInquiryBySexAndAge
+TAE_06_01_001:
+  names: []
+  params: []
+  screens:
+  - ts/getTourCplnForm
+TAE_06_01_002:
+  names: []
+  params:
+  - BASE_YEAR1
+  - BASE_YEAR2
+  - BASE_params_1
+  - BASE_params_2
+  screens:
+  - ts/getTourCplnForm
+TAE_06_01_003:
+  names: []
+  params:
+  - BASE_YEAR1
+  - BASE_YEAR2
+  - BASE_params_1
+  - BASE_params_2
+  screens:
+  - ts/getTourCplnForm
+TAE_06_01_004:
+  commented: true
+  names: []
+  params:
+  - BASE_YEAR1
+  - BASE_YEAR2
+  - BASE_params_1
+  - BASE_params_2
+  screens:
+  - ts/getTourCplnForm
+TA_01_01_001:
+  names:
+  - 관광수요_지수_추이
+  - 관광활성화 지수 추이
+  params:
+  - ALL_YN
+  - SGG_CD
+  - TOU_DIV
+  - tourActivate_page_2025
+  screens:
+  - loc/getTourActivateForm
+TA_01_01_001_001:
+  names:
+  - 관광수요 지수
+  params: []
+  screens:
+  - loc/getTourActivateForm
+TA_01_01_005:
+  names: []
+  params: []
+  screens:
+  - loc/getTourActivateForm
+TA_01_02_001:
+  names:
+  - 관광수요_세부지표별_추이
+  - 관광활성화 세부지표(추이)
+  params:
+  - ALL_YN
+  - SGG_CD
+  - TOU_DIV
+  screens:
+  - loc/getTourActivateForm
+TA_01_03_001:
+  names:
+  - 관광수요_경쟁력_분석
+  - 관광수요 경쟁력 분석(방사형챠트)
+  params:
+  - ALL_YN
+  - SGG_CD
+  - TOU_DIV
+  - chartId3003_01
+  - dataSetRe_2001
+  screens:
+  - loc/getTourActivateForm
+TA_01_03_002:
+  names:
+  - 관광수요_세부지표별_값
+  - 관광활성화 세부지표별 값(테이블챠트)
+  params:
+  - ALL_YN
+  - SGG_CD
+  - chartId3003_01
+  - dataSetRe_2001
+  - validation_date_frm
+  screens:
+  - loc/getTourActivateForm
+TA_01_03_003:
+  names:
+  - 관광활성화 세부지표별 값(인사이트)
+  params: []
+  screens:
+  - loc/getTourActivateForm
+TSA_03_01_0012:
+  commented: false
+  names: []
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - SGG_CD
+  screens:
+  - main/getMainForm
+TS_01_03_001:
+  names:
+  - 관광수입_관광지출
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - kor_tursm_balc
+  screens:
+  - ts/getKorTursmBalcForm
+TS_01_03_002:
+  names:
+  - 1인당 관광수입_관광지출
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - ts/getKorTursmBalcForm
+TS_01_03_003:
+  names:
+  - 관광수지
+  params: []
+  screens:
+  - ts/getKorTursmBalcForm
+TS_01_03_004:
+  names:
+  - 관광수지
+  params: []
+  screens:
+  - ts/getKorTursmBalcForm
+TS_01_04_001_01:
+  names:
+  - 크루즈통계 승객선원별
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - BASE_YR
+  screens:
+  - ts/getNewCrusStatsForm
+TS_01_04_002_01:
+  names:
+  - 크루즈통계 항구별
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  - BASE_YR
+  screens:
+  - ts/getNewCrusStatsForm
+TS_01_04_003_01:
+  names:
+  - 크루즈통계 성별
+  params:
+  - BASE_YR
+  screens:
+  - ts/getNewCrusStatsForm
+TS_01_04_004_01:
+  names:
+  - 크루즈통계 연령별
+  params: []
+  screens:
+  - ts/getNewCrusStatsForm
+TS_01_04_005_01:
+  names: []
+  params: []
+  screens:
+  - ts/getNewCrusStatsForm
+TS_01_04_006_01:
+  names: []
+  params: []
+  screens:
+  - ts/getNewCrusStatsForm
+TS_01_04_007_01:
+  names: []
+  params: []
+  screens:
+  - ts/getNewCrusStatsForm
+TS_01_04_008_01:
+  names: []
+  params: []
+  screens:
+  - ts/getNewCrusStatsForm
+TS_01_04_011_01:
+  names: []
+  params: []
+  screens:
+  - ts/getNewCrusStatsForm
+TS_01_04_012_01:
+  names:
+  - 크루즈입항계획통계 입항횟수
+  params: []
+  screens:
+  - ts/getNewCrusStatsForm
+TS_01_04_012_02:
+  names:
+  - 크루즈입항계획통계 입항인원
+  params: []
+  screens:
+  - ts/getNewCrusStatsForm
+TS_01_04_012_03:
+  names:
+  - 크루즈입항계획통계 승객선원별
+  params: []
+  screens:
+  - ts/getNewCrusStatsForm
+TS_01_04_012_04:
+  names:
+  - 크루즈입항계획통계 항구별
+  params: []
+  screens:
+  - ts/getNewCrusStatsForm
+TS_01_05_001_01:
+  names:
+  - 크루즈입항통계 항구별
+  params: []
+  screens:
+  - ts/getNewCrusStatsForm
+TS_01_05_002_01:
+  names:
+  - 크루즈입항통계 성별
+  params: []
+  screens:
+  - ts/getNewCrusStatsForm
+TS_01_05_003_01:
+  names:
+  - 크루즈입항통계 연령별
+  params: []
+  screens:
+  - ts/getNewCrusStatsForm
+TS_01_05_004_01:
+  names: []
+  params: []
+  screens:
+  - ts/getNewCrusStatsForm
+TS_01_05_005_01:
+  names: []
+  params: []
+  screens:
+  - ts/getNewCrusStatsForm
+TS_01_05_006_01:
+  names: []
+  params: []
+  screens:
+  - ts/getNewCrusStatsForm
+TS_01_05_008_01:
+  names: []
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - ts/getNewCrusStatsForm
+TS_01_08_001:
+  commented: false
+  names:
+  - 세계 국가별 관광 규모와 순위
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - ts/getWldTursmStatsForm
+TS_01_09_001:
+  names:
+  - 품목별 상담 건수
+  params:
+  - ALL_YN
+  - cust_con_inj
+  screens:
+  - ts/getCustConInjForm
+TS_01_09_002:
+  names:
+  - 유형별 위해 건수
+  params:
+  - ALL_YN
+  screens:
+  - ts/getCustConInjForm
+TS_01_09_003:
+  names:
+  - 지역별 상담 건수
+  params:
+  - ALL_YN
+  screens:
+  - ts/getCustConInjForm
+TS_01_09_004:
+  names:
+  - 지역별 위해 건수
+  params:
+  - ALL_YN
+  screens:
+  - ts/getCustConInjForm
+TS_01_09_005:
+  names: []
+  params: []
+  screens:
+  - ts/getCustConInjForm
+TS_01_09_006:
+  names:
+  - 광역시도별 소비자 상담 건수
+  - 광역시도별 소비자 위해 건수
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - ts/getCustConInjForm
+TS_01_10_001:
+  names: []
+  params: []
+  screens:
+  - ts/getCustConInjForm
+TS_01_10_004:
+  names: []
+  params: []
+  screens:
+  - ts/getCustConInjForm
+TS_01_12_001:
+  names: []
+  params:
+  - tour_cpln
+  screens:
+  - ts/getTourCplnForm
+TS_01_12_002:
+  names: []
+  params: []
+  screens:
+  - ts/getTourCplnForm
+TS_01_12_003:
+  names:
+  - 지역별 유형별 불편신고 추이
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - ts/getTourCplnForm
+TS_01_12_004:
+  names:
+  - 국가별 불편신고 추이
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - ts/getTourCplnForm
+TS_01_12_005:
+  names:
+  - 유형별 불편신고 건수
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - SGG_CD
+  - SIDO_ARR
+  screens:
+  - ts/getTourCplnForm
+TS_01_12_006:
+  names:
+  - 지역별 불편신고 건수
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - ts/getTourCplnForm
+TS_01_12_007:
+  names:
+  - 히트맵
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  - SGG_CD
+  - SIDO_ARR
+  screens:
+  - ts/getTourCplnForm
+TS_01_16_001:
+  names:
+  - 방한 외래관광객 성별
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - ts/getEntcnyFrgnCust2Form
+TS_01_16_002:
+  names:
+  - 방한 외래관광객 연령별
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - ts/getEntcnyFrgnCust2Form
+TS_01_16_002_1:
+  names:
+  - 방한 외래관광객 연령별
+  params: []
+  screens:
+  - ts/getEntcnyFrgnCust2Form
+TS_01_16_003:
+  names:
+  - 방한 외래관광객 목적별
+  params: []
+  screens:
+  - ts/getEntcnyFrgnCust2Form
+TS_01_16_004:
+  names:
+  - 방한 외래관광객 교통수단별
+  params: []
+  screens:
+  - ts/getEntcnyFrgnCust2Form
+TS_01_16_004_NEW:
+  names: []
+  params: []
+  screens:
+  - ts/getEntcnyFrgnCust2Form
+TS_01_16_004_NEW2:
+  names:
+  - 방한 외래관광객 교통수단별
+  params: []
+  screens:
+  - ts/getEntcnyFrgnCust2Form
+TS_01_16_005:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - ts/getEntcnyFrgnCust2Form
+TS_01_16_005_New:
+  names:
+  - 방한 외래관광객 성별
+  params: []
+  screens:
+  - ts/getEntcnyFrgnCust2Form
+TS_01_16_006:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - ts/getEntcnyFrgnCust2Form
+TS_01_16_006_New:
+  names:
+  - 방한 외래관광객 연령별
+  params: []
+  screens:
+  - ts/getEntcnyFrgnCust2Form
+TS_01_16_006_New_1:
+  names:
+  - 방한 외래관광객 연령별
+  params: []
+  screens:
+  - ts/getEntcnyFrgnCust2Form
+TS_01_16_007:
+  commented: true
+  names: []
+  params:
+  - BASE_YM1
+  screens:
+  - ts/getEntcnyFrgnCust2Form
+TS_01_16_007_New:
+  names:
+  - 방한 외래관광객 목적별
+  params: []
+  screens:
+  - ts/getEntcnyFrgnCust2Form
+TS_01_16_008:
+  commented: true
+  names: []
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - ts/getEntcnyFrgnCust2Form
+TS_01_16_008_New:
+  names:
+  - 방한 외래관광객 교통수단별
+  params: []
+  screens:
+  - ts/getEntcnyFrgnCust2Form
+TS_01_16_008_New_1:
+  names:
+  - 방한 외래관광객 교통수단별
+  params: []
+  screens:
+  - ts/getEntcnyFrgnCust2Form
+TS_01_16_008_New_2:
+  names:
+  - 방한 외래관광객 교통수단별
+  params: []
+  screens:
+  - ts/getEntcnyFrgnCust2Form
+TS_01_17_001:
+  names:
+  - 국민 해외관광객 성별
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - ts/getDtrmcNatiCust2Form
+TS_01_17_002:
+  names:
+  - 국민 해외관광객 연령별
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - ts/getDtrmcNatiCust2Form
+TS_01_17_002_1:
+  names:
+  - 국민 해외관광객 연령별
+  params: []
+  screens:
+  - ts/getDtrmcNatiCust2Form
+TS_01_17_003:
+  names:
+  - 국민 해외관광객 교통수단별
+  params: []
+  screens:
+  - ts/getDtrmcNatiCust2Form
+TS_01_17_003_NEW:
+  names:
+  - 국민 해외관광객 교통수단별
+  params: []
+  screens:
+  - ts/getDtrmcNatiCust2Form
+TS_01_17_003_NEW2:
+  names:
+  - 국민 해외관광객 교통수단별
+  params: []
+  screens:
+  - ts/getDtrmcNatiCust2Form
+TS_01_17_004_New:
+  names:
+  - 국민 해외관광객 성별
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - ts/getDtrmcNatiCust2Form
+TS_01_17_005_New:
+  names:
+  - 국민 해외관광객 연령별
+  params: []
+  screens:
+  - ts/getDtrmcNatiCust2Form
+TS_01_17_005_New_1:
+  names:
+  - 국민 해외관광객 연령별
+  params: []
+  screens:
+  - ts/getDtrmcNatiCust2Form
+TS_01_17_006_New:
+  names:
+  - 국민 해외관광객 교통수단별
+  params: []
+  screens:
+  - ts/getDtrmcNatiCust2Form
+TS_01_17_006_New_1:
+  names:
+  - 국민 해외관광객 교통수단별
+  params: []
+  screens:
+  - ts/getDtrmcNatiCust2Form
+TS_01_17_006_New_2:
+  names:
+  - 국민 해외관광객 교통수단별
+  params: []
+  screens:
+  - ts/getDtrmcNatiCust2Form
+TS_03_01_003:
+  names:
+  - 국내여행 경험률(국내 전체)
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - ts/getDomTourExmn
+TS_03_01_004:
+  names:
+  - 국내여행 횟수(국내 전체)
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - ts/getDomTourExmn
+TS_03_01_005:
+  names:
+  - 국내여행 일수(국내 전체)
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - ts/getDomTourExmn
+TS_03_01_006:
+  names:
+  - 국내여행 지출액(국내 전체)
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - ts/getDomTourExmn
+TS_03_01_007:
+  names: []
+  params: []
+  screens:
+  - ts/getDomTourExmn
+TS_03_01_008:
+  names: []
+  params: []
+  screens:
+  - ts/getDomTourExmn
+TS_03_01_009:
+  names: []
+  params: []
+  screens:
+  - ts/getDomTourExmn
+TS_03_01_010:
+  names:
+  - 1인 평균 국내여행 횟수(국내 전체)
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - ts/getDomTourExmn
+TS_03_01_011:
+  names:
+  - 1인 평균 국내여행 일수(국내 전체)
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - ts/getDomTourExmn
+TS_03_01_012:
+  names:
+  - 1인 평균 국내여행 지출액(국내 전체)
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - ts/getDomTourExmn
+TS_03_02_001:
+  names: []
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - ts/getOseaTourExmn
+TS_03_02_002:
+  names: []
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - ts/getOseaTourExmn
+TS_03_02_003:
+  names: []
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - ts/getOseaTourExmn
+TS_03_02_004:
+  names: []
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - ts/getOseaTourExmn
+TS_03_02_005:
+  names: []
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - ts/getOseaTourExmn
+TS_03_02_006:
+  names: []
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - ts/getOseaTourExmn
+TS_03_02_007:
+  names: []
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - ts/getOseaTourExmn
+TS_03_02_008:
+  names: []
+  params:
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - ts/getOseaTourExmn
+TS_03_02_011:
+  names:
+  - 체재 기간
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - ts/getOseaTourExmn
+TS_03_02_012:
+  names:
+  - 전반적 만족도(긍정 응답 비율)
+  params:
+  - ALL_YN
+  - BASE_YM1
+  - BASE_YM2
+  screens:
+  - ts/getOseaTourExmn
+TS_03_02_013:
+  names:
+  - 1인 평균 지출 경비
+  params:
+  - ALL_YN
+  - BASE_YM2
+  screens:
+  - ts/getOseaTourExmn
+TS_03_02_014:
+  names:
+  - 1일 평균 지출 경비
+  - 1일 평균 지출 경비(긍정 응답 비율)
+  params:
+  - ALL_YN
+  screens:
+  - ts/getOseaTourExmn
+TS_03_02_015:
+  names:
+  - 재방문율
+  params:
+  - ALL_YN
+  screens:
+  - ts/getOseaTourExmn
+TS_03_02_016:
+  names:
+  - 재방문 의향(긍정 응답 비율)
+  params:
+  - ALL_YN
+  screens:
+  - ts/getOseaTourExmn
+TS_03_02_017:
+  names:
+  - 타인 추천 의향(긍정 응답 비율)
+  params:
+  - ALL_YN
+  screens:
+  - ts/getOseaTourExmn
+TS_03_03_001:
+  commented: false
+  names:
+  - 잠재 방한여행객 조사(피벗)
+  params: []
+  screens:
+  - ts/getPotTourExmn
+execProc_chk_pre_data:
+  names: []
+  params:
+  - DSTNC_CMPR_CD
+  - H
+  - H_DSTNC_CMPR_CD
+  - L
+  - L_DSTNC_CMPR_CD
+  screens:
+  - loc/getAreaDataForm
+selectKorWaveCombBaseYear:
+  commented: true
+  names: []
+  params: []
+  screens:
+  - theme/getKorWaveSearch
+selectMedicalDivList:
+  names: []
+  params: []
+  screens:
+  - theme/getMedicalTourSearch

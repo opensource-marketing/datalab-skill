@@ -1,0 +1,516 @@
+# 한국관광 데이터랩 qid 카탈로그 — 방한 외래관광객 전국 통계
+#
+# 화면 셋이다.
+#   ts/getEntcnyFrgnCust2Form  방한 외래관광객(성별·연령·목적·공항)
+#   nat/getForTourForm         방한여행 현황(관광수입·대륙별·이미지)
+#   nat/getForAirForm          항공 좌석·승객
+#   ts/getTourCplnForm         해외 한국 이미지 조사(TAE_06_01_*)
+#
+# 마지막 줄이 이상해 보이지만 근거가 있다. **관광불편신고 화면의 JS
+# (`tour_cpln.js`)가 `TAE_06_01_001` 을 부른다.** 화면 코드가 여러
+# 곳에 재사용된 것으로 보이며, 데이터는 불편신고와 아무 상관이 없다.
+#
+# **인바운드 카탈로그(qid_catalog.yaml)와 나눈 이유가 있다.** 그쪽은
+# 국가별 점수를 매기는 다섯 축(volume·momentum·value·access·headroom)
+# 을 지표마다 달고 있다. 여기 지표들은 국가 축이 없는 전국 월별
+# 통계라 그 축을 달 수 없다 — 달았다면 국가 점수에 뜻 없는 값이
+# 섞였을 것이다.
+#
+# ── 컬럼 이름에 뜻이 없다 ───────────────────────────────────────
+# `TOU_NUM1`·`TOU_NUM2`… 로만 온다. 무엇이 무엇인지는 **화면 HTML 이
+# 정의한 상수**가 근거다. 지어낸 것이 아니다.
+#
+#   colSex          ['남성','여성','승무원','전체']
+#   colAge          ['20세 이하','21~30세','31~40세','41~50세',
+#                    '51~60세','61세이상','승무원','전체']
+#   colAgeNew       ['0~9세','10~19세','20~29세','30~39세','40~49세',
+#                    '50~59세','60~69세','70~79세','80세이상',
+#                    '승무원','전체']
+#   colTarget       ['관광','상용','공용','유학연수','기타','전체']
+#   colTransferNew2 ['인천공항','김해공항','김포공항','대구공항',
+#                    '무안공항','양양공항','청주공항','부산항구',
+#                    '인천항구','기타항구','기타공항','제주항구',
+#                    '서귀포항구','속초항구','여수항구','제주공항','전체']
+#
+# **'전체'는 응답에 오지 않는다.** 마지막 이름을 빼고 순서대로 짝지으면
+# 된다. 다섯 지표의 갈래를 다 더하면 같은 값이 나온다 — 2024년 1월
+# 880,881명으로 다섯이 모두 일치했다(2026-08-24 검산).
+#
+# ── 승무원이 섞여 있다 ──────────────────────────────────────────
+# 성별·연령 분해의 마지막 갈래가 '승무원'이다. 관광객이 아니다.
+# "남녀 비율"을 말할 때 승무원을 빼야 한다 — 2024년 1월 승무원이
+# 71,265명으로 전체의 8%다.
+#
+# ── 환율과 유가가 같은 표에 실려 있다 ───────────────────────────
+# `TOU_NUM21` 은 **원/달러 환율**, `TOU_NUM31` 은 **달러/배럴 국제
+# 유가**다(화면이 두 값을 보조축으로 그린다 — 차트 단위 문자열이
+# '원/달러'와 '달러/배럴'이다). 방문자 수가 아니다.
+# `_MIN`·`_MAX` 는 **조회 기간 전체의 최소·최대가 모든 행에 반복된
+# 것**이다(2024년 열두 달 모두 1319.6/1470.0). 그 달의 값이 아니다.
+#
+# ── 넣지 않은 것 ────────────────────────────────────────────────
+# `TS_01_16_004`(교통수단 구버전)와 `TS_01_16_004_NEW` 는 뺐다.
+# 값은 오지만 갈래 수가 화면 상수와 맞지 않는다(004는 9갈래인데
+# colTransfer 는 12개다). 어느 항구가 어느 자리인지 확정할 수 없어
+# 그럴듯한 남의 숫자가 될 위험이 있다. 지금 화면이 쓰는 것은
+# `_NEW2` 다.
+
+TS_01_16_001:
+  name: 방한 외래관광객 성별(월별)
+  screen: /datalab/portal/ts/getEntcnyFrgnCust2Form.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y"}
+  granularity: month
+  section: 규모
+  query_axis: 전국
+  caution: >-
+    TOU_NUM1 남성 · TOU_NUM2 여성 · TOU_NUM3 **승무원**이다(화면
+    상수 colSex 가 근거). 셋을 더하면 그 달의 방한 외래객 전체다
+    (2024년 1월 880,881명, 2026-08-24 검산). **승무원은 관광객이
+    아니다** — 남녀 비율을 낼 때 빼라(2024년 1월 8%).
+    TOU_NUM21 은 원/달러 환율, TOU_NUM31 은 달러/배럴 국제유가이며
+    _MIN·_MAX 는 조회 기간 전체의 최소·최대가 행마다 반복된 값이다.
+  columns:
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    TOU_NUM1: {label: 남성, type: float, unit: 명}
+    TOU_NUM2: {label: 여성, type: float, unit: 명}
+    TOU_NUM3: {label: 승무원, type: float, unit: 명}
+    TOU_NUM21: {label: 원달러_환율, type: float, unit: 원}
+    TOU_NUM21_MIN: {label: 기간_환율_최소, type: float, unit: 원}
+    TOU_NUM21_MAX: {label: 기간_환율_최대, type: float, unit: 원}
+    TOU_NUM31: {label: 국제유가, type: float, unit: 달러}
+    TOU_NUM31_MIN: {label: 기간_유가_최소, type: float, unit: 달러}
+    TOU_NUM31_MAX: {label: 기간_유가_최대, type: float, unit: 달러}
+
+TS_01_16_002:
+  name: 방한 외래관광객 연령별(월별·옛 구분)
+  screen: /datalab/portal/ts/getEntcnyFrgnCust2Form.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y"}
+  granularity: month
+  section: 규모
+  query_axis: 전국
+  caution: >-
+    **옛 연령 구분이다**(화면 상수 colAge). 20세 이하 · 21~30 ·
+    31~40 · 41~50 · 51~60 · 61세이상 · 승무원 일곱 갈래다.
+    2024년 8월에 사이트가 구분을 바꿨고 새 구분은 TS_01_16_002_1
+    에 있다 — **두 표를 이어 붙이지 마라.** 경계가 다르다
+    (21~30 대 20~29). 일곱을 더하면 880,881명으로 성별 표와 같다
+    (2024년 1월, 2026-08-24 검산).
+  columns:
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    TOU_NUM1: {label: 20세_이하, type: float, unit: 명}
+    TOU_NUM2: {label: 21_30세, type: float, unit: 명}
+    TOU_NUM3: {label: 31_40세, type: float, unit: 명}
+    TOU_NUM4: {label: 41_50세, type: float, unit: 명}
+    TOU_NUM5: {label: 51_60세, type: float, unit: 명}
+    TOU_NUM6: {label: 61세_이상, type: float, unit: 명}
+    TOU_NUM7: {label: 승무원, type: float, unit: 명}
+    TOU_NUM21: {label: 원달러_환율, type: float, unit: 원}
+    TOU_NUM21_MIN: {label: 기간_환율_최소, type: float, unit: 원}
+    TOU_NUM21_MAX: {label: 기간_환율_최대, type: float, unit: 원}
+    TOU_NUM31: {label: 국제유가, type: float, unit: 달러}
+    TOU_NUM31_MIN: {label: 기간_유가_최소, type: float, unit: 달러}
+    TOU_NUM31_MAX: {label: 기간_유가_최대, type: float, unit: 달러}
+
+TS_01_16_002_1:
+  name: 방한 외래관광객 연령별(월별·10세 구분)
+  screen: /datalab/portal/ts/getEntcnyFrgnCust2Form.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y"}
+  granularity: month
+  section: 규모
+  query_axis: 전국
+  caution: >-
+    10세 단위 구분이다(화면 상수 colAgeNew). 0~9 · 10~19 · … ·
+    80세이상 · 승무원 열 갈래다. 옛 구분(TS_01_16_002)과 경계가
+    달라 이어 붙일 수 없다. 열을 더하면 880,881명으로 다른 분해와
+    같다(2024년 1월, 2026-08-24 검산).
+  columns:
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    TOU_NUM1: {label: 0_9세, type: float, unit: 명}
+    TOU_NUM2: {label: 10_19세, type: float, unit: 명}
+    TOU_NUM3: {label: 20_29세, type: float, unit: 명}
+    TOU_NUM4: {label: 30_39세, type: float, unit: 명}
+    TOU_NUM5: {label: 40_49세, type: float, unit: 명}
+    TOU_NUM6: {label: 50_59세, type: float, unit: 명}
+    TOU_NUM7: {label: 60_69세, type: float, unit: 명}
+    TOU_NUM8: {label: 70_79세, type: float, unit: 명}
+    TOU_NUM9: {label: 80세_이상, type: float, unit: 명}
+    TOU_NUM10: {label: 승무원, type: float, unit: 명}
+    TOU_NUM21: {label: 원달러_환율, type: float, unit: 원}
+    TOU_NUM21_MIN: {label: 기간_환율_최소, type: float, unit: 원}
+    TOU_NUM21_MAX: {label: 기간_환율_최대, type: float, unit: 원}
+    TOU_NUM31: {label: 국제유가, type: float, unit: 달러}
+    TOU_NUM31_MIN: {label: 기간_유가_최소, type: float, unit: 달러}
+    TOU_NUM31_MAX: {label: 기간_유가_최대, type: float, unit: 달러}
+
+TS_01_16_003:
+  name: 방한 외래관광객 입국목적별(월별)
+  screen: /datalab/portal/ts/getEntcnyFrgnCust2Form.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y"}
+  granularity: month
+  section: 규모
+  query_axis: 전국
+  caution: >-
+    관광 · 상용 · 공용 · 유학연수 · 기타 다섯 갈래다(화면 상수
+    colTarget). 다섯을 더하면 880,881명으로 다른 분해와 같다
+    (2024년 1월, 2026-08-24 검산).
+    **'기타'가 무엇인지 사이트가 밝히지 않는다.** 2024년 1월 기타가
+    151,253명으로 성별 표의 승무원(71,265명)보다 크므로 승무원만은
+    아니다. 그 이상은 확인하지 못했으니 이름을 붙이지 마라.
+    **관광 목적만 보려면 TOU_NUM1 이다** — 2024년 1월 696,840명으로
+    전체 방한객 880,881명의 79%다. 전체를 관광객이라고 적으면
+    나머지 21%(상용·공용·유학연수·기타)를 관광객으로 세게 된다.
+  columns:
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    TOU_NUM1: {label: 관광, type: float, unit: 명}
+    TOU_NUM2: {label: 상용, type: float, unit: 명}
+    TOU_NUM3: {label: 공용, type: float, unit: 명}
+    TOU_NUM4: {label: 유학연수, type: float, unit: 명}
+    TOU_NUM5: {label: 기타, type: float, unit: 명}
+    TOU_NUM21: {label: 원달러_환율, type: float, unit: 원}
+    TOU_NUM21_MIN: {label: 기간_환율_최소, type: float, unit: 원}
+    TOU_NUM21_MAX: {label: 기간_환율_최대, type: float, unit: 원}
+    TOU_NUM31: {label: 국제유가, type: float, unit: 달러}
+    TOU_NUM31_MIN: {label: 기간_유가_최소, type: float, unit: 달러}
+    TOU_NUM31_MAX: {label: 기간_유가_최대, type: float, unit: 달러}
+
+TS_01_16_004_NEW2:
+  name: 방한 외래관광객 입국 공항·항구별(월별)
+  screen: /datalab/portal/ts/getEntcnyFrgnCust2Form.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y"}
+  granularity: month
+  section: 규모
+  query_axis: 전국
+  caution: >-
+    열여섯 갈래다(화면 상수 colTransferNew2 에서 '전체'를 뺀 것).
+    **순서가 공항·항구가 섞여 있어 눈으로 짐작하면 틀린다** —
+    8~10번째가 부산항구·인천항구·기타항구이고 11번째가 다시
+    기타공항이다. 열여섯을 더하면 880,881명으로 다른 분해와 같다
+    (2024년 1월, 2026-08-24 검산). 인천공항 하나가 67%다.
+    형제 지표 TS_01_16_004·_NEW 는 갈래 수가 화면 상수와 맞지 않아
+    카탈로그에 넣지 않았다.
+  columns:
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    TOU_NUM1: {label: 인천공항, type: float, unit: 명}
+    TOU_NUM2: {label: 김해공항, type: float, unit: 명}
+    TOU_NUM3: {label: 김포공항, type: float, unit: 명}
+    TOU_NUM4: {label: 대구공항, type: float, unit: 명}
+    TOU_NUM5: {label: 무안공항, type: float, unit: 명}
+    TOU_NUM6: {label: 양양공항, type: float, unit: 명}
+    TOU_NUM7: {label: 청주공항, type: float, unit: 명}
+    TOU_NUM8: {label: 부산항구, type: float, unit: 명}
+    TOU_NUM9: {label: 인천항구, type: float, unit: 명}
+    TOU_NUM10: {label: 기타항구, type: float, unit: 명}
+    TOU_NUM11: {label: 기타공항, type: float, unit: 명}
+    TOU_NUM12: {label: 제주항구, type: float, unit: 명}
+    TOU_NUM13: {label: 서귀포항구, type: float, unit: 명}
+    TOU_NUM14: {label: 속초항구, type: float, unit: 명}
+    TOU_NUM15: {label: 여수항구, type: float, unit: 명}
+    TOU_NUM16: {label: 제주공항, type: float, unit: 명}
+    TOU_NUM21: {label: 원달러_환율, type: float, unit: 원}
+    TOU_NUM21_MIN: {label: 기간_환율_최소, type: float, unit: 원}
+    TOU_NUM21_MAX: {label: 기간_환율_최대, type: float, unit: 원}
+    TOU_NUM31: {label: 국제유가, type: float, unit: 달러}
+    TOU_NUM31_MIN: {label: 기간_유가_최소, type: float, unit: 달러}
+    TOU_NUM31_MAX: {label: 기간_유가_최대, type: float, unit: 달러}
+
+# ─────────────────────────────────────────────────────────────────
+# 2026-08-24 추가 — 방한여행 현황과 항공
+#
+# ── 같은 모집단인지 산술로 확인했다 ─────────────────────────────
+# 2024년 방한 외래객이 **16,369,629명**인 것을 세 지표가 서로 다른
+# 방식으로 확인해 준다.
+#   TS_01_16_001 성별 세 갈래 합         16,369,629
+#   NAT_08_01_011 대륙 일곱 갈래 합      16,369,629
+#   NAT_07_01_006 공항·항구 아홉 갈래 합 16,369,629
+# 비율(TOU_NUM_RATE) 합도 각각 100.0 이다(2026-08-24 검산).
+#
+# ── 넣지 않은 것 ────────────────────────────────────────────────
+# `NAT_08_01_008`(관광수지)은 아웃바운드 카탈로그의 `NAT_05_01_004`
+# 와 값이 같다(DIV_NM 컬럼 하나만 없다). 같은 것을 두 벌 두지 않았다.
+#
+# `NAT_10_02_004`(입국목적별)는 뺐다. 2024년 합이 14,026,315명으로
+# 방한 외래객 16,369,629명과 맞지 않고, 승무원(1,141,209)을 빼도
+# 공항 입국자(14,547,078)와 맞춰도 어긋난다. **무엇을 센 것인지
+# 확정하지 못했다.** 같은 '입국목적별'인 TS_01_16_003 과 관광 비중이
+# 87.7% 대 82.4% 로 달라, 둘을 섞으면 어느 쪽이든 틀린 값이 실린다.
+# ─────────────────────────────────────────────────────────────────
+
+NAT_08_01_009:
+  name: 방한객 1인당 관광수입(월별)
+  screen: /datalab/portal/nat/getForTourForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y", NAT_CD: "000"}
+  granularity: month
+  section: 돈
+  query_axis: 전국
+  caution: >-
+    VAL3 = IMP_INTL_BALC_AMT x 1,000,000 ÷ IMP_PSON_NUM 이 세 달
+    모두 맞아떨어진다(2026-08-24 검산). **단위가 서로 다르다** —
+    관광수입은 백만 달러, 1인당은 달러다. IMP_PSON_NUM 은 방한
+    외래객 수이며 TS_01_16_* 의 갈래 합과 같다(2024년 1월 880,881명).
+    **승무원과 비관광 목적 입국자가 분모에 들어 있다** — "관광객
+    1인당 지출"이 아니다.
+  columns:
+    BASE_DATE: {label: 기준월, type: str, unit: ""}
+    IMP_INTL_BALC_AMT: {label: 관광수입, type: float, unit: 백만달러}
+    IMP_PSON_NUM: {label: 방한객수, type: float, unit: 명}
+    VAL3: {label: 1인당_관광수입, type: float, unit: 달러}
+
+NAT_08_01_011:
+  name: 대륙별 방한 외래객
+  screen: /datalab/portal/nat/getForTourForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y", NAT_CD: "000"}
+  granularity: period
+  section: 규모
+  query_axis: 전국
+  caution: >-
+    일곱 갈래이며 기간 합계다(2024년 아시아 80.1%). 합이
+    16,369,629명으로 TS_01_16_* 의 갈래 합과 정확히 같고 비율 합이
+    100.0이다(2026-08-24 검산). '기타' 대륙이 222명으로 오는 해가
+    있으니 0으로 반올림해 지우지 마라.
+  columns:
+    CTNN_NM: {label: 대륙, type: str, unit: ""}
+    TOU_NUM: {label: 방한객수, type: float, unit: 명}
+    TOU_NUM_RATE: {label: 비중, type: float, unit: "%"}
+
+NAT_07_01_006:
+  name: 입국 공항·항구별 방한 외래객
+  screen: /datalab/portal/nat/getForTourDashForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y", NAT_CD: "000"}
+  granularity: period
+  section: 규모
+  query_axis: 전국
+  caution: >-
+    아홉 갈래로 묶은 표다. 열여섯 갈래로 잘게 나눈
+    TS_01_16_004_NEW2 와 합은 같지만(2024년 16,369,629명, 비율 합
+    100.0, 2026-08-24 검산) 묶음이 달라 행끼리 짝지을 수 없다.
+    **DIV_ORD 는 크기 순서가 아니다** — 1번이 기타항구(5.7%)이고
+    9번이 인천공항(67.3%)이다. 순위로 읽지 마라.
+  columns:
+    DIV_ORD: {label: 표시순서, type: float, unit: ""}
+    AIRPT_POT_NM: {label: 공항_항구, type: str, unit: ""}
+    TOU_NUM: {label: 방한객수, type: float, unit: 명}
+    TOU_NUM_RATE: {label: 비중, type: float, unit: "%"}
+
+NAT_08_01_014:
+  name: 한국 국가 이미지·인지도·선호도(연도별)
+  screen: /datalab/portal/nat/getForTourForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y", NAT_CD: "000"}
+  granularity: year
+  section: 관심
+  query_axis: 전국
+  caution: >-
+    **기간 파라미터를 무시한다.** 2024년을 물어도 2015~2022년이
+    온다(2026-08-24 확인). **2022년에서 멈춘 조사다** — 최신값으로
+    말하지 마라. 세 갈래이며 모두 '긍정 응답 비율(%)'이다(국가
+    이미지 · 관광목적지 인지도 · 관광목적지 선호도). DIV_NM 에
+    단위가 이미 적혀 있으므로 표에 그대로 옮기면 된다.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    DIV_NM: {label: 조사항목, type: str, unit: ""}
+    VAL: {label: 긍정응답_비율, type: float, unit: "%"}
+
+NAT_08_01_030:
+  name: 방한여행 관심도 추이(최근 24개월)
+  screen: /datalab/portal/nat/getForTourForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y", NAT_CD: "000"}
+  granularity: month
+  section: 관심
+  query_axis: 전국
+  caution: >-
+    **기간 파라미터를 무시하고 늘 최근 24개월을 준다**(2026-08-24
+    조회에서 202408~202607). 요청한 기간이 표에 없어도 오류가 아니다.
+    `itsNum` 의 단위를 사이트가 표기하지 않는다 — 값이 36~59 사이라
+    지수로 보이나 확정하지 못했으므로 절대값을 단정하지 말고 달 사이의
+    높낮이로만 읽어라. 컬럼 이름이 소문자다.
+  columns:
+    base: {label: 기준월, type: str, unit: ""}
+    itsNum: {label: 관심도, type: float, unit: ""}
+
+NAT_10_01_005:
+  name: 국제선 승객과 탑승률(월별)
+  screen: /datalab/portal/nat/getForAirForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y", NAT_CD: "000"}
+  granularity: month
+  section: 접근성
+  query_axis: 전국
+  caution: >-
+    **내국인 승객은 추정값이다**(컬럼 이름의 ESTM 이 그 뜻이다).
+    외국인 승객과 더해 "국제선 총 승객"이라고 적을 때 추정이 섞여
+    있다는 것을 함께 적어라. 환승객(TRNF_PSNG_NUM)은 따로 오며
+    앞의 둘에 포함되는지 사이트가 밝히지 않으니 더하지 마라.
+    BDNG_RAT 은 탑승률(%)이다(2024년 1월 81.3, 12월 85.7).
+    **VSTK_FRGN_CUST_PSNG_NUM 은 방한 외래객 수가 아니다** —
+    2024년 1월 753,973명으로 같은 달 방한객 880,881명과 다르다
+    (항공편 승객만이고 항구 입국자가 빠져 있다, 2026-08-24 확인).
+  columns:
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    VSTK_FRGN_CUST_PSNG_NUM: {label: 외국인_승객수, type: float, unit: 명}
+    NATI_PSNG_ESTM_NUM: {label: 내국인_승객수_추정, type: float, unit: 명}
+    TRNF_PSNG_NUM: {label: 환승객수, type: float, unit: 명}
+    BDNG_RAT: {label: 탑승률, type: float, unit: "%"}
+
+# ─────────────────────────────────────────────────────────────────
+# 2026-08-24 추가 — 목적별 누적과 해외 한국 이미지 조사
+#
+# ── **2019년에 멈춘 조사다** ────────────────────────────────────
+# `TAE_06_01_*` 은 2014~2019 만 있다(2026-08-24 확인). 기간 파라미터를
+# 무시하고 늘 그 여섯 해를 준다. "요즘 외국인이 한국을 어떻게 보나"에
+# 쓰면 안 된다 — 코로나 이전이다.
+#
+# 그래도 넣는 이유는 **국가별 인식을 이 저장소에서 볼 수 있는 유일한
+# 자리**이기 때문이다. 인용할 때 조사 연도를 반드시 함께 적어라.
+#
+# ── UNIT_NM 컬럼이 단위를 준다 ─────────────────────────────────
+# 이 계열은 드물게 응답이 단위를 알려 준다(모두 '%'). 라벨에 %를
+# 박지 않고 그 컬럼을 함께 실어 두었다 — 사이트가 다른 단위를 섞기
+# 시작하면 그때 드러난다.
+#
+# ── 넣지 않은 것 ────────────────────────────────────────────────
+# `TAE_06_01_004` 는 `TAE_06_01_003` 과 응답이 같다(3,425행, 같은
+# 구분 둘). 같은 것을 두 벌 두지 않았다.
+#
+# `NAT_08_01_002`(국적별 성별 방한객, 60개국 × Male·Female·Crew)도
+# 뺐다. 국가별 성별은 이 저장소에 없는 축이라 탐났지만 **값이 무엇의
+# 합인지 확정하지 못했다**(2026-08-24).
+#
+#   BASE_YM2 를 무시한다 — 201801~202412 와 201801~202512 가 같다
+#   BASE_YM1 의 연도에만 반응한다 — 202001~ 이면 일본 남성 155,691,
+#   201801~ 이면 2,372,050
+#
+# 시작 연도부터의 누적으로 보이는데, 2018년 한 해 일본 방한객이
+# 295만인 것과 견주면 2018년부터 누적 237만은 너무 작다. 창이 짧으면
+# (202401~202412) 빈 배열이라 한 해만 떼어 볼 수도 없다.
+# ─────────────────────────────────────────────────────────────────
+
+NAT_08_01_006:
+  name: 방한 외래관광객 입국목적별(누적)
+  screen: /datalab/portal/nat/getForTourForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y", NAT_CD: "000"}
+  granularity: period
+  section: 규모
+  query_axis: 전국
+  caution: >-
+    다섯 갈래이고 `TOU_NUM_RATE` 합이 100.0 이다(관광 79.7 · 기타
+    16.4 · 유학연수 2.4 · 상용 1.1 · 공용 0.4, 2026-08-24 검산).
+    **`CD_NM` 에 자간을 벌린 공백이 들어 있다** — '관      광'
+    처럼 온다. 그대로 비교하거나 표에 실으면 어긋나므로 공백을 지운
+    뒤 쓰라. 이 저장소가 이미 한 번 겪은 함정이다.
+    월별 목적별(TS_01_16_003)과 비중이 다른 것은 기간이 다르기
+    때문이다 — 이쪽은 누적이다. 섞어 적지 마라.
+  columns:
+    CD_NM: {label: 입국목적, type: str, unit: ""}
+    TGT_CD: {label: 목적코드, type: str, unit: ""}
+    TOU_NUM: {label: 방한객수, type: float, unit: 명}
+    TOU_NUM_RATE: {label: 비중, type: float, unit: "%"}
+
+TAE_06_01_001:
+  name: 해외의 한국 이미지 평가(국가별·연도별)
+  screen: /datalab/portal/ts/getTourCplnForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y"}
+  granularity: year
+  section: 관심
+  query_axis: 전국
+  caution: >-
+    **2014~2019 만 있다.** 기간 파라미터를 무시하고 늘 그 여섯 해를
+    준다(2026-08-24 확인) — 코로나 이전 조사이므로 "요즘"이라고 적지
+    마라. 인용할 때 조사 연도를 함께 적어라.
+    **행이 매우 많다**(67,857행). `AGRT_ITEM_NM`(평가 항목)으로
+    걸러 쓰라. `ITEM_DIV_NM` 이 조사한 나라이고 `ITEM_DTL_NM` 이
+    평가 대상 나라다 — 한국만이 아니라 비교 대상국도 들어 있다.
+    단위는 `UNIT_NM` 컬럼이 알려 준다(모두 '%').
+  columns:
+    BASE_DATE: {label: 기준연도, type: str, unit: ""}
+    # 라벨을 '기준연도'로 맞춘다. coverage_probe 가 이 목록으로
+    # 기준 시점 컬럼을 찾기 때문에 '조사연도'라고 적으면 그
+    # 지표가 수록 시점 탐사에서 빠진다.
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    AGRT_ITEM_NM: {label: 평가항목, type: str, unit: ""}
+    ITEM_DTL_NM: {label: 평가대상국, type: str, unit: ""}
+    ITEM_DIV_NM: {label: 조사국, type: str, unit: ""}
+    UNIT_NM: {label: 단위, type: str, unit: ""}
+    AGRT_ITEM_VAL: {label: 값, type: float, unit: ""}
+
+TAE_06_01_002:
+  name: 국가별 한국 인지도·선호도(연도별)
+  screen: /datalab/portal/ts/getTourCplnForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y"}
+  granularity: year
+  section: 관심
+  query_axis: 전국
+  caution: >-
+    **2014~2019 만 있다.** `AGRT_ITEM_NM_1` 이 인지도인지 선호도인지
+    가르고 `AGRT_ITEM_NM_2` 가 대상국이다 — 한국만이 아니다.
+    `AGRT_DIV_NM` 이 "국가별 인지도/선호도('긍정' 응답만)"라고
+    적혀 있다: **긍정 응답 비율이지 점수가 아니다.**
+    `ITEM_DIV_NM` 이 조사한 나라다(21개국, 2026-08-24 확인).
+    단위는 `UNIT_NM`(%)이다.
+    기간 파라미터를 무시한다.
+  columns:
+    AGRT_DIV_NM: {label: 조사구분, type: str, unit: ""}
+    BASE_DATE: {label: 기준연도, type: str, unit: ""}
+    # 라벨을 '기준연도'로 맞춘다. coverage_probe 가 이 목록으로
+    # 기준 시점 컬럼을 찾기 때문에 '조사연도'라고 적으면 그
+    # 지표가 수록 시점 탐사에서 빠진다.
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    AGRT_ITEM_NM_1: {label: 항목, type: str, unit: ""}
+    AGRT_ITEM_NM_2: {label: 대상국, type: str, unit: ""}
+    ITEM_DIV_NM: {label: 조사국, type: str, unit: ""}
+    UNIT_NM: {label: 단위, type: str, unit: ""}
+    AGRT_ITEM_VAL: {label: 긍정응답_비율, type: float, unit: ""}
+
+TAE_06_01_003:
+  name: 한국 하면 떠오르는 도시·콘텐츠(국가별·연도별)
+  screen: /datalab/portal/ts/getTourCplnForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y"}
+  granularity: year
+  section: 관심
+  query_axis: 전국
+  caution: >-
+    **2014~2019 만 있다.** `AGRT_DIV_NM` 이 두 갈래다 — '관광목적지로
+    연상되는 한국도시'와 '관광목적지로 연상되는 한국관련 콘텐츠'.
+    **한 표에 섞여 있으니 걸러서 쓰라.** `ITEM_DTL_NM` 이 도시 또는
+    콘텐츠 이름이고 `ITEM_DIV_NM` 이 조사한 나라다(20개국,
+    2026-08-24 확인).
+    형제 지표 `TAE_06_01_004` 는 응답이 이것과 같아 카탈로그에 넣지
+    않았다. 단위는 `UNIT_NM`(%)이다. 기간 파라미터를 무시한다.
+  columns:
+    AGRT_DIV_NM: {label: 조사구분, type: str, unit: ""}
+    BASE_DATE: {label: 기준연도, type: str, unit: ""}
+    # 라벨을 '기준연도'로 맞춘다. coverage_probe 가 이 목록으로
+    # 기준 시점 컬럼을 찾기 때문에 '조사연도'라고 적으면 그
+    # 지표가 수록 시점 탐사에서 빠진다.
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    ITEM_DTL_NM: {label: 연상되는_대상, type: str, unit: ""}
+    ITEM_DIV_NM: {label: 조사국, type: str, unit: ""}
+    UNIT_NM: {label: 단위, type: str, unit: ""}
+    AGRT_ITEM_VAL: {label: 응답_비율, type: float, unit: ""}

@@ -1,0 +1,198 @@
+# 한국관광 데이터랩 qid 카탈로그 — 관광수요 경쟁력(관광활성화)
+#
+# 다른 카탈로그가 "몇 명이 왔는가"를 세는 데 비해, 여기는 **그 지역이
+# 관광지로서 얼마나 힘이 있는가**를 하나의 지수로 말한다. 전국 252개
+# 시군구(또는 17개 시도)를 같은 잣대로 줄 세운 자리가 함께 온다.
+#
+# 화면: 지역별 분석 > 관광활성화 분석 (loc/getTourActivateForm)
+#
+# ── 구버전 지표(LN_09_*)를 쓰지 마라 ──────────────────────────
+# 색인에는 LN_09_01_001 ~ LN_09_01_009_01 열두 개가 함께 있다. 같은
+# 화면의 **옛 지수**이고 **2024년 5월에 멈췄다**(그 뒤 기간을 물으면
+# 빈 배열). 지금 화면이 쓰는 것은 TA_* 계열이며 2026년 7월까지 있다.
+#
+# 두 계열은 값 체계도 다르다 — 2024-01 강남구가 구버전 100.0,
+# 신버전 128.08이다. 한 리포트에 섞으면 안 된다.
+#
+# 그중 LN_09_01_002는 특히 위험하다. **SGG_CD를 받으면서 무시하고
+# 전국 값만 준다**(정선군과 강남구가 똑같이 46.5). 지역 지수로 읽으면
+# 어느 지역을 물어도 같은 답이 나온다.
+#
+# ── 지수 체계 ─────────────────────────────────────────────────
+# 4대분류 / 8중분류 / 59세부지표로 짜여 있다. 이름은 지어낸 것이
+# 아니라 화면 요약문(tour_activate.js의 summaryTxt)에서 옮겼다.
+#
+#   1 관광 자원 수요   11 관광서비스수요 · 12 문화자연자원 수요
+#   2 관광 수요 강도   21 관광체류강도   · 22 관광소비강도
+#   3 관광 다양성      31 관광객 다양성  · 32 관광소비 다양성
+#                      33 국제적 다양성
+#   4 관광 이동거리    41 여행거리
+#
+# ── 축이 둘이다 ───────────────────────────────────────────────
+# SGG_CD에 다섯 자리를 넣으면 시군구, **두 자리를 넣으면 시도**다.
+# 순위의 모집단(RK_CNT)이 따라 바뀐다 — 시군구 252, 시도 17.
+# ────────────────────────────────────────────────────────────────
+
+TA_01_01_001:
+  name: 관광수요 지수 월별 추이
+  screen: /datalab/portal/loc/getTourActivateForm.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: month
+  section: 관광수요
+  query_axis: 지역
+  caution: >-
+    차트가 이 값에 붙이는 계열 이름은 '관광수요 지수'다. 사이트가
+    단위를 표기하지 않는다 — 전국을 기준으로 잡은 지수로 보이나
+    확정하지 못했으므로 절대값을 단정하지 말고 전국값(TA_01_01_001_001)
+    및 다른 지역과의 비교로 읽어라.
+    SGG_CD에 두 자리를 넣으면 시도 값이 온다(강원 72.02 대 정선 69.82).
+    2026년 7월까지 있다. 색인의 LN_09_* 계열은 2024년 5월에 멈춘
+    옛 지수이며 값 체계가 달라 섞을 수 없다.
+  columns:
+    BASE_YM: {label: 기준연월, type: str, unit: ""}
+    SIDO_NM: {label: 지역명, type: str, unit: ""}
+    DMAND_AVG_IDCT_VAL: {label: 관광수요지수, type: float, unit: ""}
+
+TA_01_01_001_001:
+  name: 관광수요 지수 요약(전국 대비·전기 대비)
+  screen: /datalab/portal/loc/getTourActivateForm.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: month
+  section: 관광수요
+  query_axis: 지역
+  caution: >-
+    한 행만 온다. ALL_INDX가 같은 기간의 **전국** 지수이고 CURR_INDX가
+    이 지역 지수다 — 둘을 견주는 것이 이 지표의 쓸모다. PREV_INDX는
+    직전 기간 값이므로 CURR과 빼면 증감이 되지만, 사이트가 어느 구간을
+    직전으로 잡는지 밝히지 않으니 기간을 함께 적어라.
+    ALL_INDX_NM은 늘 '전국'이고 CURR_INDX_NM·PREV_INDX_NM은 지역명이다.
+  columns:
+    ALL_INDX_NM: {label: 전국_이름, type: str, unit: ""}
+    ALL_INDX: {label: 전국_지수, type: float, unit: ""}
+    MAX_BASE_YM: {label: 기간_끝, type: str, unit: ""}
+    MIN_BASE_YM: {label: 기간_시작, type: str, unit: ""}
+    CURR_INDX_NM: {label: 이지역_이름, type: str, unit: ""}
+    CURR_INDX: {label: 이지역_지수, type: float, unit: ""}
+    PREV_INDX_NM: {label: 직전_이름, type: str, unit: ""}
+    PREV_INDX: {label: 직전_지수, type: float, unit: ""}
+
+TA_01_03_001:
+  name: 관광수요 경쟁력 4대분류(값·전국순위·전국평균·최고값)
+  screen: /datalab/portal/loc/getTourActivateForm.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: month
+  section: 관광수요
+  query_axis: 지역
+  caution: >-
+    이 카탈로그에서 가장 쓸모 있는 지표다. 네 행이 오며 한 행이
+    대분류 하나다(관광자원수요·관광 수요 강도·관광 다양성·관광 이동거리).
+    **TURSM_DNS_DIV_VAL2가 순위이고 TURSM_DNS_DIV_VAL은 순위가 아니다.**
+    후자는 RK_CNT - VAL2 + 1 로 뒤집은 값이라 클수록 좋다(세 지역에서
+    검산 통과: 정선 252-80+1=173, 강남 252-1+1=252, 제주 252-2+1=251).
+    큰 쪽을 순위로 읽으면 1등을 꼴등으로 본다.
+    RK_CNT는 모집단이며 **축에 따라 바뀐다** — 시군구로 부르면 252,
+    시도로 부르면 17이다. "252곳 중 80위"처럼(모집단 252는 2026-08-23 재확인) 반드시 함께 적어라.
+    AVG_ALL은 전국 평균, MAX_AVG는 전국 최고 지역의 값이다(차트가
+    각각 '전국평균값'·'전국평균값-최대값'으로 쓴다). 값의 단위는
+    표기되지 않는다.
+  columns:
+    SEQ: {label: 순번, type: str, unit: ""}
+    SGG_NM: {label: 지역명, type: str, unit: ""}
+    TURSM_DNS_DIV_NM: {label: 대분류, type: str, unit: ""}
+    TURSM_DNS_DIV_VAL: {label: 역순위_클수록좋음, type: float, unit: ""}
+    TURSM_DNS_DIV_VAL2: {label: 순위, type: float, unit: 위}
+    RK_CNT: {label: 모집단, type: float, unit: 곳}
+    MAX_AVG: {label: 전국최고값, type: float, unit: ""}
+    AVG_ALL: {label: 전국평균, type: float, unit: ""}
+    DMAND_DTLS_IDCT_VAL_SUM: {label: 세부지표_합, type: float, unit: ""}
+    DMAND_DTLS_IDCT_VAL_AVG: {label: 이지역_값, type: float, unit: ""}
+
+TA_01_03_003:
+  name: 관광수요 경쟁력 8중분류 점수
+  screen: /datalab/portal/loc/getTourActivateForm.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: month
+  section: 관광수요
+  query_axis: 지역
+  caution: >-
+    여덟 행이 온다. AVG_DMAND_DTLS_IDCT의 단위는 **점**이다 — 화면
+    요약문이 "관광서비스수요 : <b>{값}</b>점"으로 쓴다.
+    IDCT_SCLS_CD가 11·12·21·22·31·32·33·41이고 대분류(IDCT_MCLS_CD)
+    1~4에 각각 속한다. 순위는 여기 없다 — TA_01_03_001에 있다.
+  columns:
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    SGG_NM: {label: 시군구명, type: str, unit: ""}
+    IDCT_MCLS_CD: {label: 대분류코드, type: str, unit: ""}
+    IDCT_MCLS_NM: {label: 대분류, type: str, unit: ""}
+    IDCT_SCLS_CD: {label: 중분류코드, type: str, unit: ""}
+    IDCT_SCLS_NM: {label: 중분류, type: str, unit: ""}
+    AVG_DMAND_DTLS_IDCT: {label: 점수, type: float, unit: 점}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+
+TA_01_03_002:
+  name: 관광수요 경쟁력 세부지표별 점수
+  screen: /datalab/portal/loc/getTourActivateForm.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: month
+  section: 관광수요
+  query_axis: 지역
+  caution: >-
+    **RNK는 지역 순위가 아니다.** 그 중분류 안에서 이 지역의 점수가
+    높은 순서다 — 중분류마다 1부터 다시 시작하고, 값이 정확히
+    내림차순인 것을 여덟 중분류 모두에서 확인했다. 다른 지역과의
+    순위로 읽으면 "레포츠여행유형 SNS언급량 전국 1위"처럼 없는
+    사실을 만든다.
+    행 수가 축에 따라 다르다 — 시군구 59개, 시도 43개(2026-08-23 재확인).
+    AVG_DMAND_DTLS_IDCT는 점수다(TA_01_03_003과 같은 척도).
+  columns:
+    RNK: {label: 지역내_점수순번, type: float, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    SGG_NM: {label: 시군구명, type: str, unit: ""}
+    IDCT_MCLS_CD: {label: 대분류코드, type: str, unit: ""}
+    IDCT_MCLS_NM: {label: 대분류, type: str, unit: ""}
+    IDCT_SCLS_CD: {label: 중분류코드, type: str, unit: ""}
+    IDCT_SCLS_NM: {label: 중분류, type: str, unit: ""}
+    DTLS_IDCT_CD: {label: 세부지표코드, type: str, unit: ""}
+    DTLS_IDCT_NM: {label: 세부지표, type: str, unit: ""}
+    AVG_DMAND_DTLS_IDCT: {label: 점수, type: float, unit: 점}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+
+TA_01_02_001:
+  name: 관광수요 세부지표 월별 추이
+  screen: /datalab/portal/loc/getTourActivateForm.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: month
+  section: 관광수요
+  query_axis: 지역
+  caution: >-
+    **행이 많다.** 시군구 열두 달이면 708행이다(세부지표 59 x 12 · 2026-08-23 재확인).
+    지표 하나를 보려면 INDICATE로 걸러라.
+    TOU_NUM_PCT의 단위를 사이트가 표기하지 않는다 — 이름에 PCT가
+    붙었지만 값이 100을 넘는다(101.15). 백분율로 읽지 말고 연월 간
+    변화로 읽어라.
+    TOU_DIV는 중분류 코드(TOU_DIV_11 등)이고 TOU_DIV_NM이 그 이름이다.
+  columns:
+    BASE_YM: {label: 기준연월, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    SGG_NM: {label: 시군구명, type: str, unit: ""}
+    TOU_DIV: {label: 중분류코드, type: str, unit: ""}
+    TOU_DIV_NM: {label: 중분류, type: str, unit: ""}
+    INDICATE_CD: {label: 세부지표코드, type: str, unit: ""}
+    INDICATE: {label: 세부지표, type: str, unit: ""}
+    TOU_NUM_PCT: {label: 값, type: float, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}

@@ -1,0 +1,273 @@
+# 한국관광 데이터랩 qid 카탈로그 — 외국인 관광객 집중 분석
+#
+# 화면: nat/getNatFocTourAna (국가별 분석 > 외국인 관광객 집중 분석)
+#
+# 이 화면에만 있는 것이 둘이다.
+#
+# ── 1. 숙박 리뷰 감성 분석 ──────────────────────────────────────
+# 이 저장소는 지금까지 "감성 분석은 없다"고 답해 왔다. 있다.
+# 외국인이 남긴 숙박 리뷰에서 긍정·부정 주요 키워드를 뽑아 준다.
+#
+# **`srchKwrdText` 의 철자가 틀려 있다.** 사이트 코드가
+# `"POSTIVE"`(I 가 빠졌다)로 보낸다. 올바른 철자 `POSITIVE` 를
+# 보내면 오류가 아니라 **빈 배열**이 온다(2026-08-24 확인).
+#
+#   srchKwrdText 없음      20행 (긍정도 부정도 아닌 기본값)
+#   srchKwrdText=POSTIVE   20행 편안·훌륭·깨끗·위치·친절 …
+#   srchKwrdText=NEGATIVE  20행 위치·직원·침대·식사·아침 …
+#   srchKwrdText=POSITIVE  0행
+#
+# 셋이 서로 다른 표다. **빼고 부르면 어느 쪽도 아닌 값이 온다** —
+# 긍정 키워드라고 적으면 안 된다.
+#
+# `srchTypeText` 로 숙박 유형을 고른다. 값은 화면의 data-acctype
+# 속성이 근거다: '' 전체 · Hotel · Motel · Pension · Resort ·
+# GuestHouse · Camp. Camp 로 부르면 다른 키워드가 온다(2026-08-24 확인).
+#
+# ── 2. 간편결제 관광소비 ────────────────────────────────────────
+# 신용카드와 다른 결제 수단이다. 단위는 **천원**이다(차트 정의
+# '금액(천원)'). 업종 구성이 신용카드와 딴판이라 나란히 놓으면
+# 안 된다 — 2024년 간편결제는 의료웰니스업이 67.8%다.
+#
+# ── 방문자 수가 방한객 수가 아니다 ──────────────────────────────
+# `NAT_11_01_001` 은 2024년 1월 9,911,847명인데 같은 달 방한 외래객은
+# 880,881명이다(11배). 입국자 수가 아니라 **이동통신 기반 연인원**
+# 으로 보이나 사이트가 정의를 밝히지 않는다. 입국 통계
+# (TS_01_16_*·NAT_08_01_011)와 **절대 섞지 마라.**
+
+NAT_11_01_001:
+  name: 외국인 방문자 수와 증감률(월별)
+  screen: /datalab/portal/nat/getNatFocTourAna.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y", srchAreaDate: "1", tabDiv: "1"}
+  granularity: month
+  section: 규모
+  query_axis: 전국
+  caution: >-
+    **입국자 수가 아니다.** 2024년 1월 9,911,847명으로 같은 달 방한
+    외래객 880,881명의 11배다(2026-08-24 확인). 사이트가 정의를
+    밝히지 않으므로 "방한객 몇 명"이라고 옮기지 마라 — 이 지표
+    안에서의 달 사이 변화로만 읽어라. 단위는 명이다(차트 정의).
+    TOU_RATE 는 문자열로 온다("126.90") — 숫자로 바꿔 쓰라.
+    PREV_TOU_NUM 은 전년 동월 값이다.
+  columns:
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    TOU_NUM: {label: 방문자수, type: float, unit: 명}
+    PREV_TOU_NUM: {label: 전년동월_방문자수, type: float, unit: 명}
+    TOU_RATE: {label: 전년대비_증감률, type: str, unit: "%"}
+
+NAT_11_02_001:
+  name: 외국인 신용카드 관광소비액과 증감률(월별)
+  screen: /datalab/portal/nat/getNatFocTourAna.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y", srchAreaDate: "1", tabDiv: "1"}
+  granularity: month
+  section: 소비
+  query_axis: 전국
+  caution: >-
+    단위가 **원**이다(차트 정의). 빅데이터 카탈로그의 신용카드
+    지표(BDT_02_*)는 **천원**이므로 나란히 놓으면 1000배 틀린다
+    (2026-08-24 확인).
+    컬럼 이름이 TOU_NUM 이지만 사람 수가 아니라 금액이다.
+    TOU_RATE 는 문자열로 온다. 같은 화면의 간편결제 지표
+    (NAT_12_01_*)는 천원이고 결제 수단이 달라 더할 수 없다.
+  columns:
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    TOU_NUM: {label: 관광소비액, type: float, unit: 원}
+    PREV_TOU_NUM: {label: 전년동월_관광소비액, type: float, unit: 원}
+    TOU_RATE: {label: 전년대비_증감률, type: str, unit: "%"}
+
+NAT_11_03_009:
+  name: 숙박 리뷰 감성 분석 주요 키워드
+  screen: /datalab/portal/nat/getNatFocTourAna.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, srchKwrdText, srchTypeText]
+  fixed_params: {ALL_YN: "Y", srchAreaDate: "1", tabDiv: "1",
+                 srchKwrdText: "POSTIVE", srchTypeText: ""}
+  granularity: period
+  section: 관심
+  query_axis: 전국
+  caution: >-
+    **`srchKwrdText` 철자가 틀려 있다.** 사이트가 `POSTIVE`(I 가
+    빠진 철자)로 보내며, 올바른 철자 `POSITIVE` 를 넣으면 오류가
+    아니라 빈 배열이 온다(2026-08-24 확인). 부정은 `NEGATIVE` 다.
+    **파라미터를 빼면 긍정도 부정도 아닌 기본값이 온다** — 빼고
+    부른 뒤 "긍정 키워드"라고 적으면 사실이 아니다.
+    `srchTypeText` 로 숙박 유형을 고른다('' 전체 · Hotel · Motel ·
+    Pension · Resort · GuestHouse · Camp). 스무 행이 오며 TOU_RATE
+    는 그 키워드가 리뷰에서 차지하는 비율(%)이다.
+    **긍정과 부정에 같은 낱말이 나온다** — '위치'가 양쪽 상위에
+    있다. 어느 쪽 표인지 반드시 함께 적어라.
+  columns:
+    KWRD_NM: {label: 키워드, type: str, unit: ""}
+    TOU_RATE: {label: 비율, type: float, unit: "%"}
+
+NAT_12_01_001:
+  name: 간편결제 업종별 관광소비 추이(월별)
+  screen: /datalab/portal/nat/getNatFocTourAna.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y", srchAreaDate: "1", tabDiv: "1"}
+  granularity: month
+  section: 소비
+  query_axis: 전국
+  caution: >-
+    **단위는 천원이다**(차트 정의 '금액(천원)'). **`DPTR_REGN_NM` 은
+    지역이 아니라 업종이다** — 이름의 REGN 을 믿지 마라. '전체'
+    행이 섞여 있으므로 걸러라(2026-08-24 확인, 강릉시 조회에서도
+    전국 값이 온다). 신용카드 소비(NAT_11_02_001)와 결제 수단이
+    달라 더할 수 없다.
+  columns:
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    DPTR_REGN_NM: {label: 업종, type: str, unit: ""}
+    TOU_NUM: {label: 관광소비액, type: float, unit: 천원}
+
+NAT_12_01_002:
+  name: 간편결제 관광소비 업종 구성
+  screen: /datalab/portal/nat/getNatFocTourAna.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y", srchAreaDate: "1", tabDiv: "1"}
+  granularity: period
+  section: 소비
+  query_axis: 전국
+  caution: >-
+    **`DPTR_REGN_NM` 은 지역이 아니라 업종이다.** 단위는 천원이다.
+    **간편결제는 신용카드와 업종 구성이 딴판이다** — 2024년
+    의료웰니스업이 67.8%로 1위다(2026-08-24 확인). 신용카드 업종
+    분포와 나란히 놓고 "관광소비 업종 구성"이라고 적으면 결제 수단
+    하나의 쏠림을 전체로 말하게 된다.
+  columns:
+    DPTR_REGN_NM: {label: 업종, type: str, unit: ""}
+    TOU_NUM: {label: 관광소비액, type: float, unit: 천원}
+    TOU_NUM_RATE: {label: 비중, type: float, unit: "%"}
+
+NAT_12_01_003:
+  name: 간편결제 지역별 관광소비 구성
+  screen: /datalab/portal/nat/getNatFocTourAna.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y", srchAreaDate: "1", tabDiv: "1"}
+  granularity: period
+  section: 소비
+  query_axis: 전국
+  caution: >-
+    여기서는 `DPTR_REGN_NM` 이 정말 지역이다 — 같은 화면의
+    NAT_12_01_001·002 에서는 같은 컬럼이 업종을 담는다.
+    단위는 천원이다. **서울이 90.5%로 쏠려 있다**(2024년,
+    2026-08-24 확인). 간편결제를 쓰는 외국인이 서울에 몰려 있다는
+    뜻이지 관광소비 전체가 그렇다는 뜻이 아니다.
+  columns:
+    DPTR_REGN_NM: {label: 지역, type: str, unit: ""}
+    TOU_NUM: {label: 관광소비액, type: float, unit: 천원}
+    TOU_NUM_RATE: {label: 비중, type: float, unit: "%"}
+
+# ─────────────────────────────────────────────────────────────────
+# 2026-08-24 추가 — 감성 추이와 지역별 비율
+#
+# **부정이 긍정보다 많다.** 숙박 리뷰 감성 비율이 2024년 긍정 40.0 ·
+# 보통 10.2 · 부정 49.8 이다(합 100.0, 2026-08-24 검산). 키워드 표
+# (NAT_11_03_009)만 보면 "이런 점이 좋았다"로 읽기 쉬운데, 비율은
+# 반대다. 둘을 함께 실어라.
+# ─────────────────────────────────────────────────────────────────
+
+NAT_11_03_007:
+  name: 숙박 리뷰 감성 비율 추이(월별)
+  screen: /datalab/portal/nat/getNatFocTourAna.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y", srchAreaDate: "1", tabDiv: "1"}
+  granularity: month
+  section: 관심
+  query_axis: 전국
+  caution: >-
+    긍정·보통·부정 세 갈래가 달마다 온다(12개월이면 36행).
+    `TOU_RATE` 는 그 달 안에서의 비율이라 **달마다 합이 100** 이다
+    (2026-08-24 검산). 달을 가로질러 더하지 마라.
+    `TOU_NUM` 은 리뷰 건수로 보이나 사이트가 밝히지 않는다.
+    키워드 표(NAT_11_03_009)와 달리 **`srchKwrdText` 를 주지 않는다** —
+    세 갈래를 한꺼번에 준다.
+  columns:
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    KWRD_DIV_NM: {label: 감성구분, type: str, unit: ""}
+    TOU_NUM: {label: 건수, type: float, unit: ""}
+    TOU_RATE: {label: 비율, type: float, unit: "%"}
+
+NAT_11_03_008:
+  name: 숙박 리뷰 감성 비율(기간 합계)
+  screen: /datalab/portal/nat/getNatFocTourAna.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y", srchAreaDate: "1", tabDiv: "1"}
+  granularity: period
+  section: 관심
+  query_axis: 전국
+  caution: >-
+    세 행뿐이다 — 긍정·보통·부정. 합이 100.0 이다.
+    **부정이 긍정보다 많다**(2024년 긍정 40.0 · 부정 49.8,
+    2026-08-24 확인). 키워드 표(NAT_11_03_009)의 긍정 목록만 보고
+    "좋게 평가한다"고 적으면 반대로 말하게 된다.
+    `srchTypeText` 로 숙박 유형을 고를 수 있다.
+  columns:
+    KWRD_DIV_NM: {label: 감성구분, type: str, unit: ""}
+    TOU_NUM_PER: {label: 비율, type: float, unit: "%"}
+
+NAT_11_01_002:
+  name: 외국인 방문자 지역별 비율(시도·시군구)
+  screen: /datalab/portal/nat/getNatFocTourAna.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y", srchAreaDate: "1", tabDiv: "1"}
+  granularity: period
+  section: 규모
+  query_axis: 전국
+  caution: >-
+    **시도와 시군구가 한 표에 섞여 있다.** `TOU_NUM`·`TOU_NUM_RATE`
+    는 그 시도의 값이 시군구 행마다 반복된 것이고 `DTL_` 쪽이 그
+    시군구 값이다 — 그냥 더하면 여러 배가 된다.
+    시도 비율 합이 100.0, 한 시도 안 시군구 비율 합도 100.0 이다
+    (강원 18곳, 2026-08-24 검산).
+    **시군구 행이 없는 시도가 있다.** 2024년에 두 시도가 `DTL_*`
+    컬럼 없이 왔다(광주광역시 등) — 컬럼이 없는 것이지 값이 0이
+    아니다. `.get()` 으로 읽어라.
+    이 화면의 방문자는 입국자 수가 아니다(NAT_11_01_001 참고).
+  columns:
+    DPTR_REGN_NM: {label: 시도, type: str, unit: ""}
+    TOU_NUM: {label: 시도_방문자수, type: float, unit: 명}
+    TOU_NUM_RATE: {label: 시도_비중, type: float, unit: "%"}
+    TOU_NUM_SQRT: {label: 시도_방문자수_제곱근, type: float, unit: ""}
+    DPTR_REGN_DTL_NM: {label: 시군구, type: str, unit: ""}
+    DTL_TOU_NUM: {label: 시군구_방문자수, type: float, unit: 명}
+    DTL_TOU_NUM_RATE: {label: 시도내_시군구_비중, type: float, unit: "%"}
+    DTL_TOU_NUM_SQRT: {label: 시군구_방문자수_제곱근, type: float, unit: ""}
+
+NAT_11_02_002:
+  name: 외국인 신용카드 소비 지역별 비율(시도·시군구)
+  screen: /datalab/portal/nat/getNatFocTourAna.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y", srchAreaDate: "1", tabDiv: "1"}
+  granularity: period
+  section: 소비
+  query_axis: 전국
+  caution: >-
+    방문자 표(NAT_11_01_002)와 같은 모양이다 — 시도 값이 시군구
+    행마다 반복되므로 `DTL_` 쪽으로 합계를 내라.
+    **서울이 54.12%로 쏠려 있고 그중 강남구가 28.9%다**(2024년,
+    2026-08-24 확인). 컬럼 이름이 `SIDO_TOU_NUM`·`DTL_TOU_NUM`
+    이지만 사람 수가 아니라 **금액(원)**이다. 같은 화면의 월별
+    소비(NAT_11_02_001)도 원이다.
+    시군구 행이 없는 시도가 있다.
+  columns:
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    DPTR_REGN_NM: {label: 시도, type: str, unit: ""}
+    SIDO_TOU_NUM: {label: 시도_소비액, type: float, unit: 원}
+    TOU_NUM_RATE: {label: 시도_비중, type: float, unit: "%"}
+    TOU_NUM_SQRT: {label: 시도_소비액_제곱근, type: float, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    DPTR_REGN_DTL_NM: {label: 시군구, type: str, unit: ""}
+    DTL_TOU_NUM: {label: 시군구_소비액, type: float, unit: 원}
+    DTL_TOU_NUM_RATE: {label: 시도내_시군구_비중, type: float, unit: "%"}
+    DTL_TOU_NUM_SQRT: {label: 시군구_소비액_제곱근, type: float, unit: ""}

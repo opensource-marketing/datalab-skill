@@ -1,0 +1,336 @@
+# 한국관광 데이터랩 qid 카탈로그 — 국민여행조사·외래관광객조사
+#
+# 화면 둘이다.
+#   ts/getDomTourExmn   관광산업 분석 > 국민여행조사   (TS_03_01_*)
+#   ts/getOseaTourExmn  관광산업 분석 > 외래관광객조사 (TS_03_02_*)
+#
+# **설문조사다.** 이 저장소의 다른 지표는 대부분 이동통신·카드 같은
+# 실측이나 집계인데 여기는 표본조사 결과다. "경험률 95.4%"는 응답자
+# 비율이지 실제 인구 비율이 아니다.
+#
+# ── 기간을 네 자리 연도로 준다 ──────────────────────────────────
+# `BASE_YM1`·`BASE_YM2` 를 쓰는데 **연월 여섯 자리를 넣으면 시작
+# 연도가 빠진다.** 2026-08-24 확인:
+#
+#   BASE_YM1=2020    BASE_YM2=2024    → 2020·2021·2022·2023·2024
+#   BASE_YM1=202001  BASE_YM2=202412  → 2021·2022·2023·2024  ← 2020이 없다
+#   BASE_YM1=202401  BASE_YM2=202412  → **빈 배열**
+#
+# 마지막 줄이 이 지표들이 오래 "값이 없는 것"으로 남아 있던 이유다.
+# 한 해만 물으면 그 해가 시작 연도라 통째로 걸러진다.
+# 다른 파라미터(`srchBgngYear`·`srchBgngHf`·`itemDiv`·`srchAreaDate`)는
+# 화면이 함께 보내지만 **하나씩 빼도 응답이 같다** — 없어도 된다.
+#
+# ── 수록 범위 ───────────────────────────────────────────────────
+#   국민여행조사(TS_03_01_*)     2018 ~ 2025
+#   외래관광객조사(TS_03_02_*)   2015 ~ 2025
+# (2026-08-24 확인. `--from 2010 --to 2026` 으로 넓게 불러 봤다.)
+#
+# ── 단위(차트 정의가 근거) ──────────────────────────────────────
+#   TS_03_01_003  국내여행 경험률        %
+#   TS_03_01_004  전체 국내여행 횟수     천회
+#   TS_03_01_005  전체 국내여행 일수     천일
+#   TS_03_01_006  전체 국내여행 지출액   십억원
+#   TS_03_01_010  1인 평균 횟수          회
+#   TS_03_01_011  1인 평균 일수          일
+#   TS_03_01_012  1인 평균 지출액        천원
+#
+# 산술로 확인했다. 전체를 1인 평균으로 나누면 세 갈래가 모두 같은
+# 사람 수를 준다(2026-08-24).
+#
+#   2024년  횟수 46,248천명 · 일수 46,285천명 · 지출 46,289천명
+#   2021년  횟수 45,647천명 · 일수 45,647천명 · 지출 45,705천명
+#
+# **외래관광객조사(TS_03_02_*)의 단위는 사이트가 표기하지 않는다.**
+# 지출 경비가 달러인지 원인지 화면에도 차트에도 적혀 있지 않다.
+# `unit: ''` 로 두었으니 절대값을 단정하지 말고 해 사이 변화로 읽어라.
+#
+# ── 값이 문자열로 오고 공백이 섞인다 ────────────────────────────
+# 외래관광객조사는 숫자를 문자열로 준다. 그것도 **양옆에 공백이 붙은
+# 것이 섞여 있다** — 2024년 체재기간이 `' 6.7 '` 이다(2026-08-24 확인).
+# 이 저장소는 같은 함정을 이미 한 번 겪었다. `type: float` 로 적어
+# 인출 계층이 공백을 털고 숫자로 바꾸게 했다.
+# 국민여행조사(TS_03_01_*)는 숫자로 온다.
+#
+# ── 연령 분해가 있는 것과 없는 것 ───────────────────────────────
+# `TS_03_01_003`~`006` 은 `BAGE` 로 여덟 갈래를 준다(15-19세 · 20대 ·
+# 30대 · 40대 · 50대 · 60대 · 70대 이상 · **전체**). 네 해면 32행이다.
+# **'전체' 행이 섞여 있으므로 그냥 더하면 두 배가 된다.**
+# `TS_03_01_010`~`012` 는 '전체' 한 갈래만 준다(네 해면 4행).
+#
+# ── 무엇의 여행인지 모르는 형제 셋 ──────────────────────────────
+# `TS_03_01_007`·`008`·`009` 는 넣지 않았다.
+#
+# **처음에 "값이 전부 null 이다"라고 적었는데 틀렸다.** 창을
+# 2020~2024 로 좁게 물어서였다. `2018~2026` 으로 부르면 64행 중
+# 40행에 값이 있다(2026-08-24 재확인).
+#
+# 그래도 넣지 않은 이유는 **무엇의 여행인지 확정하지 못해서**다.
+# 화면 코드가 붙이는 차트 제목이 중립적이다.
+#
+#   TS_03_01_007  '여행 경험률(%)'     2018년 22.4
+#   TS_03_01_008  '여행 일수(일)'      2018년  4.62
+#   TS_03_01_009  '여행 지출액(천원)'  2018년  1,195
+#
+# 같은 해 국내여행 경험률(`TS_03_01_003`)은 89.2다. 22.4는 국내가
+# 아니다 — 해외여행으로 보이지만 사이트가 그렇게 밝히지 않는다.
+# 이름을 붙이면 "국민 해외여행 경험률 22.4%"가 근거 없이 퍼진다.
+
+TS_03_01_003:
+  name: 국내여행 경험률(연도별·연령별)
+  screen: /datalab/portal/ts/getDomTourExmn.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: year
+  section: 국민여행
+  query_axis: 전국
+  caution: >-
+    설문 응답자 비율이다. **`BAGE='전체'` 행이 섞여 있으니 걸러라** —
+    여덟 갈래 중 하나가 합계 성격이다. 2018~2025가 온다(2026-08-24 확인).
+    **기간을 네 자리 연도로 줘라** — 연월 여섯 자리를 넣으면 시작
+    연도가 빠지고, 한 해만 물으면 빈 배열이 온다.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    BAGE: {label: 연령대, type: str, unit: ""}
+    T_VALUE: {label: 국내여행_경험률, type: float, unit: "%"}
+
+TS_03_01_004:
+  name: 전체 국내여행 횟수(연도별·연령별)
+  screen: /datalab/portal/ts/getDomTourExmn.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: year
+  section: 국민여행
+  query_axis: 전국
+  caution: >-
+    단위가 **천회**다(차트 정의 '전체 국내여행 횟수(천회)').
+    1인 평균(TS_03_01_010, 회)과 단위가 달라 그대로 나누면 안 된다 —
+    천 배를 맞춰야 사람 수가 나온다(2024년 46,248천명, 2026-08-24 검산).
+    `BAGE='전체'` 행이 섞여 있다. 2018~2025가 온다(2026-08-24 확인). 한 해만 물으면 빈 배열이다.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    BAGE: {label: 연령대, type: str, unit: ""}
+    T_VALUE: {label: 국내여행_횟수, type: float, unit: 천회}
+
+TS_03_01_005:
+  name: 전체 국내여행 일수(연도별·연령별)
+  screen: /datalab/portal/ts/getDomTourExmn.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: year
+  section: 국민여행
+  query_axis: 전국
+  caution: >-
+    단위가 **천일**이다(차트 정의). 1인 평균(TS_03_01_011, 일)과
+    단위가 다르다. `BAGE='전체'` 행이 섞여 있다. 2018~2025가 온다(2026-08-24 확인). 한 해만 물으면 빈 배열이다.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    BAGE: {label: 연령대, type: str, unit: ""}
+    T_VALUE: {label: 국내여행_일수, type: float, unit: 천일}
+
+TS_03_01_006:
+  name: 전체 국내여행 지출액(연도별·연령별)
+  screen: /datalab/portal/ts/getDomTourExmn.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: year
+  section: 국민여행
+  query_axis: 전국
+  caution: >-
+    단위가 **십억원**이다(차트 정의 '전체 국내여행 지출액금액(십억원)').
+    1인 평균(TS_03_01_012)은 **천원**이라 백만 배 차이다 — 그대로
+    나누면 뜻 없는 수가 된다. `BAGE='전체'` 행이 섞여 있다.
+    2018~2025가 온다(2026-08-24 확인). 한 해만 물으면 빈 배열이다.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    BAGE: {label: 연령대, type: str, unit: ""}
+    T_VALUE: {label: 국내여행_지출액, type: float, unit: 십억원}
+
+TS_03_01_010:
+  name: 1인 평균 국내여행 횟수(연도별)
+  screen: /datalab/portal/ts/getDomTourExmn.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: year
+  section: 국민여행
+  query_axis: 전국
+  caution: >-
+    단위가 **회**다(차트 정의). **연령 분해가 없다** — `BAGE` 가
+    '전체' 하나뿐이라 네 해면 4행이다(2026-08-24 확인). 연령별이
+    필요하면 전체 지표(TS_03_01_004)를 쓰라. 2018~2025가 온다(2026-08-24 확인). 한 해만 물으면 빈 배열이다.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    BAGE: {label: 연령대, type: str, unit: ""}
+    T_VALUE: {label: 1인평균_국내여행_횟수, type: float, unit: 회}
+
+TS_03_01_011:
+  name: 1인 평균 국내여행 일수(연도별)
+  screen: /datalab/portal/ts/getDomTourExmn.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: year
+  section: 국민여행
+  query_axis: 전국
+  caution: >-
+    단위가 **일**이다(차트 정의). 연령 분해가 없다. 2018~2025가 온다(2026-08-24 확인). 한 해만 물으면 빈 배열이다.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    BAGE: {label: 연령대, type: str, unit: ""}
+    T_VALUE: {label: 1인평균_국내여행_일수, type: float, unit: 일}
+
+TS_03_01_012:
+  name: 1인 평균 국내여행 지출액(연도별)
+  screen: /datalab/portal/ts/getDomTourExmn.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: year
+  section: 국민여행
+  query_axis: 전국
+  caution: >-
+    단위가 **천원**이다(차트 정의). 한 해 전체 지출액(TS_03_01_006)은
+    십억원이라 백만 배 차이다. 연령 분해가 없다. 2018~2025가 온다(2026-08-24 확인). 한 해만 물으면 빈 배열이다.
+    2024년 567천원 꼴이며 **한 번 여행에 쓴 돈이 아니라 한 해 동안
+    쓴 돈**이다(1인 평균 횟수가 5회를 넘는다).
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    BAGE: {label: 연령대, type: str, unit: ""}
+    T_VALUE: {label: 1인평균_국내여행_지출액, type: float, unit: 천원}
+
+TS_03_02_011:
+  name: 외래관광객 체재 기간(연도별)
+  screen: /datalab/portal/ts/getOseaTourExmn.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: year
+  section: 외래조사
+  query_axis: 전국
+  caution: >-
+    **값이 문자열로 오고 양옆에 공백이 붙은 것이 섞여 있다**
+    (2024년이 `' 6.7 '` 이다, 2026-08-24 확인).
+    단위를 사이트가 표기하지 않는다 — 일로 보이나 확정하지 못했으니
+    절대값을 단정하지 말고 해 사이 변화로 읽어라(2021년 24.9 →
+    2024년 6.7). **2021년 값이 큰 것은 격리 기간 때문으로 보이지만
+    사이트가 그렇게 밝히지 않는다** — 추세를 말할 때 코로나 시기를
+    함께 적어라. NAT_NM 은 '전체' 하나뿐이라 국가별로 나뉘지 않는다.
+    2015~2025가 온다(2026-08-24 확인). 한 해만 물으면 빈 배열이다.
+  columns:
+    BASE_DATE: {label: 기준연도, type: str, unit: ""}
+    NAT_NM: {label: 국적, type: str, unit: ""}
+    STAY_PERIOD: {label: 체재_기간, type: float, unit: ""}
+
+TS_03_02_012:
+  name: 외래관광객 전반적 만족도(연도별)
+  screen: /datalab/portal/ts/getOseaTourExmn.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: year
+  section: 외래조사
+  query_axis: 전국
+  caution: >-
+    **긍정 응답 비율(%)이다**(화면 제목이 '전반적 만족도(긍정 응답
+    비율)'). 평균 점수가 아니다. 값이 문자열로 오며 공백이 섞일 수
+    있다. NAT_NM 은 '전체' 하나다. 2015~2025가 온다(2026-08-24 확인). 한 해만 물으면 빈 배열이다.
+  columns:
+    BASE_DATE: {label: 기준연도, type: str, unit: ""}
+    NAT_NM: {label: 국적, type: str, unit: ""}
+    SATISFACTION: {label: 만족도_긍정응답비율, type: float, unit: "%"}
+
+TS_03_02_013:
+  name: 외래관광객 1인 평균 지출 경비(연도별)
+  screen: /datalab/portal/ts/getOseaTourExmn.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: year
+  section: 외래조사
+  query_axis: 전국
+  caution: >-
+    **단위를 사이트가 표기하지 않는다.** 화면에도 차트에도 달러인지
+    원인지 적혀 있지 않다(2026-08-24 확인). 값이 2021년 4,217에서
+    2024년 1,877.4로 줄어드는 흐름만 읽어라 — "1인 1,877달러"처럼
+    단위를 붙여 적지 마라. 1일 평균(TS_03_02_014)과 나눠도 체재기간이
+    나오지 않는다(2024년 1,877.4 ÷ 326.4 = 5.8 인데 체재기간은 6.7)
+    — 따로 산출된 값이므로 서로 나누지 마라. 값이 문자열로 온다.
+  columns:
+    BASE_DATE: {label: 기준연도, type: str, unit: ""}
+    NAT_NM: {label: 국적, type: str, unit: ""}
+    PERSON_EXPENSES_AVG: {label: 1인평균_지출경비, type: float, unit: ""}
+
+TS_03_02_014:
+  name: 외래관광객 1일 평균 지출 경비(연도별)
+  screen: /datalab/portal/ts/getOseaTourExmn.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: year
+  section: 외래조사
+  query_axis: 전국
+  caution: >-
+    **단위를 사이트가 표기하지 않는다.** 1인 평균(TS_03_02_013)을
+    체재기간으로 나눈 값이 아니다 — 2024년으로 검산하면 어긋난다
+    (2026-08-24). 값이 문자열로 온다. 2015~2025가 온다(2026-08-24 확인). 한 해만 물으면 빈 배열이다.
+  columns:
+    BASE_DATE: {label: 기준연도, type: str, unit: ""}
+    NAT_NM: {label: 국적, type: str, unit: ""}
+    DAY_EXPENSES_AVG: {label: 1일평균_지출경비, type: float, unit: ""}
+
+TS_03_02_015:
+  name: 외래관광객 재방문율(연도별)
+  screen: /datalab/portal/ts/getOseaTourExmn.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: year
+  section: 외래조사
+  query_axis: 전국
+  caution: >-
+    **이미 다시 온 사람의 비율이다.** 앞으로 오겠다는 의향
+    (TS_03_02_016)과 다르다 — 2021년에 재방문율 64.7, 재방문 의향
+    88.3 으로 20포인트 넘게 벌어진다. 둘을 섞어 쓰면 안 된다.
+    값이 문자열로 온다. 2015~2025가 온다(2026-08-24 확인). 한 해만 물으면 빈 배열이다.
+  columns:
+    BASE_DATE: {label: 기준연도, type: str, unit: ""}
+    NAT_NM: {label: 국적, type: str, unit: ""}
+    REVISIT_RATE: {label: 재방문율, type: float, unit: "%"}
+
+TS_03_02_016:
+  name: 외래관광객 재방문 의향(연도별)
+  screen: /datalab/portal/ts/getOseaTourExmn.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: year
+  section: 외래조사
+  query_axis: 전국
+  caution: >-
+    **긍정 응답 비율(%)이다.** 실제 재방문율(TS_03_02_015)이 아니라
+    "다시 오겠다"고 답한 비율이다. 값이 문자열로 온다. 2015~2025가 온다(2026-08-24 확인). 한 해만 물으면 빈 배열이다.
+  columns:
+    BASE_DATE: {label: 기준연도, type: str, unit: ""}
+    NAT_NM: {label: 국적, type: str, unit: ""}
+    REVISIT_INTENT: {label: 재방문_의향, type: float, unit: "%"}
+
+TS_03_02_017:
+  name: 외래관광객 타인 추천 의향(연도별)
+  screen: /datalab/portal/ts/getOseaTourExmn.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: year
+  section: 외래조사
+  query_axis: 전국
+  caution: >-
+    **긍정 응답 비율(%)이다.** 값이 문자열로 온다. 2015~2025가 온다(2026-08-24 확인). 한 해만 물으면 빈 배열이다.
+  columns:
+    BASE_DATE: {label: 기준연도, type: str, unit: ""}
+    NAT_NM: {label: 국적, type: str, unit: ""}
+    RECOM_INTENT: {label: 타인_추천_의향, type: float, unit: "%"}

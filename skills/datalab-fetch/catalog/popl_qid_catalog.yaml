@@ -1,0 +1,514 @@
+# 한국관광 데이터랩 qid 카탈로그 — 인구감소지역
+#
+# 다른 카탈로그가 "관광객이 얼마나 오는가"를 묻는다면, 여기는 **그
+# 지역이 버티고 있는가**를 묻는다. 인구·고령화·재정자립도 같은 지역
+# 체력 지표와, 관광이 그 체력을 얼마나 메우는지를 함께 본다.
+#
+# 이 지표들이 있는 화면도 로그인해야 열린다. 하지만 데이터 API는
+# 공개라서(익명 재현으로 확인) 쓰는 사람은 로그인할 필요가 없다.
+#
+# ── 기간이 연 단위다 ────────────────────────────────────────────
+# BASE_YM1·BASE_YM2에 **네 자리 연도**를 넣는다(2020, 2024). 월(202401)을
+# 넣으면 오류가 아니라 빈 배열이 온다. 다른 카탈로그의 습관대로 부르면
+# "데이터가 없다"로 잘못 읽힌다.
+#
+# ── 축은 시군구다. 시도를 넣으면 목록이 온다 ───────────────────
+# SGG_CD에 시군구 다섯 자리를 넣으면 그 지역의 연도별 행이 온다.
+# 시도 두 자리를 넣으면 그 시도의 시군구가 모두 섞여 온다(전북 52는
+# 75행). 시도를 넣고 한 지역 값으로 읽지 마라.
+#
+# ── 컬럼 이름이 COL1·COL2다 ────────────────────────────────────
+# 응답이 지표 이름을 돌려주지 않는다. 무엇이 무엇인지는 사이트 차트가
+# 그 컬럼에 붙이는 계열 이름으로만 알 수 있다. 지어내지 않았다 —
+# 근거는 /js/portal/loc/popldcrs_chart.js 의 valueGroup 문자열과
+# chart_common.js 의 createSeries 인자다. 각 항목 columns에 옮겨 적었다.
+# ────────────────────────────────────────────────────────────────
+
+LN_06_01_002:
+  name: 관광 대체 효과 요약(주민 1인의 소비를 메우는 데 필요한 관광객 수)
+  screen: /datalab/portal/loc/getPoplDcrsFormView.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  probe_window: ["2018", "2023"]   # 창이 고정이다. 끝을 2024로만 바꿔도 빈 배열
+  granularity: year
+  section: 인구감소
+  query_axis: 지역
+  caution: >-
+    **한 해만 온다.** 기간을 2020~2024로 줘도 BASE_YM2의 한 행만 돌아온다.
+    연도별 추이가 필요하면 해마다 따로 불러라.
+    **LODG_PSON_NUM·THDY_PSON_NUM은 방문자 수가 아니다.** 주민 1명이
+    빠져나갈 때 그 사람의 지역 내 소비를 메우려면 관광객이 몇 명 와야
+    하는지다(정선군 2024: 숙박 42명 또는 당일 106명 · 2026-08-23 재확인). 방문자 수로 읽으면
+    3~4자리 작은 값을 그 지역 관광객 수로 오해한다.
+    **ONP_BY_REGN_IN_CNSM_AMT는 10,000으로 나눠야 원이다.** 사이트 화면은
+    나누지 않고 '천원'을 붙여 보여 주는데 그것은 화면의 오류다. 근거는
+    산술 교차확인이다 — (raw ÷ 10,000) ÷ LODG_VISITR_CNSM_AMT 가
+    LODG_PSON_NUM과 다섯 지역에서 모두 맞았다(정선 41.83→42,
+    강원고성 19.20→19, 경남고성 30.13→30, 신안 9.51→10, 의성 14.69→15).
+    **REGN_CNSM_ECNMY_SCLE_AMT·REGN_CNSM_IN_ECNMY_SCLE_AMT는 단위를
+    확정하지 못했다.** 화면은 '억원'을 붙이지만 두 값의 비가 정확히
+    REGN_IN_CNSM_RAT(퍼센트 값)과 같아 100배가 어긋나 있다. 비율로만
+    읽고 절대 금액으로 인용하지 마라.
+    아래 columns에 없는 컬럼(WHC_*·SALES_*·*_PER·CFMTN_DIV_CD 등)은
+    **화면 코드가 한 번도 쓰지 않는다.** 근거가 없으므로 뜻을 짐작하지 마라.
+    DTME_POPL_NUM은 값이 0으로만 오고 화면도 쓰지 않는다.
+    POPL_DCRS_REGN_YN이 Y면 인구감소지역, POPL_DCRS_ITS_REGN_YN이 Y면
+    관심지역이다.
+    **DTME_POPL_NUM은 인구감소지역에서 0으로 온다.** 정선군 2024가 0인데
+    같은 해 강남구 961,600 · 춘천시 275,130이다. 0을 값으로 읽으면 그
+    지역만 사람이 사라진 것처럼 보인다 — 재정자립도·조출생률과 같은
+    함정이다.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    SGG_NM: {label: 시군구명, type: str, unit: ""}
+    POPL_DCRS_REGN_YN: {label: 인구감소지역여부, type: str, unit: ""}
+    POPL_DCRS_ITS_REGN_YN: {label: 관심지역여부, type: str, unit: ""}
+    ADT_POPL_NUM: {label: 주민등록인구, type: float, unit: 명}
+    ONP_BY_REGN_IN_CNSM_AMT: {label: 주민1인당_역내소비액_raw, type: float, unit: ""}
+    LODG_VISITR_CNSM_AMT: {label: 숙박여행_1회평균지출액, type: float, unit: 원}
+    THDY_VISITR_CNSM_AMT: {label: 당일여행_1회평균지출액, type: float, unit: 원}
+    LODG_PSON_NUM: {label: 대체필요_숙박관광객수, type: float, unit: 명}
+    THDY_PSON_NUM: {label: 대체필요_당일관광객수, type: float, unit: 명}
+    TURSM_RPM_SCLE_LODG_PSON_NUM: {label: 대체필요_숙박관광객수_구성비반영, type: float, unit: 명}
+    TURSM_RPM_SCLE_THDY_PSON_NUM: {label: 대체필요_당일관광객수_구성비반영, type: float, unit: 명}
+    LODG_TOUR_NUM_RAT: {label: 숙박_구성비, type: float, unit: "%"}
+    THDY_TOUR_NUM_RAT: {label: 당일_구성비, type: float, unit: "%"}
+    REGN_IN_CNSM_RAT: {label: 역내소비_비율, type: float, unit: "%"}
+    REGN_EXCEP_CNSM_RAT: {label: 역외소비_비율, type: float, unit: "%"}
+    # 아래 열넷은 2026-08-23에 옮겨 적었다. 그전에는 원본 영문명 그대로
+    # 나갔다("카탈로그에 없는 컬럼" 경고가 stderr로 나오고 있었다).
+    #
+    # 셋은 이미 있는 컬럼의 **반올림 전 값**이다. 정선군 2024에서
+    # 62.94368800322733 ↔ 역외소비_비율 62.94 처럼 맞았다.
+    ONP_BY_REGN_EXCEP_CNSM_AMT_PER: {label: 역외소비_비율_정밀, type: float, unit: "%"}
+    ONP_BY_REGN_IN_CNSM_AMT_PER: {label: 역내소비_비율_정밀, type: float, unit: "%"}
+    SALES_AMT_PER: {label: 관광소비_비율_정밀, type: float, unit: ""}
+    # **인구감소지역에서 0으로 온다.** 정선군(인구감소지역 Y) 0인데
+    # 같은 해 강남구 961,600 · 춘천시 275,130이다. 0을 값으로 읽으면
+    # 그 지역만 사람이 사라진 것처럼 보인다. 이름은 주간인구처럼
+    # 보이지만 무엇을 세는지 확인하지 못했다.
+    DTME_POPL_NUM: {label: DTME_POPL_NUM_원값, type: float, unit: ""}
+    # 아래는 뜻도 단위도 확인하지 못했다. 자릿수가 조 단위를 넘어
+    # 원 단위로 보기 어렵다 — 단정하지 않는다.
+    WHC_CNSM_EXPN_AMT: {label: WHC_CNSM_EXPN_AMT_원값, type: float, unit: ""}
+    SALES_AMT: {label: SALES_AMT_원값, type: float, unit: ""}
+    SALES_AMT_SUM: {label: SALES_AMT_SUM_원값, type: float, unit: ""}
+    WHC_CARD_EXPN_CPRS_CARD_CNSM_RAT: {label: 관광소비_비율, type: float, unit: ""}
+    REGN_CNSM_ECNMY_SCLE_AMT: {label: REGN_CNSM_ECNMY_SCLE_AMT_원값, type: float, unit: ""}
+    REGN_CNSM_IN_ECNMY_SCLE_AMT: {label: REGN_CNSM_IN_ECNMY_SCLE_AMT_원값, type: float, unit: ""}
+    ONP_BY_REGN_EXCEP_CNSM_AMT: {label: ONP_BY_REGN_EXCEP_CNSM_AMT_원값, type: float, unit: ""}
+    ONP_BY_TOTL_CNSM_AMT: {label: ONP_BY_TOTL_CNSM_AMT_원값, type: float, unit: ""}
+    ONP_BY_TURSM_RPM_CNSM_SCLE_AMT: {label: ONP_BY_TURSM_RPM_CNSM_SCLE_AMT_원값, type: float, unit: ""}
+    CFMTN_DIV_CD: {label: CFMTN_DIV_CD_원값, type: str, unit: ""}
+
+LN_06_01_003:
+  name: 1인 관광대체 소비규모(연도별)
+  screen: /datalab/portal/loc/getPoplDcrsSpendForm.do
+  auth: public
+  params: [SGG_CD, SIDO_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: year
+  section: 인구감소
+  query_axis: 지역
+  caution: >-
+    **COL1·COL2는 방문자 수가 아니다.** 차트 계열 이름이 '숙박'·'당일'
+    이라 방문자로 읽기 쉽지만, LN_06_01_002와 대조하면 그 지표의
+    TURSM_RPM_SCLE_LODG_PSON_NUM·_THDY_PSON_NUM과 값이 정확히 같다
+    (정선군 2024: 26 · 39). 즉 **주민 1인의 지역 내 소비를 메우는 데
+    필요한 관광객 수**를 그 지역의 숙박:당일 구성비로 나눈 값이다.
+    **tabDiv는 응답에 영향을 주지 않는다.** 카탈로그가 한동안
+    fixed_params로 tabDiv=1을 보내고 있었는데, 넣은 경우와 뺀 경우와
+    2를 넣은 경우가 다섯 해 모두 완전히 같은 것을 확인하고 지웠다.
+    ONP_BY_REGN_IN_CNSM_AMT는 여기서는 원 단위로 그대로 온다
+    (정선군 2024: 8,848,682원 · 2026-08-23 재확인). LN_06_01_002의 같은 이름 컬럼은
+    10,000배 부풀려 오므로 **두 지표의 이 컬럼을 같은 값으로 다루지
+    마라.** 기간은 연도 네 자리다.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    SGG_NM: {label: 시군구명, type: str, unit: ""}
+    ONP_BY_REGN_IN_CNSM_AMT: {label: 주민1인당_역내소비액, type: float, unit: 원}
+    COL1: {label: 대체필요_숙박관광객수, type: float, unit: 명}
+    COL2: {label: 대체필요_당일관광객수, type: float, unit: 명}
+
+LN_06_01_004:
+  name: 주민등록 인구 대비 방문자 수(연도별)
+  screen: /datalab/portal/loc/getPoplDcrsSpendForm.do
+  auth: public
+  params: [SGG_CD, SIDO_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: year
+  section: 인구감소
+  query_axis: 지역
+  caution: >-
+    COL1은 외지인 방문자 수, COL2는 현지인 방문자 수다(차트 계열 이름).
+    **tabDiv는 응답에 영향을 주지 않는다**(LN_06_01_003과 같은 이유로
+    fixed_params에서 지웠다).
+    이동통신(KT) 기준이며 주민등록 인구를 1로 볼 때의 배수다 — 사이트가
+    단위를 표기하지 않아 절대 인원으로 읽지 마라. 기간은 연도 네 자리다.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    COL1: {label: 외지인_방문자, type: float, unit: ""}
+    COL2: {label: 현지인_방문자, type: float, unit: ""}
+
+LN_06_01_005:
+  name: 주민등록 인구 연령별 분포(연도별)
+  screen: /datalab/portal/loc/getPoplDcrsFormView.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: year
+  section: 인구감소
+  query_axis: 지역
+  caution: >-
+    COL1~COL8이 연령대다(차트가 붙이는 이름: 10대이하·10대·20대·30대·
+    40대·50대·60대·70대 이상). PO는 총인구수다. 여덟 칸의 합은 PO와
+    정확히 맞는다(정선군 2024에서 33,515로 일치). 그래도 합계를 다시
+    계산하지 말고 PO를 써라 — 결측이 0으로 오면 합이 조용히 작아진다.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    COL1: {label: 10대이하, type: float, unit: 명}
+    COL2: {label: 10대, type: float, unit: 명}
+    COL3: {label: 20대, type: float, unit: 명}
+    COL4: {label: 30대, type: float, unit: 명}
+    COL5: {label: 40대, type: float, unit: 명}
+    COL6: {label: 50대, type: float, unit: 명}
+    COL7: {label: 60대, type: float, unit: 명}
+    COL8: {label: 70대이상, type: float, unit: 명}
+    PO: {label: 총인구수, type: float, unit: 명}
+
+LN_06_01_006:
+  name: 고령화·유소년 비율(연도별)
+  screen: /datalab/portal/loc/getPoplDcrsFormView.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: year
+  section: 인구감소
+  query_axis: 지역
+  caution: >-
+    COL1이 고령화 비율, COL2가 유소년 비율이다(차트 계열 이름).
+    시도 두 자리를 넣으면 그 시도의 시군구가 모두 섞여 온다.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    COL1: {label: 고령화_비율, type: float, unit: "%"}
+    COL2: {label: 유소년_비율, type: float, unit: "%"}
+
+LN_06_01_007:
+  name: 조출생률(연도별)
+  screen: /datalab/portal/loc/getPoplDcrsFormView.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: year
+  section: 인구감소
+  query_axis: 지역
+  caution: >-
+    COL1이 조출생률이며 **인구 1000명당이다(2026-08-23 재확인).** 사이트가 분모를 적지
+    않지만 산술로 확인했다 — COL1 x 주민등록인구 ÷ 1000이 실제 출생아
+    수와 맞는다(정선군 2024: 2.5 x 33,515/1000 = 84명, 강남구 2024:
+    4.8 x 557,345/1000 = 2,675명).
+    **0은 값이 아니라 결측이다.** 그리고 결측에 규칙이 있다 —
+    **인구감소지역만 2023이 0으로 온다.** 정선·신안·의성·양양·울릉이
+    모두 2023만 0.0이고 앞뒤 해에는 값이 있다. 인구감소지역이 아닌
+    강남구는 2023도 4.3으로 정상이다. 출생아가 없었다는 뜻이 아니다.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    COL1: {label: 조출생률, type: float, unit: ""}
+
+LN_06_01_009:
+  name: 인구밀도(연도별)
+  screen: /datalab/portal/loc/getPoplDcrsFormView.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: year
+  section: 인구감소
+  query_axis: 지역
+  caution: >-
+    COL1이 인구밀도이며 **명/㎢다.** 사이트가 단위를 적지 않지만
+    산술로 확인했다 — COL1 x 행정구역 면적이 주민등록인구와 맞는다
+    (강남구 14,111 x 39.5 = 557,384명 대 실제 557,345명, 울릉군
+    125 x 72.9 = 9,112명 대 실제 9,099명, 신안군 58 x 655.5 = 38,019명
+    대 실제 38,173명). 정수로 반올림해 오므로(2026-08-23 재확인: 강남 14,111 · 울릉 125 · 신안 58) 면적이 넓고 밀도가 낮은 지역은 오차가 2%까지 난다(정선군 0.98).
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    COL1: {label: 인구밀도, type: float, unit: ""}
+
+LN_06_01_010:
+  name: 청년 순 이동률(연도별)
+  screen: /datalab/portal/loc/getPoplDcrsFormView.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: year
+  section: 인구감소
+  query_axis: 지역
+  caution: >-
+    COL1이 청년 순 이동률이다(차트 계열 이름). 음수면 순유출이다.
+    청년의 연령 범위를 사이트가 밝히지 않는다.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    COL1: {label: 청년_순이동률, type: float, unit: "%"}
+
+LN_06_01_011:
+  name: 재정자립도(연도별)
+  screen: /datalab/portal/loc/getPoplDcrsFormView.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: year
+  section: 인구감소
+  query_axis: 지역
+  caution: >-
+    COL1이 재정자립도다(차트 계열 이름). 관광 지표가 아니라 지자체
+    재정 지표다 — 관광 성과로 읽지 마라.
+    **0은 값이 아니라 결측이다.** 그리고 결측에 규칙이 있다 —
+    **인구감소지역만 2024가 0으로 온다.** 정선·신안·의성·양양·울릉이
+    모두 0.0인 반면 인구감소지역이 아닌 강남구(56.1)·춘천시(18.9)·
+    수원시 장안구(39.8)는 값이 있다. 그대로 그리면 인구감소지역만
+    2024에 재정이 무너진 것처럼 보인다 — 0은 빼고 그려라.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    COL1: {label: 재정자립도, type: float, unit: "%"}
+
+LN_01_03_004_01_001:
+  name: 지역민 역내·역외 소비와 방문객 소비(연도별)
+  screen: /datalab/portal/loc/getPoplDcrsSpendForm.do
+  auth: public
+  params: [SGG_CD, SIDO_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {selectDiv: "3"}
+  granularity: year
+  section: 지역소비
+  query_axis: 지역
+  caution: >-
+    DIV_NM으로 구분이 나뉜다(관광·비관광 등). 다 더하면 두 번 센다.
+    SALES_AMT의 단위를 사이트가 표기하지 않는다 — 값이 세 자리라
+    원 단위가 아니다. 비율(SALES_RATE)과 연도 간 변화로 읽어라.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    DIV_NM: {label: 구분, type: str, unit: ""}
+    SALES_AMT: {label: 소비액, type: float, unit: ""}
+    SALES_RATE: {label: 비중, type: float, unit: "%"}
+
+LN_01_03_004_01_002:
+  name: 지역주민 1인당 역내·역외 소비액(연도별)
+  screen: /datalab/portal/loc/getPoplDcrsSpendForm.do
+  auth: public
+  params: [SGG_CD, SIDO_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {selectDiv: "3"}
+  granularity: year
+  section: 지역소비
+  query_axis: 지역
+  caution: >-
+    ORG_가 붙은 두 컬럼이 원 단위 총액이고, 붙지 않은 두 컬럼이 1인당
+    값이다. **1인당 값의 단위를 사이트가 표기하지 않는다** — 총액과
+    1인당의 비가 정확히 10,000,000이라 인구로 나눈 것만으로는 설명되지
+    않는다. 절대값을 단정하지 말고 연도 간 변화와 역내·역외 비교로 읽어라.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    ONP_BY_REGN_IN_CNSM_AMT: {label: 1인당_역내소비액, type: float, unit: ""}
+    ONP_BY_REGN_EXCEP_CNSM_AMT: {label: 1인당_역외소비액, type: float, unit: ""}
+    ORG_ONP_BY_REGN_IN_CNSM_AMT: {label: 역내소비_총액, type: float, unit: 원}
+    ORG_ONP_BY_REGN_EXCEP_CNSM_AMT: {label: 역외소비_총액, type: float, unit: 원}
+
+LN_01_03_004_01_003:
+  name: 지역주민 관광·비관광 역내외 소비 비율(연도별)
+  screen: /datalab/portal/loc/getPoplDcrsSpendForm.do
+  auth: public
+  params: [SGG_CD, SIDO_CD, BASE_YM1, BASE_YM2, selectDiv]
+  fixed_params: {selectDiv: "관광"}
+  granularity: year
+  section: 지역소비
+  query_axis: 지역
+  caution: >-
+    **selectDiv에 '관광' 또는 '비관광'이라는 한글을 넣는다**(이
+    카탈로그는 '관광'을 기본으로 박아 두었다 — 비관광은
+    `--param selectDiv=비관광`). 코드가
+    아니다. 값에 따라 응답이 완전히 달라지므로 무엇을 넣었는지 리포트에
+    적어라. DIV_NM으로 역내·역외가 나뉜다. SALES_AMT의 단위는
+    LN_01_03_004_01_001과 같은 이유로 확정하지 못했다.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    DIV_NM: {label: 구분, type: str, unit: ""}
+    SALES_AMT: {label: 소비액, type: float, unit: ""}
+    SALES_RATE: {label: 비중, type: float, unit: "%"}
+
+# ── 인구감소지역 프로파일링(PD_*) ──────────────────────────────
+# 화면: 지역별 분석 > 인구감소지역 현황 > 인구감소지역 프로파일링
+#
+# **연도 범위가 다르다.** 산업 지표(PD_01_01_003 · _007 · _007_01)는
+# 2018~2023으로 불러야 값이 온다. 2020~2024로 부르면 오류가 아니라
+# 빈 배열이다 — 사업체 통계가 다른 지표보다 늦게 나오기 때문으로 보인다.
+
+PD_01_01_001:
+  name: 지역 관광지수(연도별, 구분별)
+  screen: /datalab/portal/loc/getPoplDcrsRegionStatusForm.do
+  auth: public
+  params: [SGG_CD, SIDO_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  probe_window: ["2018", "2023"]   # 창이 고정이다. 끝을 2024로만 바꿔도 빈 배열
+  granularity: year
+  section: 프로파일링
+  query_axis: 지역
+  caution: >-
+    TOU_DIV_NM으로 구분이 나뉘고 GRP_NM으로 지표가 나뉜다. 다 더하면
+    두 번 센다. AVG_TOU_NUM의 단위를 사이트가 표기하지 않는다 —
+    지표(GRP_NM)마다 뜻이 다르므로 절대값을 단정하지 마라.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    SGG_NM: {label: 시군구명, type: str, unit: ""}
+    POPL_DCRS_REGN_YN: {label: 인구감소지역여부, type: str, unit: ""}
+    POPL_DCRS_ITS_REGN_YN: {label: 관심지역여부, type: str, unit: ""}
+    GRP_NM: {label: 지표명, type: str, unit: ""}
+    TOU_DIV_NM: {label: 구분, type: str, unit: ""}
+    AVG_TOU_NUM: {label: 값, type: float, unit: ""}
+    COL_FIELD: {label: 항목코드, type: str, unit: ""}
+    GRP_CD: {label: 지표코드, type: str, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    TOU_DIV_CD: {label: 구분코드, type: str, unit: ""}
+
+PD_01_01_003:
+  name: 관광산업 업종별 종사자 수와 비중(연도별)
+  screen: /datalab/portal/loc/getPoplDcrsRegionStatusForm.do
+  auth: public
+  params: [SGG_CD, SIDO_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  probe_window: ["2018", "2023"]   # 창이 고정이다. 끝을 2024로만 바꿔도 빈 배열
+  granularity: year
+  section: 프로파일링
+  query_axis: 지역
+  caution: >-
+    **2018~2023으로 불러야 한다.** 2020~2024는 빈 배열이다.
+    **그렇게 불러도 마지막 해(2023) 여덟 행만 온다** — 연도별 추이가
+    아니다. GRP_NM이 관광 업종 여덟 갈래이고 TOT_TOU_NUM이 그 업종
+    종사자 수, TOTAL_TOU_NUM이 분모다(정선군 2023: 여덟 업종 합
+    3,192명 = TOTAL_TOU_NUM, RATE_VAL 합 100.0 — 2026-08-23 검산 통과).
+    **POPL_AVG_EMPL_NUM은 이 지역 값이 아니다.** 정선·신안·의성 세
+    곳 모두 3680으로 같다 — 지역과 무관한 기준선이며 무엇의 평균인지
+    사이트가 밝히지 않는다. 지역 종사자 수로 읽지 마라.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    SGG_NM: {label: 시군구명, type: str, unit: ""}
+    GRP_NM: {label: 관광업종, type: str, unit: ""}
+    TOT_TOU_NUM: {label: 종사자수, type: float, unit: 명}
+    TOTAL_TOU_NUM: {label: 전체_종사자수, type: float, unit: 명}
+    RATE_VAL: {label: 비중, type: float, unit: "%"}
+    POPL_AVG_EMPL_NUM: {label: 지역무관_기준선, type: float, unit: ""}
+    GRP_CD: {label: 업종코드, type: str, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+
+PD_01_01_005:
+  name: 인구밀도(프로파일링, 연도별)
+  screen: /datalab/portal/loc/getPoplDcrsRegionStatusForm.do
+  auth: public
+  params: [SGG_CD, SIDO_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  probe_window: ["2018", "2023"]   # 창이 고정이다. 끝을 2024로만 바꿔도 빈 배열
+  granularity: year
+  section: 프로파일링
+  query_axis: 지역
+  caution: >-
+    GRP_NM이 '인구 밀도'인 행만 온다. 단위를 사이트가 표기하지 않는다.
+    같은 값을 다루는 LN_06_01_009와 화면이 달라 값이 어긋날 수 있으니
+    한 리포트에 섞지 마라.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    SGG_NM: {label: 시군구명, type: str, unit: ""}
+    GRP_NM: {label: 지표명, type: str, unit: ""}
+    TOU_NUM: {label: 인구밀도, type: float, unit: ""}
+    GRP_CD: {label: 지표코드, type: str, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+
+PD_01_01_006:
+  name: 인구감소지수(인구 증감율·고령화·유소년, 연도별)
+  screen: /datalab/portal/loc/getPoplDcrsRegionStatusForm.do
+  auth: public
+  params: [SGG_CD, SIDO_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  probe_window: ["2018", "2023"]   # 창이 고정이다. 끝을 2024로만 바꿔도 빈 배열
+  granularity: year
+  section: 프로파일링
+  query_axis: 지역
+  caution: >-
+    COL_1이 인구 증감율, COL_2가 고령화 비율, COL_3이 유소년 비율이다
+    (차트 계열 이름). 인구 증감율은 음수가 정상이다.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    SGG_NM: {label: 시군구명, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    COL_1: {label: 인구_증감율, type: float, unit: "%"}
+    COL_2: {label: 고령화_비율, type: float, unit: "%"}
+    COL_3: {label: 유소년_비율, type: float, unit: "%"}
+
+PD_01_01_007:
+  name: 산업별 사업체 수·종사자 수와 비중(연도별)
+  screen: /datalab/portal/loc/getPoplDcrsRegionStatusForm.do
+  auth: public
+  params: [SGG_CD, SIDO_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  probe_window: ["2018", "2023"]   # 창이 고정이다. 끝을 2024로만 바꿔도 빈 배열
+  granularity: year
+  section: 프로파일링
+  query_axis: 지역
+  caution: >-
+    **2018~2023으로 불러야 한다.** 그렇게 불러도 마지막 해(2023)만 온다.
+    GRP_NM이 산업 분류이고, **그 목록 안에 '관광산업'이 한 행으로 들어
+    있다**(GRP_CD가 '?'). 표준산업분류 코드를 가진 다른 행들과 겹치지
+    않는다 — 정선군 2023에서 스무 행의 EMPLY_NUM 합이 TOT_TOU_NUM
+    (14,039명 · 2026-08-23 재확인)과 정확히 같고 RATE_VAL 합이 99.98이다. 그러므로 더해도
+    두 번 세지 않는다. 다만 **다른 열아홉 행은 관광 지표가 아니다** —
+    건설업·공공행정을 관광 성과로 읽지 마라.
+    관광산업 한 행의 RATE_VAL이 "이 지역 일자리 가운데 관광이 차지하는
+    몫"이다(정선군 2023: 22.74%).
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    SGG_NM: {label: 시군구명, type: str, unit: ""}
+    POPL_DCRS_REGN_YN: {label: 인구감소지역여부, type: str, unit: ""}
+    POPL_DCRS_ITS_REGN_YN: {label: 관심지역여부, type: str, unit: ""}
+    GRP_NM: {label: 산업분류, type: str, unit: ""}
+    BZPLC_NUM: {label: 사업체수, type: float, unit: 개}
+    EMPLY_NUM: {label: 종사자수, type: float, unit: 명}
+    TOT_TOU_NUM: {label: 전체_종사자수, type: float, unit: 명}
+    RATE_VAL: {label: 비중, type: float, unit: "%"}
+    GRP_CD: {label: 산업코드, type: str, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+
+PD_01_01_007_01:
+  name: 산업별 종사자 비중(요약, 연도별)
+  screen: /datalab/portal/loc/getPoplDcrsRegionStatusForm.do
+  auth: public
+  params: [SGG_CD, SIDO_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  probe_window: ["2018", "2023"]   # 창이 고정이다. 끝을 2024로만 바꿔도 빈 배열
+  granularity: year
+  section: 프로파일링
+  query_axis: 지역
+  caution: >-
+    **2018~2023으로 불러야 한다.** PD_01_01_007의 요약판이라 행이 적다.
+    비중 컬럼 이름이 RATE_VAL이 아니라 RATE다 — 두 지표를 같은 코드로
+    읽으면 값이 비어 보인다.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    SGG_NM: {label: 시군구명, type: str, unit: ""}
+    POPL_DCRS_REGN_YN: {label: 인구감소지역여부, type: str, unit: ""}
+    POPL_DCRS_ITS_REGN_YN: {label: 관심지역여부, type: str, unit: ""}
+    GRP_NM: {label: 산업분류, type: str, unit: ""}
+    BZPLC_NUM: {label: 사업체수, type: float, unit: 개}
+    EMPLY_NUM: {label: 종사자수, type: float, unit: 명}
+    TOT_TOU_NUM: {label: 전체_종사자수, type: float, unit: 명}
+    RATE: {label: 비중, type: float, unit: "%"}
+    GRP_CD: {label: 산업코드, type: str, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}

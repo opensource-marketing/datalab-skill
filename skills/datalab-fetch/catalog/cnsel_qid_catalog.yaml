@@ -1,0 +1,139 @@
+# 한국관광 데이터랩 qid 카탈로그 — 관광안내 상담
+#
+# 화면: bzm/getTursmCnsel (관광산업 분석 > 관광안내)
+#
+# 관광안내소·1330 같은 창구에 들어온 **안내 건수**다. 방문자 수가
+# 아니다. "어느 지역에서 무엇을 어느 말로 물었나"에 답한다.
+#
+# ── 산술로 확인한 것(2026-08-24) ────────────────────────────────
+# 세 지표가 2024년에 대해 **모두 633,581건**으로 맞아떨어진다.
+#   BZM_04_01_001 시도별 · BZM_04_01_002 유형별 · BZM_04_01_003 어권별
+# 002·003 의 `CNSEL_PER` 합도 각각 100.0 이다.
+#
+# ── **빈 문자열을 보내면 죽는다** ───────────────────────────────
+# 이 저장소가 처음 만나는 모양이다. 지금까지는 "안 보내면 빈 배열"
+# 이었는데 여기는 반대다.
+#
+#   GUID_TYPE_NM 안 보냄     17행
+#   GUID_TYPE_NM='전체'      17행
+#   GUID_TYPE_NM='체험관광'  17행
+#   GUID_TYPE_NM=''          **0행**
+#
+# 그래서 `fixed_params` 에 빈 문자열을 넣지 않았다. 좁히려면
+# `--param GUID_TYPE_NM=체험관광` 처럼 값을 주면 된다.
+#
+# ── '전체' 행이 섞여 있다 ───────────────────────────────────────
+# 추이 지표(`_004`·`_005`)에는 `GUID_TYPE_NM='전체'` 행이 따로 있다.
+# 걸러내지 않고 더하면 두 배가 된다.
+#
+# 유형 여덟: 의료관광 · 체험관광 · 축제/공연 · 숙박 · 음식 · 쇼핑 ·
+#            관광지 · 교통
+# 어권 열:   한국어 · 영어 · 일본어 · 중국어 · 프랑스어 · 러시아어 ·
+#            베트남어 · 태국어 · 말레이/인도네시아 · 기타
+# **해마다 달라질 수 있으니 개수를 못 박지 마라.**
+
+BZM_04_01_001:
+  name: 시도별 관광안내 건수
+  screen: /datalab/portal/bzm/getTursmCnsel.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, GUID_TYPE_NM]
+  fixed_params: {}
+  granularity: period
+  section: 관광안내
+  query_axis: 전국
+  caution: >-
+    조회한 지역과 무관하게 전국 시도 17행이 온다. 컬럼 이름이
+    `TOU_NUM` 이지만 **방문자 수가 아니라 안내 건수**다.
+    합이 633,581건으로 유형별(BZM_04_01_002)·어권별(_003)과 같다
+    (2024년, 2026-08-24 검산).
+    **`GUID_TYPE_NM` 에 빈 문자열을 보내면 빈 배열이 온다** —
+    안 보내거나 '전체'를 보내라. 좁히려면 '체험관광'처럼 값을 준다.
+  columns:
+    SIDO_NM: {label: 시도명_약칭, type: str, unit: ""}
+    PTL_SIDO_CD: {label: 포털_시도코드, type: str, unit: ""}
+    TOU_NUM: {label: 안내_건수, type: float, unit: 건}
+
+BZM_04_01_002:
+  name: 유형별 관광안내 건수
+  screen: /datalab/portal/bzm/getTursmCnsel.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, GUID_TYPE_NM]
+  fixed_params: {}
+  granularity: period
+  section: 관광안내
+  query_axis: 전국
+  caution: >-
+    여덟 유형이 온다(의료관광·체험관광·축제/공연·숙박·음식·쇼핑·
+    관광지·교통). `CNSEL_PER` 합이 100.0이고 `CNSEL_NUM` 합이
+    633,581건으로 시도별 표와 같다(2024년, 2026-08-24 검산).
+    **`GUID_TYPE_NM` 을 주면 그 유형 한 행만 온다** — 빈 문자열은
+    빈 배열이다. 유형 개수는 해마다 달라질 수 있으니 못 박지 마라.
+  columns:
+    TYPE_NM: {label: 안내_유형, type: str, unit: ""}
+    CNSEL_NUM: {label: 안내_건수, type: float, unit: 건}
+    CNSEL_PER: {label: 비중, type: float, unit: "%"}
+
+BZM_04_01_003:
+  name: 어권별 관광안내 건수
+  screen: /datalab/portal/bzm/getTursmCnsel.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, GUID_TYPE_NM]
+  fixed_params: {}
+  granularity: period
+  section: 관광안내
+  query_axis: 전국
+  caution: >-
+    **어느 말로 물었나이지 국적이 아니다.** '한국어'가 가장 많은데
+    내국인일 수도 재외동포일 수도 있다 — 국적 통계로 옮기지 마라.
+    `CNSEL_PER` 합이 100.0이고 `CNSEL_NUM` 합이 633,581건으로 시도별·
+    유형별 표와 같다(2024년, 2026-08-24 검산). 열 어권이 왔지만
+    개수를 못 박지 마라. `GUID_TYPE_NM` 을 주면 그 유형 안에서의
+    어권 분포가 온다.
+  columns:
+    TYPE_NM: {label: 어권, type: str, unit: ""}
+    CNSEL_NUM: {label: 안내_건수, type: float, unit: 건}
+    CNSEL_PER: {label: 비중, type: float, unit: "%"}
+
+BZM_04_01_004:
+  name: 시도별·유형별 관광안내 건수(월별)
+  screen: /datalab/portal/bzm/getTursmCnsel.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: month
+  section: 관광안내
+  query_axis: 전국
+  caution: >-
+    **`GUID_TYPE_NM='전체'` 행이 섞여 있다.** 그 시도·그 달의 합계
+    이므로 걸러내지 않고 더하면 두 배가 된다.
+    행이 많다 — 2024년 열두 달에 1,525행이다(2026-08-24 확인).
+    **`GUID_TYPE_NM` 파라미터를 무시한다** — 값을 줘도 응답이 같다.
+    좁히려면 응답을 걸러라. 안내 건수이지 방문자 수가 아니다.
+  columns:
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    GUID_TYPE_NM: {label: 안내_유형, type: str, unit: ""}
+    CNSEL_NUM: {label: 안내_건수, type: float, unit: 건}
+
+BZM_04_01_005:
+  name: 어권별·유형별 관광안내 건수(월별)
+  screen: /datalab/portal/bzm/getTursmCnsel.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: month
+  section: 관광안내
+  query_axis: 전국
+  caution: >-
+    **`GUID_TYPE_NM='전체'` 행이 섞여 있다** — 그 어권·그 달의
+    합계다. 걸러내지 않고 더하면 두 배가 된다.
+    2024년 열두 달에 1,080행이다(2026-08-24 확인).
+    `LANG_DIV_CD` 는 0100(한국어)·0400(중국어) 꼴이다.
+    어느 말로 물었나이지 국적이 아니다.
+  columns:
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    LANG_DIV_CD: {label: 어권코드, type: str, unit: ""}
+    LANG_DIV_NM: {label: 어권, type: str, unit: ""}
+    GUID_TYPE_NM: {label: 안내_유형, type: str, unit: ""}
+    CNSEL_NUM: {label: 안내_건수, type: float, unit: 건}

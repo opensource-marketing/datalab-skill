@@ -1,0 +1,258 @@
+# 한국관광 데이터랩 qid 카탈로그 — 크루즈
+#
+# 화면: 국가별 분석 > 방한여행 현황 > 크루즈 통계
+#       (ts/getNewCrusStatsForm)
+#
+# ── 04 계열과 05 계열은 세는 대상이 다르다 ────────────────────
+# 화면 이름은 각각 '크루즈통계'와 '크루즈입항통계'다.
+#
+# **04 계열 안에서는 관계가 딱 떨어진다.** 2024년 열두 달 모두
+# TS_01_04_001_01의 승객 + 선원이 TS_01_04_002_01의 SUM_PSON_NUM과
+# 정확히 같다(2024-01: 19,587 + 14,870 = 34,457).
+#
+# **05 계열은 04의 승객 수와 다른 달이 있다.** 넉 달(1·2·8월 등)은
+# 정확히 같은데 나머지 여덟 달은 05가 더 크다:
+#
+#   2024-03  05 합계 81,337  대  04 승객 70,537
+#   2024-10  05 합계 72,440  대  04 승객 68,152
+#
+# 05가 큰 쪽이므로 **같은 배가 여러 항구에 기항할 때 항구마다 세는
+# 연인원**일 가능성이 있다(2024-03 서귀포 43,350 + 제주 16,153 +
+# 부산 15,722 + 인천 6,112 = 81,337). 다만 **확인하지 못했다** —
+# 사이트가 두 통계의 정의를 밝히지 않는다. 짐작을 사실처럼 쓰지 마라.
+#
+# 그러므로 **두 계열의 수를 빼거나 나누지 마라.** 선원 수를 알고
+# 싶으면 04 계열 안에서만 계산하라. 리포트에는 어느 계열을 썼는지
+# 반드시 적어라 — 같은 달의 크루즈 인원이 두 값으로 나온다.
+#
+# ── TOU_NUM1·TOU_NUM2가 지표마다 다른 뜻이다 ──────────────────
+# 이 카탈로그에서 가장 위험한 자리다. 컬럼 이름이 같은데:
+#
+#   TS_01_04_001_01  TOU_NUM1 = 승객,  TOU_NUM2 = 선원
+#   TS_01_04_003_01  TOU_NUM1 = 남성,  TOU_NUM2 = 여성
+#   TS_01_05_002_01  TOU_NUM1 = 남성,  TOU_NUM2 = 여성 (승객만)
+#
+# 이름으로 짐작하지 않고 산술로 확정했다 — TS_01_04_005_01의 '구분'
+# 컬럼을 합치면 선원 14,870 · 승객 19,587이 나오고, TS_01_04_007_01은
+# 남성 19,979 · 여성 14,478이 나온다. 각각 001_01·003_01의 두 값과
+# 정확히 같다.
+#
+# ── 기간 파라미터를 색인이 틀리게 적어 두었다 ─────────────────
+# 색인(qid_index.yaml)은 여러 지표의 params를 빈 목록이나 [BASE_YR]로
+# 적어 두었는데 틀렸다. 아홉 개 모두 BASE_YM1과 BASE_YM2를 함께 줘야
+# 하고, 주지 않으면 빈 배열이 아니라 **비어 있는 응답 본문**이 와서
+# 인출 계층이 FetchError를 던진다. BASE_YR은 넣어도 아무 영향이 없다.
+#
+# ── 피벗 응답이 섞여 있다 ─────────────────────────────────────
+# TS_01_04_005_01 · 006_01 · 007_01 · 008_01 · 011_01은 컬럼 이름에
+# R: · C: · V: 접두사가 붙는다(행축·열축·값). 다른 지표와 컬럼 이름
+# 규칙이 달라 같은 코드로 읽으면 전부 None이 된다.
+#
+# **그중 005_01과 011_01만 이 카탈로그에 있다.** 006_01·007_01·008_01은
+# 색인에만 있고 아직 검증하지 않았다 — 위 근거로 인용한 007_01의
+# 성별 합계는 실호출로 직접 확인한 값이지 카탈로그 항목이 아니다.
+# 그 셋을 쓰려면 먼저 probe로 확인하라.
+# ────────────────────────────────────────────────────────────────
+
+TS_01_04_001_01:
+  name: 크루즈 승객·선원 수(월별)
+  screen: /datalab/portal/ts/getNewCrusStatsForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: month
+  section: 크루즈
+  query_axis: 전국
+  caution: >-
+    **TOU_NUM1이 승객, TOU_NUM2가 선원이다**(TS_01_04_005_01의 구분별
+    합계와 대조해 확정했다). 다른 지표의 같은 이름 컬럼은 남성·여성인
+    경우가 있으니 지표마다 다시 확인하라.
+    둘을 더하면 항구별 지표(TS_01_04_002_01)의 SUM_PSON_NUM과 같다
+    (2024년 열두 달 모두 일치).
+    **TS_01_05_* 계열의 합계와는 다른 달이 있다** — 05가 더 크다.
+    두 계열을 빼서 선원 수를 구하지 마라.
+  columns:
+    BASE_DATE: {label: 기준연월, type: str, unit: ""}
+    TOU_NUM1: {label: 승객수, type: float, unit: 명}
+    TOU_NUM2: {label: 선원수, type: float, unit: 명}
+
+TS_01_04_002_01:
+  name: 크루즈 입항 항구별 인원(승객+선원, 월별)
+  screen: /datalab/portal/ts/getNewCrusStatsForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: month
+  section: 크루즈
+  query_axis: 전국
+  caution: >-
+    **승객과 선원을 합친 수다.** 승객만 보려면 TS_01_05_001_01을 써라.
+    SUM_PSON_NUM은 그 달의 전 항구 합계이며 같은 달 모든 행에 같은
+    값이 들어 있다 — 행마다 더하지 마라(2024-01: 34,457명, PSON_NUM
+    합과 일치하는 것을 확인했다).
+    달마다 입항한 항구만 행으로 오므로 항구 수가 달마다 다르다.
+  columns:
+    BASE_DATE: {label: 기준연월, type: str, unit: ""}
+    AIRPT_POT_CD: {label: 항구코드, type: str, unit: ""}
+    AIRPT_POT_NM: {label: 항구명, type: str, unit: ""}
+    PSON_NUM: {label: 인원, type: float, unit: 명}
+    SUM_PSON_NUM: {label: 그달_전체인원, type: float, unit: 명}
+
+TS_01_04_003_01:
+  name: 크루즈 성별 인원(승객+선원, 월별)
+  screen: /datalab/portal/ts/getNewCrusStatsForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: month
+  section: 크루즈
+  query_axis: 전국
+  caution: >-
+    **여기서는 TOU_NUM1이 남성, TOU_NUM2가 여성이다.** 같은 이름
+    컬럼이 TS_01_04_001_01에서는 승객·선원이었다 — 두 지표를 같은
+    코드로 읽으면 선원 수를 여성 수로 적는다. TS_01_04_007_01의
+    구분별 합계(남성 19,979 · 여성 14,478)와 대조해 확정했다.
+    선원이 포함돼 성비가 남성 쪽으로 기운다. 승객만 보려면
+    TS_01_05_002_01을 써라.
+  columns:
+    BASE_DATE: {label: 기준연월, type: str, unit: ""}
+    TOU_NUM1: {label: 남성, type: float, unit: 명}
+    TOU_NUM2: {label: 여성, type: float, unit: 명}
+
+TS_01_04_004_01:
+  name: 크루즈 연령별 인원(승객+선원, 월별)
+  screen: /datalab/portal/ts/getNewCrusStatsForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: month
+  section: 크루즈
+  query_axis: 전국
+  caution: >-
+    승객과 선원을 합친 수다. 아홉 개 연령 구간이 오고 합이
+    SUM_PSON_NUM과 맞는다. **선원이 섞여 20~39세가 크게 부풀려진다**
+    (2024-01: 04 계열 20대 8,568명 대 05 계열 955명). 방한 관광객의
+    연령 분포로 읽으려면 TS_01_05_003_01을 써라.
+  columns:
+    BASE_DATE: {label: 기준연월, type: str, unit: ""}
+    AGEG_DIV_CD: {label: 연령코드, type: str, unit: ""}
+    AGEG_DIV_NM: {label: 연령, type: str, unit: ""}
+    PSON_NUM: {label: 인원, type: float, unit: 명}
+    SUM_PSON_NUM: {label: 그달_전체인원, type: float, unit: 명}
+
+TS_01_05_001_01:
+  name: 크루즈 입항 항구별 승객 수(월별)
+  screen: /datalab/portal/ts/getNewCrusStatsForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: month
+  section: 크루즈
+  query_axis: 전국
+  caution: >-
+    '크루즈입항통계'다. 선원은 들어 있지 않은 것으로 보이나 **04
+    계열의 승객 수와 값이 다른 달이 있다** — 2024년 넉 달은 같고
+    여덟 달은 05가 더 크다(2024-03: 81,337 대 70,537). 같은 배가
+    여러 항구에 기항할 때 항구마다 세는 연인원일 수 있으나 사이트가
+    밝히지 않아 확인하지 못했다.
+    **항구별로 세는 값이므로 항구 수를 곱해 늘어난 수일 수 있다.**
+    "크루즈로 몇 명이 들어왔나"에 이 값을 그대로 쓰기 전에 04 계열의
+    승객 수와 견주고, 다르면 둘 다 적어라.
+    SUM_PSON_NUM은 그 달의 전 항구 합계이며 같은 달 모든 행에 같은
+    값이 들어 있다.
+  columns:
+    BASE_DATE: {label: 기준연월, type: str, unit: ""}
+    AIRPT_POT_CD: {label: 항구코드, type: str, unit: ""}
+    AIRPT_POT_NM: {label: 항구명, type: str, unit: ""}
+    PSON_NUM: {label: 승객수, type: float, unit: 명}
+    SUM_PSON_NUM: {label: 그달_전체승객수, type: float, unit: 명}
+
+TS_01_05_002_01:
+  name: 크루즈 승객 성별(월별)
+  screen: /datalab/portal/ts/getNewCrusStatsForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: month
+  section: 크루즈
+  query_axis: 전국
+  caution: >-
+    TOU_NUM1이 남성, TOU_NUM2가 여성이다. **04 계열과 성비가
+    뒤집힌다** — 2024-01에 04는 남 19,979 · 여 14,478인데 05는
+    남 8,756 · 여 10,831이다. 04에 선원이 들어 있고 선원에 남성이
+    많기 때문으로 보이나 확인하지 못했다.
+    어느 계열을 썼는지 밝히지 않으면 "크루즈 관광객은 남성이 많다"와
+    "여성이 많다"가 같은 해에 다 나온다.
+  columns:
+    BASE_DATE: {label: 기준연월, type: str, unit: ""}
+    TOU_NUM1: {label: 남성, type: float, unit: 명}
+    TOU_NUM2: {label: 여성, type: float, unit: 명}
+
+TS_01_05_003_01:
+  name: 크루즈 승객 연령별(월별)
+  screen: /datalab/portal/ts/getNewCrusStatsForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: month
+  section: 크루즈
+  query_axis: 전국
+  caution: >-
+    '크루즈입항통계'의 연령 분포다. 04 계열(TS_01_04_004_01)은 선원이
+    섞여 20~39세가 크게 부풀려지므로(2024-01 20대 8,568명 대 955명)
+    관광객의 연령을 볼 때는 이쪽이 맞다.
+    아홉 구간의 합이 SUM_PSON_NUM과 맞고, 그 값은 TS_01_05_001_01의
+    합계와 늘 같다. 다만 그 합계 자체가 04의 승객 수와 다른 달이
+    있으므로 절대 인원보다 **구간 사이의 비율**로 읽어라.
+  columns:
+    BASE_DATE: {label: 기준연월, type: str, unit: ""}
+    AGEG_DIV_CD: {label: 연령코드, type: str, unit: ""}
+    AGEG_DIV_NM: {label: 연령, type: str, unit: ""}
+    PSON_NUM: {label: 승객수, type: float, unit: 명}
+    SUM_PSON_NUM: {label: 그달_전체승객수, type: float, unit: 명}
+
+TS_01_04_005_01:
+  name: 크루즈 국적별 승객·선원(월별, 피벗)
+  screen: /datalab/portal/ts/getNewCrusStatsForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: month
+  section: 크루즈
+  query_axis: 전국
+  caution: >-
+    **컬럼 이름에 R: · C: · V: 접두사가 붙는다**(행축·열축·값).
+    다른 지표와 규칙이 달라 같은 코드로 읽으면 전부 None이 된다.
+    'C:구분'이 승객·선원이고 이 둘을 다 더하면 04 계열 합계가 된다 —
+    구분을 걸러 내지 않으면 두 번 센다.
+    행이 많다(2026-08-23 확인: 한 달 200행 안팎, 열두 달 2,444행 — 국적 × 구분이 교차된다). 국적 하나를 보려면 'R:국적'으로 걸러라.
+    'V:전년동기'는 PREV 기준이며 0으로 오는 국적이 많다.
+  columns:
+    "R:BASE_DATE": {label: 기준연월, type: str, unit: ""}
+    "R:대륙": {label: 대륙, type: str, unit: ""}
+    "R:국적": {label: 국적, type: str, unit: ""}
+    "C:구분": {label: 승객선원구분, type: str, unit: ""}
+    "V:인원": {label: 인원, type: float, unit: 명}
+    "V:전년동기": {label: 전년동기_인원, type: float, unit: 명}
+
+TS_01_04_011_01:
+  name: 크루즈 항구별 입항 횟수(월별, 피벗)
+  screen: /datalab/portal/ts/getNewCrusStatsForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: month
+  section: 크루즈
+  query_axis: 전국
+  caution: >-
+    **인원이 아니라 배가 들어온 횟수다.** 컬럼 이름에 R: · C: · V:
+    접두사가 붙는다. 'C:구분'이 항구명이다.
+    입항이 있었던 항구만 행으로 오므로 항구 수가 달마다 다르다
+    (2024-01은 두 항구 합 7회).
+  columns:
+    "R:BASE_DATE": {label: 기준연월, type: str, unit: ""}
+    AIRPT_POT_CD: {label: 항구코드, type: str, unit: ""}
+    "C:구분": {label: 항구명, type: str, unit: ""}
+    "V:횟수": {label: 입항횟수, type: float, unit: 회}
+    PREV_BASE_YM: {label: 전년동월, type: str, unit: ""}
+    "V:전년동기": {label: 전년동월_입항횟수, type: float, unit: 회}

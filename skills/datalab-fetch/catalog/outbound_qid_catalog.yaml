@@ -1,0 +1,234 @@
+# 한국관광 데이터랩 qid 카탈로그 — 아웃바운드(국민 해외여행)
+#
+# 방향이 반대다. 인바운드 카탈로그가 "한국에 오는 사람"이라면 여기는
+# "한국에서 나가는 사람"이다. 여행사·항공사·면세가 보는 쪽이다.
+#
+# 조회 축이 **없다.** 전국 합계만 나온다. 목적지 국가별 분해는 이 화면에
+# 없다(BASE_YM1·BASE_YM2로 기간만 정한다).
+#
+# ── VAL1·VAL2·VAL3가 qid마다 다른 것을 가리킨다 ────────────────
+# 사이트 차트는 VAL3만 그린다. 같은 변환 함수(dataCnvtLine)를 쓰면서
+# 차트 단위만 바꾼다.
+#   NAT_05_01_004 (차트 단위 '백만달러')  VAL3 = 관광지출
+#   NAT_05_01_005 (차트 단위 '달러')      VAL3 = 1인당 관광지출
+# VAL1·VAL2는 차트에 안 나오지만 응답에는 있다. 뜻은 산술로 확정했다.
+#   VAL1 = VAL2 - VAL3 이 12개월 모두 정확히 맞는다.
+#   관광수지 = 관광수입 - 관광지출 이므로 VAL1=수지, VAL2=수입, VAL3=지출.
+#   VAL1이 음수인 것도 맞는다(한국은 관광수지 적자다).
+# 1인당도 검산했다: 2,608.9백만USD × 1e6 ÷ 2,770,866명 = 941.5USD, 12/12 일치.
+# ────────────────────────────────────────────────────────────────
+#
+# 성별 대응 근거: 차트가 area_XYChart_Notitle(..., '남성', '여성')로 불리고
+# value1(=CD_CNT)을 -1 곱해 왼쪽에 그린다(인구 피라미드).
+#
+# 주의: NAT_05_01_002의 인원 합계(2024년 26,958,995)는 NAT_05_01_001의
+# 합계(28,686,435)와 맞지 않는다. 두 지표를 더해 맞추려 하지 마라.
+
+NAT_05_01_001:
+  name: 국민 해외관광객 수(월별)
+  screen: /datalab/portal/nat/getOseaTourForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, srchAreaDate]
+  fixed_params: {srchAreaDate: "1", adminYn: ""}
+  granularity: month
+  section: 규모
+  query_axis: 전국
+  caution: 목적지 국가별로 나뉘지 않는다. 전국 합계다.
+  columns:
+    BASE_DATE: {label: 기준월, type: str, unit: ""}
+    DIV_NM: {label: 구분, type: str, unit: ""}
+    PSON_NUM: {label: 해외관광객수, type: float, unit: 명}
+
+NAT_05_01_002:
+  name: 국민 해외관광객 성·연령별 구성
+  screen: /datalab/portal/nat/getOseaTourForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, srchAreaDate]
+  fixed_params: {srchAreaDate: "1", adminYn: ""}
+  granularity: period
+  section: 누구
+  query_axis: 전국
+  caution: 인원 합계가 NAT_05_01_001과 맞지 않는다. 두 지표를 합산해 맞추려 하지 마라.
+  columns:
+    AGEG_DIV_NM: {label: 연령대, type: str, unit: ""}
+    CD_CNT: {label: 남성_인원, type: float, unit: 명}
+    CD_CNT2: {label: 여성_인원, type: float, unit: 명}
+    AMT1: {label: 남성_비중, type: float, unit: "%"}
+    AMT2: {label: 여성_비중, type: float, unit: "%"}
+
+NAT_05_01_003:
+  name: 국민 해외관광객 출국 공항·항만별 구성
+  screen: /datalab/portal/nat/getOseaTourForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, srchAreaDate]
+  fixed_params: {srchAreaDate: "1", adminYn: ""}
+  granularity: period
+  section: 어디로
+  query_axis: 전국
+  caution: 출국 지점이지 목적지가 아니다.
+  columns:
+    AIRPT_POT_NM: {label: 출국지점, type: str, unit: ""}
+    AIRPT_POT_CD: {label: 출국지점코드, type: str, unit: ""}
+    PSON_NUM: {label: 인원, type: float, unit: 명}
+    PSON_NUM_RATE: {label: 비중, type: float, unit: "%"}
+
+NAT_05_01_004:
+  name: 관광수지(월별)
+  screen: /datalab/portal/nat/getOseaTourForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, srchAreaDate]
+  fixed_params: {srchAreaDate: "1", adminYn: ""}
+  granularity: month
+  section: 돈
+  query_axis: 전국
+  caution: 단위가 백만 달러다. 1인당 지출인 NAT_05_01_005의 VAL3(달러)와 섞지 마라.
+  columns:
+    BASE_DATE: {label: 기준월, type: str, unit: ""}
+    DIV_NM: {label: 구분, type: str, unit: ""}
+    VAL1: {label: 관광수지, type: float, unit: 백만USD}
+    VAL2: {label: 관광수입, type: float, unit: 백만USD}
+    VAL3: {label: 관광지출, type: float, unit: 백만USD}
+
+NAT_05_01_005:
+  name: 1인당 관광지출(월별)
+  screen: /datalab/portal/nat/getOseaTourForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, srchAreaDate]
+  fixed_params: {srchAreaDate: "1", adminYn: ""}
+  granularity: month
+  section: 돈
+  query_axis: 전국
+  caution: VAL3만 달러 단위다. 같은 표의 관광지출은 백만 달러다.
+  columns:
+    BASE_DATE: {label: 기준월, type: str, unit: ""}
+    DIV_NM: {label: 구분, type: str, unit: ""}
+    EXPN_INTL_BALC_AMT: {label: 관광지출, type: float, unit: 백만USD}
+    EXPN_PSON_NUM: {label: 해외관광객수, type: float, unit: 명}
+    VAL3: {label: 1인당_관광지출, type: float, unit: USD}
+
+# ─────────────────────────────────────────────────────────────────
+# 2026-08-24 추가 — 국민 해외관광객 인구통계
+# (ts/getDtrmcNatiCust2Form, 출국자 기준)
+#
+# ── '전체'가 두 축에 다 있다 ────────────────────────────────────
+# 이 세 지표는 긴 형식(long format)이라 인바운드 쪽(TS_01_16_*)의
+# 넓은 형식보다 읽기 쉽다. 대신 **합계 행이 두 축 모두에 섞여 있다.**
+#
+#   BASE_YM = '전체'   기간 전체의 합계
+#   SEX_CD  = '전체'   갈래 전체의 합계 (AGE_CD·ARPT_PRT_CD 도 같다)
+#
+# 열두 달을 물으면 **13개 BASE_YM 이 온다.** 걸러내지 않고 다 더하면
+# 네 배가 된다(달 두 배 x 갈래 두 배). 2024년 1월 갈래합 2,770,866명이
+# '전체' 행의 값과 정확히 같다(2026-08-24 검산).
+#
+# ── C_RATE 는 전년 동기 대비다 ──────────────────────────────────
+# (QTY - PRE_QTY) / PRE_QTY x 100 이 맞아떨어진다(2024년 1월 남성
+# 53.3%, 2026-08-24 검산). PRE_QTY 가 전년 같은 달의 값이다.
+#
+# ── 승무원이 섞여 있다 ──────────────────────────────────────────
+# 성별·연령 갈래의 마지막이 '승무원'이다. 관광객이 아니다
+# (2024년 172만 명, 출국자의 6%).
+# ─────────────────────────────────────────────────────────────────
+
+TS_01_17_004_New:
+  name: 국민 해외관광객 성별(월별)
+  screen: /datalab/portal/ts/getDtrmcNatiCust2Form.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y"}
+  granularity: month
+  section: 규모
+  query_axis: 전국
+  caution: >-
+    갈래는 남성 · 여성 · 승무원 · **전체**다. `SEX_CD` 가 '전체'인
+    행은 합계이므로 걸러라. `BASE_YM` 에도 '전체' 행이 있다 —
+    열두 달을 물으면 13개 달이 온다(2026-08-24 확인).
+    승무원은 관광객이 아니다. C_RATE 는 전년 동월 대비 증감률(%)이고
+    PRE_QTY 가 그 전년 값이다.
+  columns:
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    SEX_CD: {label: 성별, type: str, unit: ""}
+    QTY: {label: 출국자수, type: float, unit: 명}
+    PRE_QTY: {label: 전년동월_출국자수, type: float, unit: 명}
+    C_RATE: {label: 전년대비_증감률, type: float, unit: "%"}
+
+TS_01_17_005_New_1:
+  name: 국민 해외관광객 연령별(월별·10세 구분)
+  screen: /datalab/portal/ts/getDtrmcNatiCust2Form.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y"}
+  granularity: month
+  section: 규모
+  query_axis: 전국
+  caution: >-
+    0~9세부터 80세이상까지 아홉 갈래에 승무원과 **전체**가 더해져
+    열한 가지다. `AGE_CD` 가 '전체'인 행과 `BASE_YM` 이 '전체'인
+    행을 모두 걸러야 한다 — 안 그러면 네 배가 된다.
+    2024년 1월 갈래합 2,770,866명이 '전체' 행과 같다(2026-08-24 검산).
+    옛 구분(TS_01_17_002)은 경계가 달라 이어 붙일 수 없다.
+  columns:
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    AGE_CD: {label: 연령대, type: str, unit: ""}
+    QTY: {label: 출국자수, type: float, unit: 명}
+    PRE_QTY: {label: 전년동월_출국자수, type: float, unit: 명}
+    C_RATE: {label: 전년대비_증감률, type: float, unit: "%"}
+
+TS_01_17_006_New_2:
+  name: 국민 해외관광객 출국 공항·항구별(월별)
+  screen: /datalab/portal/ts/getDtrmcNatiCust2Form.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y"}
+  granularity: month
+  section: 규모
+  query_axis: 전국
+  caution: >-
+    공항·항구 열여섯 곳에 **전체**가 더해져 열일곱 가지다
+    (2026-08-24 확인). `ARPT_PRT_CD` 가 '전체'인 행과 `BASE_YM` 이
+    '전체'인 행을 걸러라. 인천공항 하나가 2024년 1월 출국자의
+    77%(2,124,318 / 2,770,866)다. ORD 는 사이트가 쓰는 정렬 순서이며
+    순위로 읽어도 되지만 '전체' 행이 섞여 있다는 것을 잊지 마라.
+  columns:
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    ARPT_PRT_CD: {label: 공항_항구, type: str, unit: ""}
+    QTY: {label: 출국자수, type: float, unit: 명}
+    PRE_QTY: {label: 전년동월_출국자수, type: float, unit: 명}
+    C_RATE: {label: 전년대비_증감률, type: float, unit: "%"}
+    ORD: {label: 정렬순서, type: float, unit: ""}
+
+# ─────────────────────────────────────────────────────────────────
+# 2026-08-24 추가 — 관광수지 한 표
+#
+# `NAT_05_01_004`·`_005` 는 VAL1·VAL2·VAL3 라는 이름 없는 컬럼에
+# 수지·수입·지출을 담는다(위 머리말에서 산술로 확정한 것이다).
+# 여기 넣는 `TS_01_03_004` 는 **같은 값을 항목 이름과 함께** 준다.
+# 이름으로 고를 수 있으니 새로 쓸 때는 이쪽이 낫다.
+# ─────────────────────────────────────────────────────────────────
+
+TS_01_03_004:
+  name: 관광수지·수입·지출(월별, 항목명 포함)
+  screen: /datalab/portal/ts/getKorTursmBalcForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {ALL_YN: "Y", srchAreaDate: "1", tabDiv: "1"}
+  granularity: month
+  section: 돈
+  query_axis: 전국
+  caution: >-
+    다섯 항목이 각각 한 행씩 온다 — 관광수지 전체(백만달러) ·
+    관광수입 전체(백만달러) · 관광수입 1인당(달러) · 관광지출
+    전체(백만달러) · 관광지출 1인당(달러). **단위가 항목 이름에
+    적혀 있으니 그대로 옮겨라** — 전체는 백만 달러이고 1인당은
+    달러다.
+    **`BASE_DATE` 에 '총계' 행이 섞여 있다.** 열두 달을 물으면
+    13가지가 온다(5 x 13 = 65행, 2026-08-24 확인). 걸러내지 않고
+    더하면 두 배가 된다.
+    산술로 확인했다 — 2024년 1월 수입 1,375.1 - 지출 2,608.9 =
+    수지 -1,233.8. `PREYR_GTOT` 는 전년 같은 달의 값이다.
+    한국은 관광수지 적자라 음수가 정상이다.
+  columns:
+    BASE_DATE: {label: 기준월, type: str, unit: ""}
+    ITEM_DIV_NM: {label: 항목, type: str, unit: ""}
+    INTL_BALC_AMT: {label: 값, type: float, unit: ""}
+    PREYR_GTOT: {label: 전년동월_값, type: float, unit: ""}

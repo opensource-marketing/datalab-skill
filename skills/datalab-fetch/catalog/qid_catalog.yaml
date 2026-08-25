@@ -1,0 +1,139 @@
+# 한국관광 데이터랩 qid 카탈로그 — 인바운드 영역
+# auth: public = 쿠키 불필요 / session = 로그인 세션 필요(없으면 빈 배열)
+# fixed_params: 누락하면 빈 배열이 반환되는 숨은 필수 파라미터
+
+NAT_08_01_021:
+  name: 국가별 방한객수 및 전년 대비 증감
+  # natCd를 받지만 무시한다. 무엇을 넣어도 전체 국가 204행이 그대로
+  # 온다(999/VN/JP/빈값 모두 동일함을 실호출로 확인). 사이트도 전체를
+  # 받아 화면에서 걸러 쓴다. 특정 국가 값이 필요하면 응답에서 골라야 한다.
+  caution: natCd를 무시하고 항상 전체 국가를 돌려준다. 응답에서 직접 골라라.
+  screen: /datalab/portal/nat/getForTourForm.do
+  auth: public
+  params: [natCd, BASE_YM1, BASE_YM2, srchAreaDate]
+  fixed_params: {}
+  granularity: month
+  axis: [volume, momentum]
+  columns:
+    NAT_NM: {label: 국가명, type: str, unit: ""}
+    PTL_NAT_CD: {label: 국가코드, type: str, unit: ""}
+    TOU_NUM: {label: 방한객수, type: float, unit: 명}
+    BEF_TOU_NUM: {label: 전년동기_방한객수, type: float, unit: 명}
+    PER: {label: 전년대비_증감률, type: float, unit: "%"}
+    RATE_TOU_NUM: {label: 전체_대비_점유율, type: float, unit: "%"}
+    RK: {label: 순위, type: int, unit: ""}
+
+NAT_10_01_001:
+  name: 국가별 항공 좌석 공급 및 운항 편수
+  caution: 국가 파라미터가 아예 없다. 전체 국가가 한꺼번에 온다.
+  screen: /datalab/portal/nat/getForAirForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, srchAreaDate, tabDiv]
+  fixed_params: {tabDiv: "1"}
+  granularity: month
+  axis: [access]
+  columns:
+    NAT_NM: {label: 국가명, type: str, unit: ""}
+    PTL_NAT_CD: {label: 국가코드, type: str, unit: ""}
+    SEAT_NUM: {label: 공급좌석수, type: float, unit: 석}
+    TOU_NUM: {label: 운항편수, type: float, unit: 편}
+
+NAT_07_01_018:
+  name: 국가별 방한여행 행태 및 만족도 (지출·체류·재방문)
+  screen: /datalab/portal/nat/getForTourDashForm.do
+  # 화면은 회원 전용이지만 API 는 공개다. 2026-08-23 쿠키 없이 불러
+  # 열한 행을 받았다 — 데이터랩은 화면과 데이터 API 를 따로 막는다.
+  # session 으로 두면 빈 배열이 올 때 "세션 만료"라고 잘못 말하고
+  # (client.fetch), column_probe 가 이 지표를 건너뛴다.
+  auth: public
+  params: [natCd, natNm, BASE_YM1, BASE_YM2, srchAreaDate, tarCd]
+  fixed_params: {chartId18: ttravel, tarCd: ""}
+  granularity: year
+  axis: [value, headroom]
+  caution: >-
+    **기간을 무시한다.** 어느 해를 물어도 2015~2025 열한 행이 통째로
+    온다(2026-08-23 확인: --period 2019 와 2024 가 같은 열한 행).
+    한 해만 보려면 받은 표에서 BASE_YEAR 로 골라라 — 기간을 좁혔다고
+    믿고 합계를 내면 열한 해를 더하게 된다. 국가(natCd)는 먹는다.
+    만족도·재방문 의향·추천 의향은 100점 만점 조사값이며 백분율이
+    아니다(2024 일본 만족도 85.1). 외래관광객조사 기반이라 표본
+    조사값이고, 통신·카드 기반 지표와 성격이 다르다.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    NAT_NM: {label: 국가명, type: str, unit: ""}
+    PERSON_EXPENSES_AVG: {label: 1인_평균지출액, type: float, unit: USD}
+    DAY_EXPENSES_AVG: {label: 1일_평균지출액, type: float, unit: USD}
+    STAY_PERIOD: {label: 평균_체류일수, type: float, unit: 일}
+    REVISIT_RATE: {label: 재방문율, type: float, unit: "%"}
+    REVISIT_INTENT: {label: 재방문_의향, type: float, unit: "%"}
+    RECOM_INTENT: {label: 추천_의향, type: float, unit: "%"}
+    SATISFACTION: {label: 만족도, type: float, unit: "%"}
+
+NAT_08_01_013:
+  name: 전체 방한여행 행태 및 만족도 (국가 무시, 전체값)
+  caution: natCd를 무시한다. 국가별 값이 아니라 연도별 전체값이다.
+  screen: /datalab/portal/nat/getForTourForm.do
+  auth: public
+  params: [natCd, BASE_YM1, BASE_YM2, srchAreaDate]
+  fixed_params: {}
+  granularity: year
+  axis: []
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    NAT_NM: {label: 국가명, type: str, unit: ""}
+    PERSON_EXPENSES_AVG: {label: 1인_평균지출액, type: float, unit: USD}
+    DAY_EXPENSES_AVG: {label: 1일_평균지출액, type: float, unit: USD}
+    STAY_PERIOD: {label: 평균_체류일수, type: float, unit: 일}
+    REVISIT_RATE: {label: 재방문율, type: float, unit: "%"}
+    REVISIT_INTENT: {label: 재방문_의향, type: float, unit: "%"}
+    RECOM_INTENT: {label: 추천_의향, type: float, unit: "%"}
+    SATISFACTION: {label: 만족도, type: float, unit: "%"}
+
+NAT_08_01_012:
+  name: 방한여행 요약 국적별
+  caution: natCd를 무시하고 상위 국가 5행을 돌려준다.
+  screen: /datalab/portal/nat/getForTourForm.do
+  auth: public
+  params: [natCd, BASE_YM1, BASE_YM2, srchAreaDate]
+  fixed_params: {}
+  granularity: month
+  axis: []
+  columns:
+    NAT_CD: {label: 국가코드, type: str, unit: ""}
+    NAT_NM: {label: 국가명, type: str, unit: ""}
+    TOU_NUM: {label: 방한객수, type: float, unit: 명}
+
+NAT_08_01_007:
+  # 실제 응답을 확인한 결과 방문목적이 아니라 입국 공항·항구별 구성
+  # (김해공항, 제주항구, 인천항구 등)이었다. 또한 natCd 파라미터를
+  # 무시하며, 어떤 국가를 넣어도 전국 합계와 동일한 값을 반환한다.
+  # 국가별로 다르지 않으므로 축 스코어링에는 절대 쓰지 말 것.
+  name: 입국 공항·항구별 구성 (국가 무시, 전체값)
+  caution: natCd를 무시한다. 국가별로 다르지 않으므로 축 스코어링에 쓰지 마라.
+  screen: /datalab/portal/nat/getForTourForm.do
+  auth: public
+  params: [natCd, BASE_YM1, BASE_YM2, srchAreaDate]
+  fixed_params: {}
+  granularity: month
+  axis: []
+  columns:
+    AIRPT_POT_NM: {label: 입국공항항구명, type: str, unit: ""}
+    DIV_ORD: {label: 정렬순서, type: int, unit: ""}
+    TOU_NUM: {label: 인원수, type: float, unit: 명}
+    TOU_NUM_RATE: {label: 구성비, type: float, unit: "%"}
+
+NAT_07_01_005:
+  # Q&A 모드 및 향후 활용을 위해 카탈로그에만 등록한다. 현재 스코어링에는
+  # 연결되어 있지 않다(axis: []).
+  name: 국가별 입국목적 구성
+  screen: /datalab/portal/nat/getForTourForm.do
+  auth: public
+  params: [natCd, BASE_YM1, BASE_YM2, srchAreaDate]
+  fixed_params: {}
+  granularity: month
+  axis: []
+  columns:
+    CD_NM: {label: 목적, type: str, unit: ""}
+    TGT_CD: {label: 목적코드, type: str, unit: ""}
+    TOU_NUM: {label: 인원수, type: float, unit: 명}
+    TOU_NUM_RATE: {label: 구성비, type: float, unit: "%"}

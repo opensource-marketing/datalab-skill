@@ -1,0 +1,764 @@
+# 한국관광 데이터랩 qid 카탈로그 — 빅데이터(이동통신·신용카드·내비게이션)
+#
+# ── 이 카탈로그가 늦게 생긴 이유 ────────────────────────────────
+# 이 지표들이 있는 화면(빅데이터 메뉴)은 **로그인해야 열린다.** 화면을
+# 못 열면 그 안의 qid를 알 수 없어서, 색인이 화면 마흔 곳을 훑는 동안
+# 이 영역이 통째로 비어 있었다.
+#
+# 그런데 **데이터 API 자체는 공개다.** 로그인해서 얻은 qid와 파라미터를
+# 그대로 익명으로 다시 불러 27건이 모두 같은 값을 돌려주는 것을
+# 확인했다(263행 → 263행, 242행 → 242행). 그래서 이 카탈로그의 지표는
+# 전부 auth: public 이고, 쓰는 사람은 로그인할 필요가 없다.
+# ────────────────────────────────────────────────────────────────
+#
+# ── SGG_CD에 시도 두 자리를 넣는다 ─────────────────────────────
+# 이름은 SGG_CD지만 이 계열은 **시도 두 자리**를 본다. 시군구 다섯
+# 자리를 넣으면 지표에 따라 셋 중 하나가 일어난다:
+#
+#   빈 배열       BDT_01_01_001 · BDT_02_01_002_31 · _32 · _35 · BDT_03_01_002_3 · _4
+#   앞 두 자리만  BDT_01_01_002 · BDT_02_01_002_33
+#                 (강릉 51150을 넣어도 춘천 51110을 넣어도 응답이 같다.
+#                  해시까지 같은 것을 확인했다. 시군구를 고른 것이 아니라
+#                  그 시도 안의 시군구 목록을 받은 것이다)
+#   시군구로 동작  BDT_01_01_003_4 · BDT_01_01_004_3_5 · BDT_03_01_001_2
+#
+# 각 항목의 query_axis가 무엇을 넣어야 하는지 못 박는다. 이름만 보고
+# 시군구를 넣으면 "그 지역 값"인 줄 알고 시도 값을 읽게 된다.
+#
+# 전국은 98이다. 다만 98을 받는 지표는 일부다(caution에 적었다).
+#
+# ── touDivCd: 방문자 구분 ──────────────────────────────────────
+# **같은 이름인데 지표군마다 코드 체계가 다르다.** 이 카탈로그에서
+# 가장 조용히 틀리는 자리다 — 틀린 코드를 보내도 오류가 아니라
+# 기본값으로 처리되어 다른 집단의 값이 그대로 실린다.
+#
+# 이동통신 방문자(BDT_01_*). **2026-08-24에 1의 뜻을 고쳤다.**
+#
+#   1 현지인(a)       71,155,266   ← 한동안 '전체'로 잘못 적혀 있었다
+#   2 외지인(b)       34,827,352
+#   3 외국인(c)          393,086
+#   4 외부방문자(b+c)  35,220,438   ← 2 + 3 과 정확히 일치
+#
+# 근거 셋이 같은 곳을 가리킨다(강원 2025-08~2026-07, 강릉시).
+#
+# **화면 코드가 키와 라벨을 짝지어 둔다**(metco_ana_chart.js):
+#   JURI_TOU_NUM 현지인(a) · OJURI_TOU_NUM 외지인(b) ·
+#   FRN_TOU_NUM 외국인(c) · JURI_OJURI_TOTL_TOU_NUM 외부방문자(b+c) ·
+#   TOTL_TOU_NUM 전체방문자(a+b+c)
+# touDivCd 1·2·3·4 가 이 순서와 맞는다.
+#
+# **형제 지표와 값이 맞아떨어진다.** BDT_01_01_004_4 는 구분을
+# TOU_DIV_NM 컬럼으로 나눠 주는데, 거기서 현지인방문자(a)가
+# 71,155,266 으로 touDivCd=1 과 같다. 외지인도 34,827,351 로 같다.
+#
+# **덧셈이 맞는다.** 1 + 2 = 105,982,618 이고 004_4 의
+# '전체방문자(a+b)' 가 105,982,616 이다(오차 2, 반올림).
+#
+# ── 그래서 "전체 방문자"는 touDivCd 로 부를 수 없다 ────────────
+# 1 을 전체로 읽으면 강릉시 2024년 방문자가 68,224,356 명이 되는데
+# 실제 전체(a+b)는 101,457,694 명이다 — **33% 적게 말하게 된다.**
+# 종로구는 56,238,098 대 194,581,537 로 3.5배 차이다.
+# 전체가 필요하면 BDT_01_01_004_4 의 '전체방문자(a+b)' 행을 쓰라.
+#
+# **관광 맥락에서는 4(외부방문자)가 맞다.** 현지인을 빼야 관광객이
+# 되기 때문이다. 그래서 BDT_01_01_001·002 의 기본값을 1에서 4로
+# 바꿨다(2026-08-24).
+#
+# 신용카드 소비(BDT_02_*). 화면의 select 옵션에서 읽고 산술로 확인했다
+# (강원 2024년, 시군구 18곳 합계):
+#
+#   0 현지인(a)      230,003,396
+#   1 외지인(b)    4,939,740,735
+#   2 내국인(a+b)  5,169,744,131  ← 0 + 1 과 일치(오차 1)
+#
+# **소비 지표에 3이나 4를 보내면 기본값(2)으로 처리된다.** 오류가 나지
+# 않으므로 알아채기 어렵다 — 현지인이 섞여 순위가 바뀐다(강원 지출액
+# 1위가 강릉시가 아니라 원주시가 된다).
+#
+# 그러므로 1과 2·3·4를 더하면 두 번 센다. 하나를 골라 써라.
+# 월별 추이 지표(BDT_01_01_003_4 등)는 touDivCd를 **무시하고** 구분을
+# TOU_DIV_NM 컬럼으로 나눠서 한꺼번에 준다.
+#
+# ── 단위 ────────────────────────────────────────────────────────
+# 이동통신 방문자 수  명  (차트 정의 ' 명')
+# 신용카드 지출액     천원 (차트 정의 ' 천원')  ← 원이 아니다
+# 내비게이션 검색건수 건  (차트 정의 ' 건')
+#
+# ── 신용카드 계열에서 넣지 않기로 한 것 (2026-08-24) ───────────
+# `BDT_02_01_*` 은 색인에 93개가 있는데 카탈로그에는 다섯뿐이다.
+# 나머지를 열어 보려고 축 네 가지(전국 '' · 시도 · 시군구 · 98)를
+# 다 두들겨 55개에서 값을 받아 냈다. 그런데 **넣지 않았다.**
+#
+# 이유가 둘이다.
+#
+# **1. `_003_*` 과 `_005_*` 는 touDivCd 를 무시한다.** 0·1·2·3·4를
+# 넣어도 응답이 똑같다(2026-08-24 확인). 그러면서 값이 이미 검증된
+# `_002_*` 와 맞지 않는다 — 강원 2024년이 `002_33` 은 5,169,744,131
+# 천원인데 `003_1` 은 653,286,712천원이다(8배 차이).
+# 외국인 카드소비인가 싶어 전국 시도를 모두 더해 봤지만
+# 22,831,733,053천원으로 `NAT_11_02_001`(외국인 2024년
+# 12,112,160,438,675원)의 1.885배라 그것도 아니다.
+# **무엇을 세는지 확정하지 못했다.** 값이 오고 그럴듯해서 더 위험하다.
+#
+# **2. `_4x`(외국인 신한카드) 계열은 0바이트를 준다.** 화면 코드는
+# 아직 `BDT_02_01_001_41`·`002_41`·`003_41` 을 부르는데 서버가 빈
+# 본문을 돌려준다. `TB_CD` 를 1·2·3·4·6 으로 바꿔 봐도 같다
+# (2026-08-24 확인). 데이터랩이 시군구 내국인 카드소비 계열을
+# 내렸던 것처럼 이 계열도 내려간 것으로 보인다.
+#
+# 다시 열어 보려는 사람은 여기서부터 시작하면 된다.
+#
+# ── 내비게이션 계열의 전년동기 컬럼은 비어 있다 ────────────────
+# `SPPY_SRCH_CNT` 와 `GROW_RATE_SPPY_SRCH_CNT` 가 **늘 0이다.**
+# BDT_03_01_* 여섯 지표를 2023·2025·2026년 세 기간에서 확인했는데
+# 0이 아닌 행이 하나도 없었다(2026-08-24). 컬럼은 있지만 값이
+# 들어오지 않는다.
+#
+# **오류도 빈 배열도 아니라서 그대로 나눗셈에 들어간다** — 증감률을
+# 계산하면 -100%가 되거나 0으로 나누게 된다. 전년 대비를 보려면
+# 기간을 두 번 불러 직접 견주어라.
+#
+# 신용카드가 천원인 것이 특히 위험하다. 다른 카탈로그에는 원 단위
+# 소비 지표가 있어서, 그대로 나란히 놓으면 1000배 틀린다.
+#
+# ── 방문자 수는 연인원이다 ─────────────────────────────────────
+# 한 사람이 여러 번 가면 여러 번 센다. 강릉시 2025-08~2026-07 전체
+# 방문자가 7,115만 명인 것이 그 때문이다. 인구와 비교하지 마라.
+# ────────────────────────────────────────────────────────────────
+
+BDT_01_01_001:
+  name: 시도 관광 방문자 수(요약)
+  screen: /datalab/portal/bda/getMetcoAna.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, touDivCd]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1", srchLocation: "1",
+                 sggIntgYnFlag: "N", touDivCd: "4"}
+  granularity: period
+  section: 이동통신
+  query_axis: 시도
+  caution: >-
+    **touDivCd를 보내지 않으면 오류가 아니라 빈 배열이 온다.**
+    이동통신 체계다 — **1 현지인(a)** · 2 외지인(b) · 3 외국인(c) ·
+    4 외부방문자(b+c). **1은 전체가 아니다**(2026-08-24 정정 — 그전에는
+    '전체'로 적혀 있었다). 여기서는 관광 맥락에 맞게 4로 고정해 두었다.
+    현지인까지 넣은 전체가 필요하면 BDT_01_01_004_4 의
+    '전체방문자(a+b)' 행을 쓰라 — touDivCd 로는 부를 수 없다. 시도 두 자리를 넣으면 그 시도
+    한 행이, 98을 넣으면 전국 시도 17행이 온다(2026-08-23 재확인 — 한때 18행이었다). 시군구 다섯 자리는
+    빈 배열이다. 기간 합계이며
+    SPPY_TOU_NUM은 전년 같은 기간 값이다.
+  columns:
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    PTL_SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    TOU_NUM: {label: 방문자수, type: float, unit: 명}
+    SPPY_TOU_NUM: {label: 전년동기_방문자수, type: float, unit: 명}
+
+BDT_01_01_002:
+  name: 시도 안 시군구별 방문자 수
+  screen: /datalab/portal/bda/getMetcoAna.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, touDivCd]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1", srchLocation: "1",
+                 sggIntgYnFlag: "N", touDivCd: "4"}
+  granularity: period
+  section: 이동통신
+  query_axis: 시도
+  caution: >-
+    **touDivCd를 보내지 않으면 오류가 아니라 빈 배열이 온다.**
+    **1은 현지인이지 전체가 아니다**(2026-08-24 정정). 기본값을 4
+    (외부방문자 b+c)로 바꿔 두었다. 이동통신
+    체계다 — 1 전체(현지인 포함) · 2 외지인 · 3 외국인 · 4 외지인+외국인.
+    2026-08-23 강원 2024년에서 2(33,233,340) + 3(350,931) =
+    4(33,584,271)로 산술이 맞았다. 여기서는 1로 고정해 두었으니 현지인을
+    빼려면 `--param touDivCd=4`를 쓴다.
+    **시군구 다섯 자리를 넣어도 앞 두 자리만 본다.** 강릉(51150)과
+    춘천(51110)이 해시까지 같은 응답을 준다 — 시군구를 고른 것이 아니라
+    강원도 안의 시군구 18곳을 받은 것이다. 시도 안에서 시군구를 견줄 때
+    쓴다. 전국(98)은 빈 배열이다. TOU_NUM_SQRT는 화면이 원 크기를
+    정할 때 쓰는 값이라 뜻이 없다.
+  columns:
+    DPTR_REGN_NM: {label: 시군구명, type: str, unit: ""}
+    DPTR_REGN_DTL_NM: {label: 시군구명_상세, type: str, unit: ""}
+    TOU_NUM: {label: 방문자수, type: float, unit: 명}
+    TOU_NUM_RATE: {label: 시도내_비중, type: float, unit: "%"}
+    DTL_TOU_NUM: {label: 방문자수_상세, type: float, unit: 명}
+    DTL_TOU_NUM_RATE: {label: 상세_비중, type: float, unit: "%"}
+    TOU_NUM_SQRT: {label: 차트용_보조값, type: float, unit: ""}
+    DTL_TOU_NUM_SQRT: {label: 차트용_보조값_상세, type: float, unit: ""}
+
+BDT_01_01_003_4:
+  name: 방문자 수 추이(월별, 구분별)
+  screen: /datalab/portal/bda/getMetcoAna.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1", srchLocation: "1",
+                 sggIntgYnFlag: "N", touDivCd: "2"}
+  granularity: month
+  section: 이동통신
+  query_axis: 시도
+  caution: >-
+    **touDivCd를 무시한다.** 대신 방문자 구분을 TOU_DIV_NM 컬럼으로
+    나눠 한꺼번에 준다(외지인방문자·현지인방문자·외국인방문자). 다 더하면
+    두 번 센다. **SGG_CD에 다섯 자리를 넣으면 무시하고 전국 시도표를
+    준다** — 2026-08-23 실호출에서 강릉(51150)·종로(11110)·빈 값이
+    모두 같은 행 수를 줬다(2026-08-23 재확인: 2022~2025 모두 612행 — 한때 306행이었다). 즉 이 지표는 시도 축이다. 시군구 방문자
+    월별 추이는 LN_04_01_022를 쓴다. 전국(98)은 빈 배열이다.
+  columns:
+    BASE_DATE: {label: 기준월, type: str, unit: ""}
+    SIDO_NM: {label: 지역명, type: str, unit: ""}
+    TOU_DIV_NM: {label: 방문자구분, type: str, unit: ""}
+    TOU_NUM: {label: 방문자수, type: float, unit: 명}
+    SPPY_TOU_NUM: {label: 전년동월_방문자수, type: float, unit: 명}
+    DTL_TOU_NUM_RATE: {label: 전년동월_증감률, type: float, unit: "%"}
+
+BDT_01_01_004_3_5:
+  name: 방문자 거주지 분포
+  screen: /datalab/portal/bda/getMetcoAna.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, touDivCd]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1", srchLocation: "1",
+                 sggIntgYnFlag: "N"}
+  granularity: period
+  section: 이동통신
+  query_axis: 지역
+  caution: >-
+    시도와 시군구를 모두 받으며 값이 다르다. 거주 시도와 그 안의
+    시군구가 함께 오므로(DPTR_REGN_NM이 시도, DPTR_REGN_DTL_NM이
+    시군구) 다 더하면 두 번 센다. 한쪽을 골라 읽어라.
+  columns:
+    DPTR_REGN_NM: {label: 거주_시도, type: str, unit: ""}
+    DPTR_REGN_DTL_NM: {label: 거주_시군구, type: str, unit: ""}
+    TOU_NUM: {label: 시도_방문자수, type: float, unit: 명}
+    TOU_NUM_RATE: {label: 시도_비중, type: float, unit: "%"}
+    DTL_TOU_NUM: {label: 시군구_방문자수, type: float, unit: 명}
+    TOT_DTL_TOU_NUM_RATE: {label: 시군구_비중, type: float, unit: "%"}
+    TOU_NUM_SQRT: {label: 차트용_보조값, type: float, unit: ""}
+
+BDT_01_03_001:
+  name: 지역별 방문자 수 추이(여러 지역 비교)
+  screen: /datalab/portal/bda/getByRegnAna.do
+  auth: public
+  params: [SGG_CD, "arrSggCd[]", BASE_YM1, BASE_YM2]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1", txtSGG_CD: "1",
+                 txtSIDO_ARR: "", txtADONG_ARR: "", SIDO_ARR: ""}
+  granularity: month
+  section: 이동통신
+  query_axis: 시도
+  caution: >-
+    비교 화면의 지표다. **빈 문자열 파라미터까지 다 보내야 한다** —
+    txtSIDO_ARR·txtADONG_ARR·SIDO_ARR을 빼면 빈 배열이 아니라 오류가
+    난다(JSON이 아닌 본문이 온다). arrSggCd[]에는 SGG_CD와 같은 값을
+    넣는다. 구분은 TOU_DIV_NM으로 나뉘므로 다 더하면 두 번 센다.
+  columns:
+    BASE_DATE: {label: 기준월, type: str, unit: ""}
+    SIDO_NM: {label: 지역명, type: str, unit: ""}
+    TOU_DIV_NM: {label: 방문자구분, type: str, unit: ""}
+    TOU_NUM: {label: 방문자수, type: float, unit: 명}
+    SPPY_TOU_NUM: {label: 전년동월_방문자수, type: float, unit: 명}
+    DTL_TOU_NUM_RATE: {label: 전년동월_증감률, type: float, unit: "%"}
+
+BDT_02_01_002_31:
+  name: 시도 관광 지출액(요약)
+  screen: /datalab/portal/bda/getByLocgoCnsmAmt.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, touDivCd]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1", sggIntgYnFlag: "N"}
+  granularity: period
+  section: 신용카드
+  query_axis: 시도
+  caution: >-
+    **내국인 카드 소비다**(외국인이 아니다). touDivCd의 select 옵션이 현지인(a)·외지인(b)·내국인(a+b) 셋뿐이고 0+1=2가 산술로 맞는다 — 외국인 구분 자체가 없다. touDivCd에 3·4를 넣으면 오류가 아니라 기본값 2(현지인 포함)로 처리된다. **형제 지표 BDT_02_01_002_23과 값이 95배 다르다**(강원 2024년 543억 대 5.2조). 그 형제 지표는 2026-08-23 현재 빈 본문(EmptyBody)을 주어 다시 견줄 수 없다 — 카탈로그에도 없고 색인에만 남아 있다. 화면에 카드사가 다른 갈래가 여럿 있고 어느 쪽이 어느 카드사인지는 **확정하지 못했다** — 차트 영역이 탭마다 재사용돼 화면 라벨과 qid를 짝지을 수 없었다. 그러니 '관광 지출액 N위'라고만 옮겨 말하지 말고 이 지표로 잰 값임을 밝혀라. 
+    **단위가 천원이다**(차트 정의 ' 천원'). 원 단위 소비 지표와 나란히
+    놓으면 1000배 틀린다. 시군구 다섯 자리와 전국(98)은 빈 배열이다.
+  columns:
+    AREA_NM: {label: 지역명, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    PTL_SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    KTO_TOB_MCLS_NM: {label: 업종, type: str, unit: ""}
+    CNSM_AMT: {label: 지출액, type: float, unit: 천원}
+    SPPY_CNSM_AMT: {label: 전년동기_지출액, type: float, unit: 천원}
+    GROW_RATE_CNSM_AMT: {label: 전년동기_증감률, type: float, unit: "%"}
+
+BDT_02_01_002_32:
+  name: 업종별 관광 지출액
+  screen: /datalab/portal/bda/getByLocgoCnsmAmt.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, touDivCd]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1", sggIntgYnFlag: "N"}
+  granularity: period
+  section: 신용카드
+  query_axis: 시도
+  caution: >-
+    **내국인 카드 소비다**(외국인이 아니다). touDivCd의 select 옵션이 현지인(a)·외지인(b)·내국인(a+b) 셋뿐이고 0+1=2가 산술로 맞는다 — 외국인 구분 자체가 없다. touDivCd에 3·4를 넣으면 오류가 아니라 기본값 2(현지인 포함)로 처리된다. **형제 지표 BDT_02_01_002_23과 값이 95배 다르다**(강원 2024년 543억 대 5.2조). 그 형제 지표는 2026-08-23 현재 빈 본문(EmptyBody)을 주어 다시 견줄 수 없다 — 카탈로그에도 없고 색인에만 남아 있다. 화면에 카드사가 다른 갈래가 여럿 있고 어느 쪽이 어느 카드사인지는 **확정하지 못했다** — 차트 영역이 탭마다 재사용돼 화면 라벨과 qid를 짝지을 수 없었다. 그러니 '관광 지출액 N위'라고만 옮겨 말하지 말고 이 지표로 잰 값임을 밝혀라. 
+    **단위가 천원이다.** 대분류(DPTR_REGN_NM)와 세부업종(DPTR_REGN_DTL_NM)이
+    한 응답에 함께 오므로 다 더하면 두 번 센다. 시군구와 전국은 빈 배열이다.
+    TOU_NUM은 인원이 아니라 지출액이다 — 컬럼 이름을 믿지 마라.
+  columns:
+    DPTR_REGN_NM: {label: 업종_대분류, type: str, unit: ""}
+    DPTR_REGN_DTL_NM: {label: 업종_세부, type: str, unit: ""}
+    TOU_NUM: {label: 대분류_지출액, type: float, unit: 천원}
+    TOU_NUM_RATE: {label: 대분류_비중, type: float, unit: "%"}
+    DTL_TOU_NUM: {label: 세부업종_지출액, type: float, unit: 천원}
+    DTL_TOU_NUM_RATE: {label: 세부업종_비중, type: float, unit: "%"}
+    DTL_TOU_NUM_RATE2: {label: 세부업종_비중2, type: float, unit: "%"}
+    TOU_NUM_SQRT: {label: 차트용_보조값, type: float, unit: ""}
+    DTL_TOU_NUM_SQRT: {label: 차트용_보조값_세부, type: float, unit: ""}
+
+BDT_02_01_002_33:
+  name: 시도 안 시군구별 관광 지출액
+  screen: /datalab/portal/bda/getByLocgoCnsmAmt.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, touDivCd]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1", sggIntgYnFlag: "N"}
+  granularity: period
+  section: 신용카드
+  query_axis: 시도
+  caution: >-
+    **내국인 카드 소비다**(외국인이 아니다). touDivCd의 select 옵션이 현지인(a)·외지인(b)·내국인(a+b) 셋뿐이고 0+1=2가 산술로 맞는다 — 외국인 구분 자체가 없다. touDivCd에 3·4를 넣으면 오류가 아니라 기본값 2(현지인 포함)로 처리된다. **형제 지표 BDT_02_01_002_23과 값이 95배 다르다**(강원 2024년 543억 대 5.2조). 그 형제 지표는 2026-08-23 현재 빈 본문(EmptyBody)을 주어 다시 견줄 수 없다 — 카탈로그에도 없고 색인에만 남아 있다. 화면에 카드사가 다른 갈래가 여럿 있고 어느 쪽이 어느 카드사인지는 **확정하지 못했다** — 차트 영역이 탭마다 재사용돼 화면 라벨과 qid를 짝지을 수 없었다. 그러니 '관광 지출액 N위'라고만 옮겨 말하지 말고 이 지표로 잰 값임을 밝혀라. 
+    **시군구 다섯 자리를 넣어도 앞 두 자리만 본다**(BDT_01_01_002와 같다).
+    전국(98)을 넣으면 229행으로 전국 시군구가 온다(2026-08-23 재확인: 2022~2025 모두 229행 — 한때 233행이었다). 우리 코드 표의 271곳과 수가 다르다. **단위가 천원이다.**
+    TOU_NUM은 인원이 아니라 지출액이다.
+  columns:
+    DPTR_REGN_NM: {label: 시군구명, type: str, unit: ""}
+    DPTR_REGN_DTL_NM: {label: 시군구명_상세, type: str, unit: ""}
+    TOU_NUM: {label: 지출액, type: float, unit: 천원}
+    TOU_NUM_RATE: {label: 비중, type: float, unit: "%"}
+    DTL_TOU_NUM: {label: 지출액_상세, type: float, unit: 천원}
+    DTL_TOU_NUM_RATE: {label: 상세_비중, type: float, unit: "%"}
+    DTL_TOU_NUM_RATE2: {label: 상세_비중2, type: float, unit: "%"}
+    TOU_NUM_SQRT: {label: 차트용_보조값, type: float, unit: ""}
+    DTL_TOU_NUM_SQRT: {label: 차트용_보조값_상세, type: float, unit: ""}
+
+BDT_02_01_002_35:
+  name: 관광 지출액 추이(월별, 업종별)
+  screen: /datalab/portal/bda/getByLocgoCnsmAmt.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, touDivCd]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1", sggIntgYnFlag: "N"}
+  granularity: month
+  section: 신용카드
+  query_axis: 시도
+  caution: >-
+    **내국인 카드 소비다**(외국인이 아니다). touDivCd의 select 옵션이 현지인(a)·외지인(b)·내국인(a+b) 셋뿐이고 0+1=2가 산술로 맞는다 — 외국인 구분 자체가 없다. touDivCd에 3·4를 넣으면 오류가 아니라 기본값 2(현지인 포함)로 처리된다. **형제 지표 BDT_02_01_002_23과 값이 95배 다르다**(강원 2024년 543억 대 5.2조). 그 형제 지표는 2026-08-23 현재 빈 본문(EmptyBody)을 주어 다시 견줄 수 없다 — 카탈로그에도 없고 색인에만 남아 있다. 화면에 카드사가 다른 갈래가 여럿 있고 어느 쪽이 어느 카드사인지는 **확정하지 못했다** — 차트 영역이 탭마다 재사용돼 화면 라벨과 qid를 짝지을 수 없었다. 그러니 '관광 지출액 N위'라고만 옮겨 말하지 말고 이 지표로 잰 값임을 밝혀라. 
+    **단위가 천원이다.** 월 × 업종이 교차된 행이라 한 달에 여러 행이
+    온다(행 수는 해마다 다르다 — 2026-08-23 확인: 강원 12개월이 2023년 264행 · 2024년 259행 · 2025년 256행. 업종 수가 해마다 달라지므로 개수를 세어 판단하지 마라). 업종을 고르거나 월별로 합쳐 읽어라.
+    시군구는 빈 배열이고, 전국(98)은 3803행으로 매우 크다.
+  columns:
+    BASE_DATE: {label: 기준월, type: str, unit: ""}
+    SIDO_NM: {label: 지역명, type: str, unit: ""}
+    KTO_TOB_MCLS_NM: {label: 업종, type: str, unit: ""}
+    CNSM_AMT: {label: 지출액, type: float, unit: 천원}
+    SPPY_CNSM_AMT: {label: 전년동월_지출액, type: float, unit: 천원}
+
+BDT_02_03_001_1:
+  name: 지역별 내국인 지출액(여러 지역 비교)
+  screen: /datalab/portal/bda/getByRegnCmpr.do
+  auth: public
+  params: [SGG_CD, "arrSggCd[]", CMPN_SGG_CD, BASE_YM1, BASE_YM2, touDivCd]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1", sggIntgYnFlag: "N",
+                 txtSGG_CD: "1", txtSIDO_ARR: "", txtADONG_ARR: "",
+                 SIDO_ARR: "", ADONG_ARR: ""}
+  granularity: month
+  section: 신용카드
+  query_axis: 시도
+  caution: >-
+    비교 화면의 지표다. **빈 문자열 파라미터까지 다 보내야 한다** —
+    빼면 빈 배열이 아니라 오류가 난다. arrSggCd[]와 CMPN_SGG_CD에는
+    SGG_CD와 같은 값을 넣는다. **단위가 천원이다.** 월 × 업종이
+    교차된 행이다. 이름에 (BC)가 붙은 형제 지표가 있는데 카드사 범위가
+    달라 보이나 확인하지 못했다 — 두 지표의 값을 섞지 마라.
+  columns:
+    BASE_DATE: {label: 기준월, type: str, unit: ""}
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    BASE_MM: {label: 기준월_월, type: str, unit: ""}
+    AREA_NM: {label: 지역명, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    PTL_SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    KTO_TOB_MCLS_NM: {label: 업종, type: str, unit: ""}
+    CNSM_AMT: {label: 지출액, type: float, unit: 천원}
+    CMPS_RATE: {label: 구성비, type: float, unit: "%"}
+
+BDT_03_01_001_1:
+  name: 시도 관광지 검색건수(요약)
+  screen: /datalab/portal/bda/getDomInqCnt.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {srchAreaDate: "1", sggIntgYnFlag: "N"}
+  granularity: period
+  section: 내비게이션
+  query_axis: 시도
+  caution: >-
+    내비게이션(TMAP) 검색 건수다. **방문자 수가 아니다.** 시군구는 빈
+    배열이고 전국(98)은 16행이 온다(2026-08-23 재확인).
+    **SPPY_SRCH_CNT 와 GROW_RATE_SPPY_SRCH_CNT 는 늘 0이다**
+    (2026-08-24 세 기간 확인). 증감률을 계산하지 마라.
+  columns:
+    AREA_NM: {label: 지역명, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    PTL_SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SRCH_CNT: {label: 검색건수, type: float, unit: 건}
+    SPPY_SRCH_CNT: {label: 전년동기_검색건수, type: float, unit: 건}
+    GROW_RATE_SPPY_SRCH_CNT: {label: 전년동기_증감률, type: float, unit: "%"}
+
+BDT_03_01_001_2:
+  name: 관광지 유형별 검색건수
+  screen: /datalab/portal/bda/getDomInqCnt.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {srchAreaDate: "1", sggIntgYnFlag: "N"}
+  granularity: period
+  section: 내비게이션
+  query_axis: 지역
+  caution: >-
+    이 계열에서 드물게 **시군구 다섯 자리가 실제로 동작한다**(강원 51과
+    강릉 51150의 응답이 다르다). 검색 건수이지 방문자 수가 아니다.
+    대분류와 세부유형이 함께 오므로 다 더하면 두 번 센다.
+    **SPPY_SRCH_CNT 는 늘 0이다**(2026-08-24 확인).
+  columns:
+    DPTR_REGN_NM: {label: 유형_대분류, type: str, unit: ""}
+    DPTR_REGN_DTL_NM: {label: 유형_세부, type: str, unit: ""}
+    SRCH_CNT: {label: 검색건수, type: float, unit: 건}
+    SPPY_SRCH_CNT: {label: 전년동기_검색건수, type: float, unit: 건}
+    TOU_NUM: {label: 대분류_검색건수, type: float, unit: 건}
+    TOU_NUM_RATE: {label: 대분류_비중, type: float, unit: "%"}
+    DTL_TOU_NUM: {label: 세부유형_검색건수, type: float, unit: 건}
+    DTL_TOU_NUM_RATE: {label: 세부유형_비중, type: float, unit: "%"}
+    TOU_NUM_SQRT: {label: 차트용_보조값, type: float, unit: ""}
+    DTL_TOU_NUM_SQRT: {label: 차트용_보조값_세부, type: float, unit: ""}
+    ORD: {label: 정렬순서, type: str, unit: ""}
+
+BDT_03_01_002_3:
+  name: 시도 안 시군구별 검색건수
+  screen: /datalab/portal/bda/getDomInqCnt.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {srchAreaDate: "1", sggIntgYnFlag: "N"}
+  granularity: period
+  section: 내비게이션
+  query_axis: 시도
+  caution: >-
+    시군구 다섯 자리는 빈 배열이다. 전국(98)은 1,800행대로 크며 해마다 다르다(2026-08-23 확인: 2022년 1,858행 · 2023년 1,859행 · 2024·2025년 1,861행).
+    시군구 × 관광지 유형이 교차된 행이라 다 더하면 두 번 센다.
+    검색 건수이지 방문자 수가 아니다.
+    **SPPY_SRCH_CNT 는 늘 0이다**(2026-08-24 확인).
+  columns:
+    DPTR_REGN_NM: {label: 시군구명, type: str, unit: ""}
+    DPTR_REGN_DTL_NM: {label: 시군구명_상세, type: str, unit: ""}
+    TMAP_CATE_MCLS_NM: {label: 관광지유형, type: str, unit: ""}
+    SRCH_CNT: {label: 검색건수, type: float, unit: 건}
+    SPPY_SRCH_CNT: {label: 전년동기_검색건수, type: float, unit: 건}
+    TOU_NUM: {label: 상위_검색건수, type: float, unit: 건}
+    TOU_NUM_RATE: {label: 상위_비중, type: float, unit: "%"}
+    DTL_TOU_NUM: {label: 세부_검색건수, type: float, unit: 건}
+    DTL_TOU_NUM_RATE: {label: 세부_비중, type: float, unit: "%"}
+    TOU_NUM_SQRT: {label: 차트용_보조값, type: float, unit: ""}
+    DTL_TOU_NUM_SQRT: {label: 차트용_보조값_세부, type: float, unit: ""}
+
+BDT_03_01_002_4:
+  name: 검색건수 추이(월별, 유형별)
+  screen: /datalab/portal/bda/getDomInqCnt.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {srchAreaDate: "1", sggIntgYnFlag: "N"}
+  granularity: month
+  section: 내비게이션
+  query_axis: 시도
+  caution: >-
+    월 × 관광지 유형이 교차된 행이다(12개월에 120행 · 2026-08-23 재확인). 시군구와
+    전국(98)은 빈 배열이다. 검색 건수이지 방문자 수가 아니다.
+    **SPPY_SRCH_CNT 는 늘 0이다**(2026-08-24 확인).
+  columns:
+    BASE_DATE: {label: 기준월, type: str, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    TMAP_CATE_MCLS_NM: {label: 관광지유형, type: str, unit: ""}
+    SRCH_CNT: {label: 검색건수, type: float, unit: 건}
+    SPPY_SRCH_CNT: {label: 전년동월_검색건수, type: float, unit: 건}
+
+BDT_03_02_002:
+  name: 지역별 검색건수(여러 지역 비교)
+  screen: /datalab/portal/bda/getAreaSrchCnt.do
+  auth: public
+  params: [SGG_CD, "arrSggCd[]", CMPN_SGG_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {srchAreaDate: "1", "arrSggSidoCd[]": "1",
+                 "arrSggAdongCd[]": "1", txtSGG_CD: "1",
+                 txtSIDO_ARR: "", txtADONG_ARR: "", SIDO_ARR: ""}
+  granularity: month
+  section: 내비게이션
+  query_axis: 시도
+  caution: >-
+    비교 화면의 지표다. **빈 문자열 파라미터까지 다 보내야 한다** —
+    빼면 오류가 난다. arrSggCd[]에 지역을 여러 번 실어 보내면 그만큼
+    행이 늘어난다(사이트가 여러 지역을 함께 보낼 때 1920행, 하나만
+    보낼 때 120행 · 2026-08-23 재확인). 이 계층은 한 번에 하나만 보내므로 여러 지역을
+    나란히 보려면 지역마다 따로 불러 합쳐라. 검색 건수이지 방문자
+    수가 아니다.
+  columns:
+    BASE_DATE: {label: 기준월, type: str, unit: ""}
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    BASE_MM: {label: 기준월_월, type: str, unit: ""}
+    AREA_NM: {label: 지역명, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    TMAP_CATE_MCLS_NM: {label: 관광지유형, type: str, unit: ""}
+    SRCH_CNT: {label: 검색건수, type: float, unit: 건}
+    SPPY_SRCH_CNT: {label: 전년동기_검색건수, type: float, unit: 건}
+    CMPS_RATE: {label: 구성비, type: float, unit: "%"}
+    SPPY_IRDS_RATE: {label: 전년동기_증감률, type: float, unit: "%"}
+
+# ─────────────────────────────────────────────────────────────────
+# 2026-08-24 추가 — 내비게이션 검색을 시군구·읍면동까지
+#
+# 기존 네 지표는 시도까지만 봤다. 여기 넷이 그 아래를 연다.
+#   BDT_03_01_003_1  시도 안 시군구별 (조회는 시도 두 자리)
+#   BDT_03_01_003_4  시군구의 월별 x 유형별
+#   BDT_03_01_004_1  **시군구 안 읍면동별**
+#   BDT_03_01_001_4  전국 월별 x 유형별
+#
+# 축을 실호출로 확인했다(2026-08-24). 같은 계열인데 셋이 다르다.
+#   003_1  앞 두 자리만 본다 (51150·51110·51 응답이 모두 같다)
+#   003_4  시군구로 동작 (시도·전국은 빈 배열)
+#   004_1  시군구로 동작 (읍면동 목록을 준다)
+#   001_4  무엇을 넣어도 전국만 준다
+# ─────────────────────────────────────────────────────────────────
+
+BDT_03_01_003_1:
+  name: 시도 안 시군구별 검색건수
+  screen: /datalab/portal/bda/getDomInqCnt.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {srchAreaDate: "1", sggIntgYnFlag: "N"}
+  granularity: period
+  section: 내비게이션
+  query_axis: 시도
+  caution: >-
+    **시군구 다섯 자리를 넣어도 앞 두 자리만 본다.** 강릉(51150)과
+    춘천(51110)과 강원(51)의 응답이 완전히 같다(2026-08-24 확인) —
+    "강릉시 검색건수"인 줄 알고 강원도 시군구 표를 읽게 된다.
+    전국(98)은 229행으로 전국 시군구를 준다.
+    **SPPY_SRCH_CNT 와 GROW_RATE_SPPY_SRCH_CNT 는 늘 0이다.**
+    검색 건수이지 방문자 수가 아니다.
+  columns:
+    AREA_NM: {label: 지역명, type: str, unit: ""}
+    SGG_NM: {label: 시군구명, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    PTL_SIDO_CD: {label: 포털_지역코드, type: str, unit: ""}
+    SRCH_CNT: {label: 검색건수, type: float, unit: 건}
+    SPPY_SRCH_CNT: {label: 전년동기_검색건수_비어있음, type: float, unit: 건}
+    GROW_RATE_SPPY_SRCH_CNT: {label: 전년동기_증감률_비어있음, type: float, unit: "%"}
+
+BDT_03_01_004_1:
+  name: 시군구 안 읍면동별 검색건수
+  screen: /datalab/portal/bda/getDomInqCnt.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {srchAreaDate: "1", sggIntgYnFlag: "N"}
+  granularity: period
+  section: 내비게이션
+  query_axis: 지역
+  caution: >-
+    **읍면동 단위다.** 강릉시 21행 · 춘천시 25행이며 시도나 전국(98)을
+    넣으면 빈 배열이다(2026-08-24 확인). 성·연령 조회(SE_AG_*)와 함께
+    이 저장소에서 읍면동까지 내려가는 몇 안 되는 지표다.
+    **`SGG_CD` 컬럼에 열 자리 코드가 온다**(5115025000) — 시군구
+    다섯 자리와 다르므로 다른 표와 코드로 이으려 하면 어긋난다.
+    `PTL_SIDO_CD` 도 'KR-5115025000' 꼴이라 시도 코드가 아니다.
+    **SPPY_SRCH_CNT 는 늘 0이다.** 검색 건수이지 방문자 수가 아니다.
+  columns:
+    AREA_NM: {label: 읍면동명, type: str, unit: ""}
+    SGG_NM: {label: 읍면동명_중복, type: str, unit: ""}
+    SGG_CD: {label: 읍면동코드_열자리, type: str, unit: ""}
+    PTL_SIDO_CD: {label: 포털_지역코드, type: str, unit: ""}
+    SRCH_CNT: {label: 검색건수, type: float, unit: 건}
+    SPPY_SRCH_CNT: {label: 전년동기_검색건수_비어있음, type: float, unit: 건}
+    GROW_RATE_SPPY_SRCH_CNT: {label: 전년동기_증감률_비어있음, type: float, unit: "%"}
+
+BDT_03_01_003_4:
+  name: 시군구 검색건수 추이(월별, 유형별)
+  screen: /datalab/portal/bda/getDomInqCnt.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {srchAreaDate: "1", sggIntgYnFlag: "N"}
+  granularity: month
+  section: 내비게이션
+  query_axis: 지역
+  caution: >-
+    형제 지표 BDT_03_01_002_4 는 시도만 보는데 이것은 **시군구로
+    동작한다**(강릉 51150과 춘천 51110의 응답이 다르다). 시도나
+    전국(98)을 넣으면 빈 배열이다(2026-08-24 확인).
+    월 x 관광지 유형이 교차된 행이라(12개월 120행) 다 더하면 두 번
+    센다 — `TMAP_CATE_MCLS_NM='전체'` 행이 그 달의 합계다.
+    **SPPY_SRCH_CNT 는 늘 0이다.** ORD 는 사이트의 정렬 순서다.
+    검색 건수이지 방문자 수가 아니다.
+  columns:
+    BASE_DATE: {label: 기준월, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    SGG_NM: {label: 시군구명, type: str, unit: ""}
+    TMAP_CATE_MCLS_NM: {label: 관광지유형, type: str, unit: ""}
+    SRCH_CNT: {label: 검색건수, type: float, unit: 건}
+    SPPY_SRCH_CNT: {label: 전년동월_검색건수_비어있음, type: float, unit: 건}
+    ORD: {label: 정렬순서, type: float, unit: ""}
+
+BDT_03_01_001_4:
+  name: 전국 검색건수 추이(월별, 유형별)
+  screen: /datalab/portal/bda/getDomInqCnt.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {srchAreaDate: "1", sggIntgYnFlag: "N"}
+  granularity: month
+  section: 내비게이션
+  query_axis: 전국
+  caution: >-
+    **지역 파라미터를 무시한다.** 강릉을 넣어도 강원을 넣어도 전국
+    (98)을 넣어도 응답이 같고 SIDO_NM 이 '전국'이다(2026-08-24 확인).
+    지역별이 필요하면 BDT_03_01_002_4(시도) 또는 003_4(시군구)다.
+    월 x 유형 교차라 120행이며 '전체' 행이 그 달의 합계다.
+    **SPPY_SRCH_CNT 는 늘 0이다.** 검색 건수이지 방문자 수가 아니다.
+  columns:
+    BASE_DATE: {label: 기준월, type: str, unit: ""}
+    SIDO_NM: {label: 지역명, type: str, unit: ""}
+    TMAP_CATE_MCLS_NM: {label: 관광지유형, type: str, unit: ""}
+    SRCH_CNT: {label: 검색건수, type: float, unit: 건}
+    SPPY_SRCH_CNT: {label: 전년동월_검색건수_비어있음, type: float, unit: 건}
+
+# ─────────────────────────────────────────────────────────────────
+# 2026-08-24 추가 — 이동통신의 아래층
+#
+# 이 넷을 열다가 touDivCd=1 이 '전체'가 아니라 '현지인'이라는 것을
+# 알아냈다. BDT_01_01_004_4 가 구분을 컬럼으로 나눠 주기 때문에
+# 대조가 가능했다.
+# ─────────────────────────────────────────────────────────────────
+
+BDT_01_01_004_4:
+  name: 시군구 방문자 수 추이(월별, 구분별)
+  screen: /datalab/portal/bda/getMetcoAna.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1", srchLocation: "1",
+                 sggIntgYnFlag: "N", touDivCd: "1"}
+  granularity: month
+  section: 이동통신
+  query_axis: 지역
+  caution: >-
+    **touDivCd 를 무시하고 구분을 TOU_DIV_NM 컬럼으로 나눠서 한꺼번에
+    준다**(0·1·2·3·4 어느 값을 넣어도 응답이 같다, 2026-08-24 확인).
+    세 갈래가 온다 — 현지인방문자(a) · 외지인방문자(b) ·
+    전체방문자(a+b). **다 더하면 두 배가 된다**(전체가 나머지 둘의
+    합이다). 강릉시 2024년 현지인 68,224,356 + 외지인 33,233,341 =
+    101,457,697 이고 전체 행이 101,457,694 다(오차 3, 2026-08-24 검산).
+    **이 저장소에서 '전체 방문자'를 부를 수 있는 유일한 자리다** —
+    touDivCd 로는 부를 수 없다.
+    12개월이면 36행이다. 시도나 전국(98)은 빈 배열이다.
+    연인원이므로 인구와 비교하지 마라. SPPY_TOU_NUM 은 전년 같은 달 값이다.
+  columns:
+    BASE_DATE: {label: 기준월, type: str, unit: ""}
+    SIDO_NM: {label: 지역명, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    TOU_DIV_NM: {label: 방문자구분, type: str, unit: ""}
+    TOU_NUM: {label: 방문자수, type: float, unit: 명}
+    SPPY_TOU_NUM: {label: 전년동월_방문자수, type: float, unit: 명}
+    DTL_TOU_NUM_RATE: {label: 구성비, type: float, unit: "%"}
+
+BDT_01_01_005_1:
+  name: 시군구 안 읍면동별 방문자 수
+  screen: /datalab/portal/bda/getMetcoAna.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, touDivCd]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1", srchLocation: "1",
+                 sggIntgYnFlag: "N", touDivCd: "4"}
+  granularity: period
+  section: 이동통신
+  query_axis: 지역
+  caution: >-
+    **읍면동 단위다.** 강릉시 21행이며 시도나 전국(98)은 빈 배열이다.
+    touDivCd 가 먹는다 — 2 + 3 = 4 를 검산했다(외지인 66,139,157 +
+    외국인 743,885 = 66,883,042, 응답 66,883,040, 2026-08-24).
+    **읍면동을 다 더해도 시군구가 되지 않는다.** 강릉시 외지인이
+    33,233,340명인데 읍면동 합은 66,139,157명으로 **1.99배**다 —
+    읍면동 사이를 오간 사람이 동마다 한 번씩 세어지기 때문이다.
+    통합시 산하 구를 더하면 안 되는 것과 같은 이유다.
+    `SGG_CD` 컬럼에 **열 자리 읍면동 코드**가 온다(5115025000).
+    `SIDO_NM` 에도 읍면동 이름이 들어온다 — 시도가 아니다.
+    SPPY_TOU_NUM 과 DTL_TOU_NUM_RATE 는 늘 0이다(2026-08-24 확인).
+  columns:
+    SGG_CD: {label: 읍면동코드_열자리, type: str, unit: ""}
+    PTL_SIDO_CD: {label: 포털_지역코드, type: str, unit: ""}
+    AREA_NM: {label: 읍면동명, type: str, unit: ""}
+    SIDO_NM: {label: 읍면동명_중복, type: str, unit: ""}
+    TOU_NUM: {label: 방문자수, type: float, unit: 명}
+    SPPY_TOU_NUM: {label: 전년동기_방문자수_비어있음, type: float, unit: 명}
+    DTL_TOU_NUM_RATE: {label: 구성비_비어있음, type: float, unit: "%"}
+
+BDT_01_01_004_1:
+  name: 전국 시군구별 방문자 수
+  screen: /datalab/portal/bda/getMetcoAna.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, touDivCd]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1", srchLocation: "1",
+                 sggIntgYnFlag: "N", touDivCd: "4", SGG_CD: ""}
+  granularity: period
+  section: 이동통신
+  query_axis: 전국
+  caution: >-
+    **`SGG_CD` 를 빈 문자열로 보내야 한다**(화면이 전국 조회에서
+    98을 ''로 바꿔 보낸다). 전국 시군구 263행이 온다(2026-08-24 확인).
+    **행 수는 해마다 달라질 수 있으니 못 박지 마라.**
+    touDivCd 가 먹는다 — 관광 맥락이면 4(외부방문자)다. 1은 현지인이다.
+    SPPY_TOU_NUM 은 늘 0이다. 연인원이므로 인구와 비교하지 마라.
+  columns:
+    SIDO_NM: {label: 시군구명, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    PTL_SIDO_CD: {label: 포털_지역코드, type: str, unit: ""}
+    TOU_NUM: {label: 방문자수, type: float, unit: 명}
+    SPPY_TOU_NUM: {label: 전년동기_방문자수_비어있음, type: float, unit: 명}
+
+BDT_01_01_001_4:
+  name: 전국 방문자 수 추이(월별, 구분별)
+  screen: /datalab/portal/bda/getMetcoAna.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1", srchLocation: "1",
+                 sggIntgYnFlag: "N", touDivCd: "1", SGG_CD: ""}
+  granularity: month
+  section: 이동통신
+  query_axis: 전국
+  caution: >-
+    **`SGG_CD` 를 빈 문자열로 보내야 한다.** BDT_01_01_004_4 의
+    전국판이며 구분 셋(현지인·외지인·전체)을 TOU_DIV_NM 으로 나눠
+    준다 — 12개월이면 36행이고(2026-08-24 확인) **다 더하면 두 배가
+    된다.**
+    touDivCd 를 무시한다. 연인원이므로 인구와 비교하지 마라.
+  columns:
+    BASE_DATE: {label: 기준월, type: str, unit: ""}
+    SIDO_NM: {label: 지역명, type: str, unit: ""}
+    TOU_DIV_NM: {label: 방문자구분, type: str, unit: ""}
+    TOU_NUM: {label: 방문자수, type: float, unit: 명}
+    SPPY_TOU_NUM: {label: 전년동월_방문자수, type: float, unit: 명}
+    DTL_TOU_NUM_RATE: {label: 구성비, type: float, unit: "%"}
+
+BDT_03_04_003:
+  name: 시군구 관광지 검색순위 Top500
+  screen: /datalab/portal/bda/getTourVisitCnt.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {srchAreaDate: "1", sggIntgYnFlag: "N"}
+  granularity: period
+  section: 내비게이션
+  query_axis: 지역
+  caution: >-
+    **시군구 전용이다.** 시도(51)·전국(98)·빈 문자열은 모두 빈 배열이다
+    (2026-08-24 확인). **Top500이라지만 500행이 아닐 수 있다** —
+    강릉시는 500행인데 종로구는 501행이 왔다(동점으로 보인다).
+    행 수를 못 박지 마라.
+    검색 건수이지 방문자 수가 아니다. 이름이 사람들이 부르는 이름과
+    다를 수 있다(경포해수욕장이 '경포해변'으로 온다).
+    형제 지표 `LN_03_01_038`(인기관광지 Top100)과 값 체계가 다르니
+    섞지 마라.
+  columns:
+    RK: {label: 순위, type: float, unit: ""}
+    SIDO_NM: {label: 시도, type: str, unit: ""}
+    SGG_NM: {label: 시군구, type: str, unit: ""}
+    AREA_NM: {label: 전체_지역명, type: str, unit: ""}
+    ITS_BRO_NM: {label: 관광지명, type: str, unit: ""}
+    ADDR_ROAD_NM: {label: 도로명주소, type: str, unit: ""}
+    KTO_CATE_MCLS_NM: {label: 중분류, type: str, unit: ""}
+    KTO_CATE_SCLS_NM: {label: 소분류, type: str, unit: ""}
+    SRCH_CNT: {label: 검색건수, type: float, unit: 건}

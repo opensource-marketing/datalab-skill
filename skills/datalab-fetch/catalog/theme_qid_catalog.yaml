@@ -1,0 +1,1213 @@
+# 한국관광 데이터랩 qid 카탈로그 — 테마 관광(야간·의료)
+#
+# `{SKILLS_DIR}` = 이 스킬들이 설치된 디렉토리(이 스킬 폴더의 부모). 소스
+# 저장소와 배포본에서 실제 설치 위치가 다르므로, 아래 명령을 그대로 쓰기
+# 전에 이 값을 자신의 설치 경로로 바꿔라.
+#
+# 다른 카탈로그와 조회 축이 다르다. 섞어 쓰면 빈 배열만 받는다.
+#
+# 각 항목의 query_axis 필드가 조회 축을 못 박는다.
+# (인바운드 카탈로그의 axis는 스코어링 축 목록이라 뜻이 다르다. 섞지 마라.) 파라미터 이름만 보고 추론하면
+# 틀린다 — 의료관광은 NAT_CD를 fixed_params로 보내지만 국가 축이 아니고,
+# 야간관광은 SGG_CD를 쓰지만 시군구 축이 아니다.
+#
+#   해양관광  BY_TH_MARINE_*      시군구 다섯 자리 + **배열 파라미터**가 필요하다.
+#                                  scripts/marine.py 로 만든다(두 단계 호출).
+#   MICE     BY_TH_MICE_*        축이 없다(전국 고정). srchEventDivCd로 행사
+#                                  유형을, srchRsdeDivCd로 거주지 구분을 고른다.
+#   한류관광  BY_TH_KOR_WAVE_*    NAT_CD에 **한글 국가명**을 넣는다("글로벌",
+#                                  "일본", "중국"…). 코드가 아니다.
+#                                  설문 기반이라 기간이 연 단위다.
+#   야간관광  BY_TH_NIGHT_TOUR_*  SGG_CD에 **시도 두 자리**를 넣는다.
+#                                  시군구 다섯 자리와 전국(98)은 빈 배열이다.
+#   의료관광  BY_TH_MEDIC_*       조회 축이 **없다**. 전국 값만 나온다.
+#                                  SGG_CD·NAT_CD를 받지만 무시한다.
+#
+# ── 의료관광이 축을 무시한다는 근거 ─────────────────────────────
+# 추측이 아니다. 화면 JS가 호출 직전에 스스로 값을 지운다:
+#   params2 = assign(params2, {qid:"", SGG_CD:"", SGG_NM:"", NAT_CD:"", ...});
+# 실호출로도 확인했다. SGG_CD를 11/27/51로 바꿔도, NAT_CD를 000/392/111로
+# 바꿔도 응답이 한 글자도 달라지지 않는다. 지역·국가 선택은 화면에서만
+# 걸러 쓰는 장치다.
+# ────────────────────────────────────────────────────────────────
+#
+# ── 단위가 지표마다 다르다 ─────────────────────────────────────
+# BY_TH_MEDIC_002_001_AMT 는 **천원**, BY_TH_MEDIC_002_002_AMT 와
+# 002_003_AMT 는 **원**이다. 같은 달의 같은 금액을 놓고 정확히 1000.0000배
+# 차이가 나는 것을 확인했다(2024-01: 55,132,709 대 55,132,709,115).
+# 단위를 확인하지 않고 두 지표를 나란히 놓으면 1000배 틀린다.
+# 단위 출처는 사이트 차트 정의(unit: '천원')다.
+# ────────────────────────────────────────────────────────────────
+#
+# ── 야간관광의 구분(LRFRN_DIV) 값이 지표마다 다르다 ──────────
+#   001_001 / 001_002 : 내국인(1) · 외국인(2)                      → 2종
+#   002_001            : 현지인(0) · 외지인(1) · 외국인(2)          → 3종
+#   002_002            : 현지인(0) · 외지인(1) · 외국인(2) · 내국인(3) → 4종
+#
+# 002_002에서 현지인 + 외지인 = 내국인 임을 12개월 전부 검산해 확인했다
+# (강원 2024년, 오차 1원 미만). 그러므로 002_002의 행을 모두 더하면
+# 내국인을 두 번 세게 된다. 구분을 골라 쓰라.
+# ────────────────────────────────────────────────────────────────
+
+BY_TH_NIGHT_TOUR_001_001:
+  name: 야간관광 방문객 수(월별)
+  screen: /datalab/portal/theme/getNightTourSearch.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, srchAreaDate, tabDiv]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1"}
+  granularity: month
+  section: 야간
+  query_axis: 시도
+  caution: SGG_CD는 시도 두 자리다. 시군구 다섯 자리는 빈 배열이 온다.
+  columns:
+    DT: {label: 기준월, type: str, unit: ""}
+    LRFRN_DIV_CD: {label: 구분코드, type: str, unit: ""}
+    LRFRN_DIV_NM: {label: 구분, type: str, unit: ""}
+    NIGHT_TOU_NUM: {label: 야간_방문객수, type: float, unit: 명}
+    TOU_NUM: {label: 전체_방문객수, type: float, unit: 명}
+
+BY_TH_NIGHT_TOUR_001_002:
+  # RATE_NUM = NIGHT_TOU_NUM / TOU_NUM * 100 임을 검산으로 확인했다
+  # (강원 2024-01: 5,264,630 / 11,012,484 = 47.81).
+  name: 야간관광 방문객 비율(월별)
+  screen: /datalab/portal/theme/getNightTourSearch.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, srchAreaDate, tabDiv]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1"}
+  granularity: month
+  section: 야간
+  query_axis: 시도
+  caution: SGG_CD는 시도 두 자리다.
+  columns:
+    DT: {label: 기준월, type: str, unit: ""}
+    LRFRN_DIV_CD: {label: 구분코드, type: str, unit: ""}
+    LRFRN_DIV_NM: {label: 구분, type: str, unit: ""}
+    NIGHT_TOU_NUM: {label: 야간_방문객수, type: float, unit: 명}
+    TOU_NUM: {label: 전체_방문객수, type: float, unit: 명}
+    RATE_NUM: {label: 야간_비율, type: float, unit: "%"}
+
+BY_TH_NIGHT_TOUR_001_005:
+  name: 시도별 야간관광 방문객 수와 비율
+  screen: /datalab/portal/theme/getNightTourSearch.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, srchAreaDate, tabDiv]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1"}
+  granularity: period
+  section: 야간
+  query_axis: 시도
+  caution: 조회한 시도와 무관하게 전국 시도가 모두 온다. 기간 합계다.
+  columns:
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    LRFRN_DIV_CD: {label: 구분코드, type: str, unit: ""}
+    LRFRN_DIV_NM: {label: 구분, type: str, unit: ""}
+    NIGHT_TOU_NUM: {label: 야간_방문객수, type: float, unit: 명}
+    TOU_NUM: {label: 전체_방문객수, type: float, unit: 명}
+    RATE_NUM: {label: 야간_비율, type: float, unit: "%"}
+
+BY_TH_NIGHT_TOUR_001_009:
+  name: 야간관광 인기 행정동 Top20
+  screen: /datalab/portal/theme/getNightTourSearch.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, srchAreaDate, tabDiv]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1"}
+  granularity: period
+  section: 야간
+  query_axis: 시도
+  caution: SGG_CD는 시도 두 자리다. 행정동 단위 결과가 온다.
+  columns:
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    ADONG_CD: {label: 행정동코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    SGG_NM: {label: 시군구명, type: str, unit: ""}
+    ADONG_NM: {label: 행정동명, type: str, unit: ""}
+    LRFRN_DIV_CD: {label: 구분코드, type: str, unit: ""}
+    LRFRN_DIV_NM: {label: 구분, type: str, unit: ""}
+    NIGHT_TOU_NUM: {label: 야간_방문객수, type: float, unit: 명}
+    TOU_NUM: {label: 전체_방문객수, type: float, unit: 명}
+    RATE_NUM: {label: 야간_비율, type: float, unit: "%"}
+    RNK: {label: 순위, type: int, unit: ""}
+
+BY_TH_NIGHT_TOUR_002_002:
+  # 데이터랩이 시군구 단위 내국인 카드소비 계열(LN_04_01_006 등 8개)을
+  # 내린 뒤에도, 이 지표는 **시도 단위 관광소비 총액**을 현지인·외지인·
+  # 외국인으로 나눠 계속 제공한다. CNSM_AMT가 그 총액이고
+  # NIGHT_CNSM_AMT는 그중 야간 몫이다.
+  # RATE_NUM = NIGHT_CNSM_AMT / CNSM_AMT * 100 임을 검산했다
+  # (강원 2024-01 현지인: 3,337,618,327 / 16,392,779,635 = 20.36).
+  name: 야간관광 소비액과 비율(월별)
+  screen: /datalab/portal/theme/getNightTourSearch.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, srchAreaDate, tabDiv]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1"}
+  granularity: month
+  section: 야간
+  query_axis: 시도
+  caution: SGG_CD는 시도 두 자리다. CNSM_AMT는 야간이 아니라 전체 관광소비액이다.
+  columns:
+    DT: {label: 기준월, type: str, unit: ""}
+    LRFRN_DIV_CD: {label: 구분코드, type: str, unit: ""}
+    LRFRN_DIV_NM: {label: 구분, type: str, unit: ""}
+    NIGHT_CNSM_AMT: {label: 야간_소비액, type: float, unit: 원}
+    CNSM_AMT: {label: 전체_관광소비액, type: float, unit: 원}
+    RATE_NUM: {label: 야간_비율, type: float, unit: "%"}
+
+BY_TH_NIGHT_TOUR_002_004:
+  name: 시도별 야간관광 소비액
+  screen: /datalab/portal/theme/getNightTourSearch.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, srchAreaDate, tabDiv]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1"}
+  granularity: period
+  section: 야간
+  query_axis: 시도
+  caution: 조회한 시도와 무관하게 전국 시도가 모두 온다. 기간 합계다.
+  columns:
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    LRFRN_DIV_CD: {label: 구분코드, type: str, unit: ""}
+    LRFRN_DIV_NM: {label: 구분, type: str, unit: ""}
+    NIGHT_CNSM_AMT: {label: 야간_소비액, type: float, unit: 원}
+    CNSM_AMT: {label: 전체_관광소비액, type: float, unit: 원}
+
+BY_TH_NIGHT_TOUR_003_003:
+  name: 시도별 야간관광 내비게이션 검색건수
+  screen: /datalab/portal/theme/getNightTourSearch.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, srchAreaDate, tabDiv]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1"}
+  granularity: period
+  section: 야간
+  query_axis: 시도
+  caution: 검색건수는 방문이 아니다. 조회한 시도와 무관하게 전국이 온다.
+  columns:
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    NIGHT_SRCH_CNT: {label: 야간_검색건수, type: float, unit: 건}
+    SRCH_CNT: {label: 전체_검색건수, type: float, unit: 건}
+
+BY_TH_NIGHT_TOUR_001_004:
+  name: 시도별 야간관광 방문객 수(내국인·외국인)
+  screen: /datalab/portal/theme/getNightTourSearch.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, srchAreaDate, tabDiv]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1"}
+  granularity: period
+  section: 야간
+  query_axis: 시도
+  caution: >-
+    조회한 시도와 무관하게 전국 시도가 모두 온다(34행 = 17시도 x 2구분,
+    2026-08-24 확인). **구분이 두 갈래뿐이다** — 내국인(1)·외국인(2)이고
+    현지인·외지인이 없다. 같은 화면의 소비 지표(002_*)는 현지인·외지인
+    까지 네 갈래를 주므로 구분 이름만 보고 이어 붙이면 어긋난다.
+  columns:
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    LRFRN_DIV_CD: {label: 구분코드, type: str, unit: ""}
+    LRFRN_DIV_NM: {label: 구분, type: str, unit: ""}
+    NIGHT_TOU_NUM: {label: 야간_방문객수, type: float, unit: 명}
+    TOU_NUM: {label: 전체_방문객수, type: float, unit: 명}
+
+BY_TH_NIGHT_TOUR_002_001:
+  name: 야간관광 소비액(월별, 현지인·외지인·외국인)
+  screen: /datalab/portal/theme/getNightTourSearch.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, srchAreaDate, tabDiv]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1"}
+  granularity: month
+  section: 야간
+  query_axis: 시도
+  caution: >-
+    SGG_CD는 시도 두 자리다. **이 지표는 조회한 시도를 본다**(같은
+    화면의 002_005 는 무시하고 전국을 준다). 구분이 세 갈래다 —
+    현지인(0)·외지인(1)·외국인(2). 형제 지표 002_002 는 여기에
+    내국인(3)을 더해 네 갈래를 주는데 그것은 현지인+외지인이라
+    다 더하면 두 번 센다. CNSM_AMT 는 야간이 아니라 전체 관광소비액이다.
+  columns:
+    DT: {label: 기준월, type: str, unit: ""}
+    LRFRN_DIV_CD: {label: 구분코드, type: str, unit: ""}
+    LRFRN_DIV_NM: {label: 구분, type: str, unit: ""}
+    NIGHT_CNSM_AMT: {label: 야간_소비액, type: float, unit: 원}
+    CNSM_AMT: {label: 전체_관광소비액, type: float, unit: 원}
+
+BY_TH_NIGHT_TOUR_002_005:
+  name: 시도별 야간관광 소비 비율
+  screen: /datalab/portal/theme/getNightTourSearch.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, srchAreaDate, tabDiv]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1"}
+  granularity: period
+  section: 야간
+  query_axis: 시도
+  caution: >-
+    **시도가 16곳으로 온다. 광주광역시와 전라남도가 없고 대신
+    '전남광주통합특별시'가 있다**(2026-08-24 확인). 같은 화면의
+    방문자 지표(001_004·001_005)는 열일곱 곳을 분리해 주므로,
+    두 표를 시도 이름으로 이어 붙이면 광주·전남이 사라진다.
+    구분은 네 갈래이고 **내국인 = 현지인 + 외지인**이다(서울 2024년
+    검산 오차 2원). 다 더하면 내국인을 두 번 센다.
+    RATE_NUM = NIGHT_CNSM_AMT / CNSM_AMT x 100 을 검산했다
+    (인천 현지인 28.36).
+  columns:
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    LRFRN_DIV_CD: {label: 구분코드, type: str, unit: ""}
+    LRFRN_DIV_NM: {label: 구분, type: str, unit: ""}
+    NIGHT_CNSM_AMT: {label: 야간_소비액, type: float, unit: 원}
+    CNSM_AMT: {label: 전체_관광소비액, type: float, unit: 원}
+    RATE_NUM: {label: 야간_비율, type: float, unit: "%"}
+
+BY_TH_NIGHT_TOUR_003_001:
+  name: 전국 야간관광 내비게이션 검색건수(월별)
+  screen: /datalab/portal/theme/getNightTourSearch.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, srchAreaDate, tabDiv]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1"}
+  granularity: month
+  section: 야간
+  query_axis: 전국
+  caution: >-
+    **시도를 무시하고 전국만 준다.** SIDO_CD 가 '00', SGG_CD 가
+    '00000' 으로 고정이며 어느 시도를 넣어도 같은 값이 온다
+    (2026-08-24 확인). 지역별이 필요하면 003_004 를 쓰라.
+    검색건수는 방문이 아니다.
+  columns:
+    DT: {label: 기준월, type: str, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    NIGHT_SRCH_CNT: {label: 야간_검색건수, type: float, unit: 건}
+    SRCH_CNT: {label: 전체_검색건수, type: float, unit: 건}
+
+BY_TH_NIGHT_TOUR_003_002:
+  name: 전국 야간관광 내비게이션 검색 비율(월별)
+  screen: /datalab/portal/theme/getNightTourSearch.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, srchAreaDate, tabDiv]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1"}
+  granularity: month
+  section: 야간
+  query_axis: 전국
+  caution: >-
+    003_001 에 비율 컬럼 하나를 더한 것이다. 시도를 무시하고 전국만
+    준다. RATE_NUM = NIGHT_SRCH_CNT / SRCH_CNT x 100 을 검산했다
+    (2024-01: 3,243,215 / 18,256,954 = 17.76).
+  columns:
+    DT: {label: 기준월, type: str, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    NIGHT_SRCH_CNT: {label: 야간_검색건수, type: float, unit: 건}
+    SRCH_CNT: {label: 전체_검색건수, type: float, unit: 건}
+    RATE_NUM: {label: 야간_비율, type: float, unit: "%"}
+
+BY_TH_NIGHT_TOUR_003_004:
+  name: 시도별 야간관광 내비게이션 검색 비율
+  screen: /datalab/portal/theme/getNightTourSearch.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, srchAreaDate, tabDiv]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1"}
+  granularity: period
+  section: 야간
+  query_axis: 시도
+  caution: >-
+    **시도가 16곳이다. 광주광역시와 전라남도 대신 '전남광주통합
+    특별시'가 온다**(2026-08-24 확인). 형제 지표 003_003 은 열일곱
+    곳을 준다 — 두 표를 나란히 놓지 마라. 조회한 시도와 무관하게
+    전국이 온다. 검색건수는 방문이 아니다.
+  columns:
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    NIGHT_SRCH_CNT: {label: 야간_검색건수, type: float, unit: 건}
+    SRCH_CNT: {label: 전체_검색건수, type: float, unit: 건}
+    RATE_NUM: {label: 야간_비율, type: float, unit: "%"}
+
+BY_TH_MEDIC_000_001:
+  name: 의료관광 관심도 추이(전국)
+  screen: /datalab/portal/theme/getMedicalTourSearch.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, srchAreaDate, tabDiv]
+  fixed_params: {srchAreaDate: "1", tabDiv: "0", NAT_CD: "000"}
+  granularity: month
+  section: 의료
+  query_axis: 전국
+  caution: 지역·국가 파라미터를 무시한다. 전국 값만 나온다.
+  columns:
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    KTO_CATE_SCLS_CD: {label: 항목코드, type: str, unit: ""}
+    KTO_CATE_SCLS_NM: {label: 항목, type: str, unit: ""}
+    SRCH_RAT: {label: 관심도, type: float, unit: "%"}
+
+BY_TH_MEDIC_001_001:
+  name: 국가별 외국인 환자 수(전국, 연도별)
+  screen: /datalab/portal/theme/getMedicalTourSearch.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, srchAreaDate, tabDiv]
+  fixed_params: {srchAreaDate: "1", tabDiv: "0", NAT_CD: "000"}
+  granularity: year
+  section: 의료
+  query_axis: 전국
+  # 연도마다 상위 5개국만 온다(35행 = 7년 × 5개국). 2024년 상위 5개국
+  # 합계는 925,094명인데 이는 전국 총계가 아니다.
+  caution: 지역·국가 파라미터를 무시한다. 연도마다 상위 5개만 오므로 합계를 전국 총계로 읽지 마라.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    CUST_NAT_CD: {label: 국가코드, type: str, unit: ""}
+    CUST_NAT_NM: {label: 국가명, type: str, unit: ""}
+    FORN_TRAVL_CNT: {label: 외국인_환자수, type: float, unit: 명}
+
+BY_TH_MEDIC_001_003:
+  name: 지역별 외국인 환자 수(연도별)
+  screen: /datalab/portal/theme/getMedicalTourSearch.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, srchAreaDate, tabDiv]
+  fixed_params: {srchAreaDate: "1", tabDiv: "0", NAT_CD: "000"}
+  granularity: year
+  section: 의료
+  query_axis: 전국
+  # 시도가 전부 오지 않는다. 연도마다 상위 5곳만 온다(35행 = 7년 × 5곳).
+  # 국가별 지표와 합계가 맞지 않는 것도 둘 다 상위 5개만 오기 때문이다
+  # (2024년 국가 925,094 대 지역 1,124,279).
+  caution: 지역 파라미터를 무시한다. 연도마다 상위 5곳만 오므로 합계를 전국 총계로 읽지 마라.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    REGN_NM: {label: 지역명, type: str, unit: ""}
+    FORN_TRAVL_CNT: {label: 외국인_환자수, type: float, unit: 명}
+
+BY_TH_MEDIC_002_001_AMT:
+  # 단위가 천원이다. 002_002_AMT·002_003_AMT는 원이라 정확히 1000배 크다.
+  # 사이트 차트 정의(unit: '천원')와 실측 대조로 확인했다.
+  name: 외국인 의료 소비액 추이(전국)
+  screen: /datalab/portal/theme/getMedicalTourSearch.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, srchAreaDate, tabDiv]
+  fixed_params: {srchAreaDate: "1", tabDiv: "0", NAT_CD: "000"}
+  granularity: month
+  section: 의료
+  query_axis: 전국
+  caution: 지역·국가 파라미터를 무시한다(전국 값). 단위가 천원이라 원 단위인 002_002_AMT·002_003_AMT와 섞으면 1000배 틀린다(2026-08-23 재확인).
+  columns:
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    KTO_CATE_SCLS_CD: {label: 항목코드, type: str, unit: ""}
+    KTO_CATE_SCLS_NM: {label: 항목, type: str, unit: ""}
+    CARD_COMPT_AMT: {label: 의료_소비액, type: float, unit: 천원}
+
+BY_TH_MEDIC_002_001_CNT:
+  name: 외국인 의료 소비건수 추이(전국)
+  screen: /datalab/portal/theme/getMedicalTourSearch.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, srchAreaDate, tabDiv]
+  fixed_params: {srchAreaDate: "1", tabDiv: "0", NAT_CD: "000"}
+  granularity: month
+  section: 의료
+  query_axis: 전국
+  caution: 지역·국가 파라미터를 무시한다. 전국 값만 나온다.
+  columns:
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    KTO_CATE_SCLS_CD: {label: 항목코드, type: str, unit: ""}
+    KTO_CATE_SCLS_NM: {label: 항목, type: str, unit: ""}
+    CARD_COMPT_CNT: {label: 의료_소비건수, type: float, unit: 건}
+
+BY_TH_MEDIC_002_003_AMT:
+  name: 외국인 의료 소비액 진료과목별 비율(전국)
+  screen: /datalab/portal/theme/getMedicalTourSearch.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, srchAreaDate, tabDiv]
+  fixed_params: {srchAreaDate: "1", tabDiv: "0", NAT_CD: "000"}
+  granularity: period
+  section: 의료
+  query_axis: 전국
+  caution: 지역·국가 파라미터를 무시한다(전국 값). 단위가 원이라 천원 단위인 002_001_AMT와 섞으면 1000배 틀린다(2026-08-23 재확인).
+  columns:
+    KTO_CATE_SCLS_CD: {label: 진료과목코드, type: str, unit: ""}
+    KTO_CATE_SCLS_NM: {label: 진료과목, type: str, unit: ""}
+    CARD_COMPT_AMT: {label: 진료과목_소비액, type: float, unit: 원}
+    TOT_AMT: {label: 전체_소비액, type: float, unit: 원}
+    MCLS_SUM_AMT: {label: 진료과목_소비액_합계, type: float, unit: 원}
+    MCLS_AMT_RATE: {label: 진료과목_비중, type: float, unit: "%"}
+
+BY_TH_MEDIC_002_003_CNT:
+  name: 외국인 의료 소비건수 진료과목별 비율(전국)
+  screen: /datalab/portal/theme/getMedicalTourSearch.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, srchAreaDate, tabDiv]
+  fixed_params: {srchAreaDate: "1", tabDiv: "0", NAT_CD: "000"}
+  granularity: period
+  section: 의료
+  query_axis: 전국
+  caution: 지역·국가 파라미터를 무시한다. 전국 값만 나온다.
+  columns:
+    KTO_CATE_SCLS_CD: {label: 진료과목코드, type: str, unit: ""}
+    KTO_CATE_SCLS_NM: {label: 진료과목, type: str, unit: ""}
+    CARD_COMPT_CNT: {label: 진료과목_소비건수, type: float, unit: 건}
+    TOT_CNT: {label: 전체_소비건수, type: float, unit: 건}
+    MCLS_SUM_CNT: {label: 진료과목_소비건수_합계, type: float, unit: 건}
+    MCLS_CNT_RATE: {label: 진료과목_비중, type: float, unit: "%"}
+
+
+# ── 한류관광 ────────────────────────────────────────────────────
+# NAT_CD가 한글 국가명이다. "글로벌"이 전체 평균이고 "일본"·"중국"처럼
+# 나라 이름을 그대로 넣는다. 국가 코드(JP·CN)를 넣으면 빈 배열이 온다.
+#
+# vstkHopeDivNmChart01이 실제 관문이다. 이름은 chart01이지만 001_001과
+# 001_002 둘 다 이것을 본다. chart04·chart05는 빼도 결과가 같았다.
+# 값은 "일반외국인" 또는 "방한의향자"이며, 비우면 빈 배열이 온다.
+#
+# 설문(외래관광객 대상 한류 조사) 기반이라 기간이 연 단위다.
+
+BY_TH_KOR_WAVE_001_001:
+  name: 한류 경험률(국가별)
+  screen: /datalab/portal/theme/getKorWaveSearch.do
+  auth: public
+  params: [NAT_CD, BASE_YM1, BASE_YM2, vstkHopeDivNmChart01]
+  fixed_params: {srchAreaDate: "4", tabDiv: "1", vstkHopeDivNmChart01: "일반외국인"}
+  granularity: year
+  section: 한류
+  query_axis: 국가명
+  caution: >-
+    NAT_CD에 코드(JP)가 아니라 한글 국가명("일본")을 넣는다. 전체
+    평균은 "글로벌"이다. **vstkHopeDivNmChart01에 "일반외국인" 또는
+    "방한의향자"를 함께 보내야 한다** — 비우면 오류가 아니라 빈 배열이
+    온다. 설문 기반이라 기간은 연 단위(네 자리)다.
+  columns:
+    NAT_NM: {label: 국가명, type: str, unit: ""}
+    VSTK_HOPE_DIV_NM: {label: 응답자구분, type: str, unit: ""}
+    EXPER_DIV_NM: {label: 경험여부, type: str, unit: ""}
+    EXPER_DIV_VAL: {label: 비율_원값, type: float, unit: "%"}
+    RATE_VAL: {label: 비율, type: float, unit: "%"}
+
+BY_TH_KOR_WAVE_001_002:
+  name: 한류 경험률(성·연령별)
+  screen: /datalab/portal/theme/getKorWaveSearch.do
+  auth: public
+  params: [NAT_CD, BASE_YM1, BASE_YM2, vstkHopeDivNmChart01]
+  fixed_params: {srchAreaDate: "4", tabDiv: "1", vstkHopeDivNmChart01: "일반외국인"}
+  granularity: year
+  section: 한류
+  query_axis: 국가명
+  caution: >-
+    파라미터 이름은 chart01이지만 이 지표도 그것을 본다.
+    vstkHopeDivNmChart01에 "일반외국인" 또는 "방한의향자"를 넣는다 —
+    없으면 빈 배열이다. NAT_CD도 한글 국가명이다.
+  columns:
+    GENA_DIV_NM: {label: 성_연령, type: str, unit: ""}
+    VSTK_HOPE_DIV_NM: {label: 응답자구분, type: str, unit: ""}
+    EXPER_DIV_NM: {label: 경험여부, type: str, unit: ""}
+    EXPER_DIV_VAL: {label: 비율_원값, type: float, unit: "%"}
+    RATE_VAL: {label: 비율, type: float, unit: "%"}
+    COLOR: {label: 차트색상, type: str, unit: ""}
+
+BY_TH_KOR_WAVE_001_004:
+  name: 한류 경험 분야
+  screen: /datalab/portal/theme/getKorWaveSearch.do
+  auth: public
+  params: [NAT_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {srchAreaDate: "4", tabDiv: "1"}
+  granularity: year
+  section: 한류
+  query_axis: 국가명
+  caution: 일반외국인과 방한의향자 행이 함께 온다. 응답자구분을 골라 읽어라.
+  columns:
+    NAT_NM: {label: 국가명, type: str, unit: ""}
+    VSTK_HOPE_DIV_NM: {label: 응답자구분, type: str, unit: ""}
+    EXPER_FLD_DIV_NM: {label: 경험분야, type: str, unit: ""}
+    EXPER_FLD_DIV_VAL: {label: 비율_원값, type: float, unit: "%"}
+    RATE_VAL: {label: 비율, type: float, unit: "%"}
+
+BY_TH_KOR_WAVE_002_000:
+  # 이 지표만 월 단위다(srchAreaDate=1, tabDiv=2). 같은 화면 안에서도
+  # 탭마다 기간 단위가 다르다.
+  name: 한류관광 관심도 추이(월별)
+  screen: /datalab/portal/theme/getKorWaveSearch.do
+  auth: public
+  params: [NAT_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {srchAreaDate: "1", tabDiv: "2"}
+  granularity: month
+  section: 한류
+  query_axis: 국가명
+  caution: 같은 화면의 다른 지표와 달리 월 단위다. 연도를 넣으면 빈 배열이 온다.
+  columns:
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    KTO_CATE_SCLS_CD: {label: 항목코드, type: str, unit: ""}
+    KTO_CATE_SCLS_NM: {label: 항목, type: str, unit: ""}
+    SRCH_RAT: {label: 관심도, type: float, unit: "%"}
+
+
+# ── MICE ────────────────────────────────────────────────────────
+# 조회 축이 없다. SGG_CD를 받지만 "98"(전국)로만 부른다.
+# 응답은 연도별로 여러 행이 온다(BASE_YEAR). 한 해를 보려면 골라 읽어라.
+# srchEventDivCd(행사 유형)와 srchRsdeDivCd(거주지 구분)가 없으면
+# 004_* 계열이 빈 배열이 온다.
+#
+# 금액 컬럼이 쌍으로 온다: SALES_AMT(원)와 SALES_AMT_M(백만원).
+# 정확히 10^6 배임을 8/8 행에서 확인했다.
+
+BY_TH_MICE_002_001:
+  name: MICE 개최건수(연도별)
+  screen: /datalab/portal/theme/getMiceScleSearch.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {SGG_CD: "98", TAB_DIV: "1", tabDiv: "1",
+                 srchGrdTyp: "TFM_ST_KTO_MICE_SCLE_HDMT_SUM"}
+  granularity: year
+  section: MICE
+  query_axis: 전국
+  caution: 여러 해가 한꺼번에 온다. BASE_YEAR로 골라 읽어라.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    AGRT_DIV_CD: {label: 집계구분코드, type: str, unit: ""}
+    AGRT_DIV_NM: {label: 집계구분, type: str, unit: ""}
+    MICE_DIV_CD: {label: MICE구분코드, type: str, unit: ""}
+    MICE_DIV_NM: {label: MICE구분, type: str, unit: ""}
+    HDMT_CNT: {label: 개최건수, type: float, unit: 건}
+    SPPY_HDMT_CNT: {label: 전년_개최건수, type: float, unit: 건}
+    HDMT_CNT_IRDS_RATE: {label: 개최건수_증감률, type: float, unit: "%"}
+
+BY_TH_MICE_002_002:
+  name: MICE 참가자 수(연도별)
+  screen: /datalab/portal/theme/getMiceScleSearch.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {SGG_CD: "98", TAB_DIV: "1", tabDiv: "1",
+                 srchGrdTyp: "TFM_ST_KTO_MICE_SCLE_HDMT_SUM"}
+  granularity: year
+  section: MICE
+  query_axis: 전국
+  caution: 집계구분(전체·개최·참가)과 연도가 교차된 행이다. 다 더하면 중복해서 센다.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    AGRT_DIV_CD: {label: 집계구분코드, type: str, unit: ""}
+    AGRT_DIV_NM: {label: 집계구분, type: str, unit: ""}
+    MICE_DIV_CD: {label: MICE구분코드, type: str, unit: ""}
+    MICE_DIV_NM: {label: MICE구분, type: str, unit: ""}
+    PTCPR_PSON_NUM: {label: 참가자수, type: float, unit: 명}
+    SPPY_PTCPR_PSON_NUM: {label: 전년_참가자수, type: float, unit: 명}
+    PSON_IRDS_RATE: {label: 참가자수_증감률, type: float, unit: "%"}
+
+BY_TH_MICE_003_001:
+  # SALES_AMT = SALES_AMT_M × 10^6 임을 8/8 행에서 확인했다.
+  # 2024년 회의시설업 5,158,476백만원 = 5.16조원.
+  name: MICE 업종별 매출액(연도별)
+  screen: /datalab/portal/theme/getMiceScleSearch.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {SGG_CD: "98", TAB_DIV: "1", tabDiv: "1",
+                 srchGrdTyp: "TFM_ST_KTO_MICE_SCLE_HDMT_SUM"}
+  granularity: year
+  section: MICE
+  query_axis: 전국
+  caution: SALES_AMT는 원, SALES_AMT_M은 백만원이다. 둘을 섞으면 100만배 틀린다.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    MICE_SALES_DIV_CD: {label: 업종코드, type: str, unit: ""}
+    MICE_SALES_DIV_NM: {label: 업종, type: str, unit: ""}
+    SALES_AMT: {label: 매출액, type: float, unit: 원}
+    SALES_AMT_M: {label: 매출액_백만원, type: float, unit: 백만원}
+    PREYR_SALES_AMT: {label: 전년_매출액, type: float, unit: 원}
+    PREYR_SALES_AMT_M: {label: 전년_매출액_백만원, type: float, unit: 백만원}
+    SALES_IRDS_RATE: {label: 매출_증감률, type: float, unit: "%"}
+
+BY_TH_MICE_003_002:
+  name: MICE 업종별 종사자 수(연도별)
+  screen: /datalab/portal/theme/getMiceScleSearch.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {SGG_CD: "98", TAB_DIV: "1", tabDiv: "1",
+                 srchGrdTyp: "TFM_ST_KTO_MICE_SCLE_HDMT_SUM"}
+  granularity: year
+  section: MICE
+  query_axis: 전국
+  caution: 여러 해가 한꺼번에 온다. BASE_YEAR로 골라 읽어라.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    MICE_SALES_DIV_CD: {label: 업종코드, type: str, unit: ""}
+    MICE_SALES_DIV_NM: {label: 업종, type: str, unit: ""}
+    WKER_NUM: {label: 종사자수, type: float, unit: 명}
+    SPPY_WKER_PSON_NUM: {label: 전년_종사자수, type: float, unit: 명}
+    WKER_IRDS_RATE: {label: 종사자_증감률, type: float, unit: "%"}
+
+BY_TH_MICE_004_001:
+  name: MICE 참가자 평균 체류일(연도별)
+  screen: /datalab/portal/theme/getMiceScleSearch.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, srchEventDivCd, srchRsdeDivCd]
+  fixed_params: {SGG_CD: "98", TAB_DIV: "1", tabDiv: "1",
+                 srchEventDivCd: "10", srchRsdeDivCd: "10000"}
+  granularity: year
+  section: MICE
+  query_axis: 전국
+  caution: 본인과 동반자 행이 따로 온다. 연도와 참가자구분을 골라 읽어라.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    EVNT_DIV_CD: {label: 행사유형코드, type: str, unit: ""}
+    EVNT_DIV_NM: {label: 행사유형, type: str, unit: ""}
+    PTCPR_DIV_CD: {label: 참가자구분코드, type: str, unit: ""}
+    PTCPR_DIV_NM: {label: 참가자구분, type: str, unit: ""}
+    RSDE_DIV_CD: {label: 거주지구분코드, type: str, unit: ""}
+    RSDE_DIV_NM: {label: 거주지구분, type: str, unit: ""}
+    HDMT_REGN_IN_STAY_DAYS: {label: 개최지역_체류일, type: float, unit: 일}
+    HDMT_REGN_EXCEP_STAY_DAYS: {label: 개최지역외_체류일, type: float, unit: 일}
+    GRO_STAY_DAYS: {label: 총_체류일, type: float, unit: 일}
+
+BY_TH_MICE_004_002:
+  # 척도는 사이트가 어디에도 적어 두지 않았다. 2023~2025년 값이
+  # 4.25~4.29 범위이므로 5점 척도로 보이지만 확인하지 못했다.
+  name: MICE 행사 만족도(연도별)
+  screen: /datalab/portal/theme/getMiceScleSearch.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, srchEventDivCd, srchRsdeDivCd]
+  fixed_params: {SGG_CD: "98", TAB_DIV: "1", tabDiv: "1",
+                 srchEventDivCd: "10", srchRsdeDivCd: "10000"}
+  granularity: year
+  section: MICE
+  query_axis: 전국
+  caution: 척도를 사이트가 표기하지 않는다. 절대값을 단정하지 말고 연도 간 변화로 읽어라.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    EVNT_DIV_CD: {label: 행사유형코드, type: str, unit: ""}
+    EVNT_DIV_NM: {label: 행사유형, type: str, unit: ""}
+    RSDE_DIV_CD: {label: 거주지구분코드, type: str, unit: ""}
+    RSDE_DIV_NM: {label: 거주지구분, type: str, unit: ""}
+    STISF_ASCR_VAL: {label: 만족도, type: float, unit: ""}
+
+BY_TH_MICE_004_004:
+  # 항목 합계가 "총액(장거리 교통비 제외)"과 맞는 것을 확인했다
+  # (2025 미팅&컨벤션 전체: 8개 항목 합 1,406,191 대 총액 1,406,193, 반올림 차이).
+  name: MICE 참가자 1인당 지출(항목별)
+  screen: /datalab/portal/theme/getMiceScleSearch.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, srchEventDivCd, srchRsdeDivCd]
+  fixed_params: {SGG_CD: "98", TAB_DIV: "1", tabDiv: "1",
+                 srchEventDivCd: "10", srchRsdeDivCd: "10000"}
+  granularity: year
+  section: MICE
+  query_axis: 전국
+  caution: 총액(장거리 교통비 제외) 행이 함께 온다. 항목과 총액을 같이 더하면 두 배가 된다.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    EVNT_DIV_CD: {label: 행사유형코드, type: str, unit: ""}
+    EVNT_DIV_NM: {label: 행사유형, type: str, unit: ""}
+    RSDE_DIV_CD: {label: 거주지구분코드, type: str, unit: ""}
+    RSDE_DIV_NM: {label: 거주지구분, type: str, unit: ""}
+    EXPS_DIV_CD: {label: 지출항목코드, type: str, unit: ""}
+    EXPS_DIV_NM: {label: 지출항목, type: str, unit: ""}
+    CNSM_AMT: {label: 1인당_지출액, type: float, unit: 원}
+
+BY_TH_MICE_001_005:
+  name: MICE 사업체 업종별 분포
+  screen: /datalab/portal/theme/getMiceScleSearch.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {SGG_CD: "98", TAB_DIV: "1", tabDiv: "1",
+                 srchGrdTyp: "TFM_ST_KTO_MICE_SCLE_HDMT_SUM"}
+  granularity: snapshot
+  section: MICE
+  query_axis: 전국
+  caution: 국제회의업 안의 업종 분포다. 관광사업체 전체가 아니다.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    UPR_OPNG_SVC_NM: {label: 업종, type: str, unit: ""}
+    NUM: {label: 사업체_수, type: float, unit: 개}
+    PER: {label: 비중, type: float, unit: "%"}
+
+
+# ── 해양관광 ────────────────────────────────────────────────────
+# 이 계열만 배열 파라미터를 받는다.
+#     A_1[0][YEONAN_TYPE_NM]=연안 도시
+#     A_1[0][YEONAN_TYPE_CD]=A01
+#     A_1[0][CNT]=4
+# 값은 지어내는 것이 아니라 BY_TH_MARINE_COMMON_DISP_CHECK이 돌려주는 것을
+# 그대로 옮긴다. 지역마다 구성이 다르다(강릉시 셋, 고성군 둘).
+# 그래서 fixed_params로 적을 수 없고 scripts/marine.py 가 만들어 준다.
+#
+#     python3 {SKILLS_DIR}/datalab-fetch/scripts/marine.py 강릉시
+#
+# 결과는 **행정동(읍면동) 단위**다. 이 프로젝트에서 가장 촘촘한 지역 단위다.
+# 바다에 닿지 않은 지역은 연안 유형이 없어 빈 배열이 온다.
+
+BY_TH_MARINE_COMMON_DISP_CHECK:
+  name: 지역의 연안 유형 목록
+  screen: /datalab/portal/theme/getMarineTourSearch.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, srchAreaDate, tabDiv, srchDivType]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1", srchDivType: "REGN", SGG_NM: ""}
+  granularity: snapshot
+  section: 해양
+  query_axis: 지역
+  caution: 다른 해양 지표의 배열 파라미터를 만드는 입구다. 이것만 배열 없이 부를 수 있다.
+  columns:
+    YEONAN_TYPE_NM: {label: 연안유형, type: str, unit: ""}
+    YEONAN_TYPE_CD: {label: 연안유형코드, type: str, unit: ""}
+    CNT: {label: 개수, type: float, unit: 개}
+
+BY_TH_MARINE_001_009:
+  name: 해양관광 방문자 성·연령 분포
+  screen: /datalab/portal/theme/getMarineTourSearch.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, srchAreaDate, tabDiv, srchDivType]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1", srchDivType: "REGN"}
+  granularity: period
+  section: 해양
+  query_axis: 지역
+  caution: 배열 파라미터가 필요하다. marine.py로 만들어라. NUM1은 남성, NUM2는 여성이다.
+  columns:
+    AGE_HNGL_NM: {label: 연령대, type: str, unit: ""}
+    TOU_NUM1: {label: 남성_방문자수, type: float, unit: 명}
+    TOU_NUM2: {label: 여성_방문자수, type: float, unit: 명}
+    TOU_NUM_RAT1: {label: 남성_비중, type: float, unit: "%"}
+    TOU_NUM_RAT2: {label: 여성_비중, type: float, unit: "%"}
+
+BY_TH_MARINE_101_002:
+  name: 해양관광 방문자 수 추이(행정동별·월별)
+  screen: /datalab/portal/theme/getMarineTourSearch.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, srchAreaDate, tabDiv, srchDivType]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1", srchDivType: "REGN"}
+  granularity: month
+  section: 해양
+  query_axis: 지역
+  caution: >-
+    배열 파라미터가 필요하다. 행정동 단위이며 DIV_NM으로 방문자 구분이
+    나뉜다. **구분끼리 겹치므로 다 더하면 안 된다** — 2026-08-23 강릉
+    2024년에서 "강릉시 연안 어촌"(3,167,794) 안에 "연안 어촌(강동면)"
+    (3,026,866)이 들어가고, 무관한 "전국 연안"까지 같은 표에 온다.
+    하나를 골라 읽어라. **값 컬럼은 TOU_NUM_AVG 하나뿐이다** — 이름에
+    AVG가 있지만 평균인지 합계인지 확인하지 못해 라벨을 원값으로 두었다.
+  columns:
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    SGG_NM: {label: 시군구, type: str, unit: ""}
+    ADONG_CD: {label: 행정동코드, type: str, unit: ""}
+    ADONG_NM: {label: 행정동, type: str, unit: ""}
+    DIV_NM: {label: 방문자구분, type: str, unit: ""}
+    # 이 지표의 유일한 값 컬럼인데 카탈로그에 없어 원본명으로 나가고
+    # 있었다. 평균인지 합계인지 확인하지 못해 뜻을 단정하지 않는다.
+    TOU_NUM_AVG: {label: TOU_NUM_AVG_원값, type: float, unit: ""}
+    CNT: {label: CNT_원값, type: int, unit: ""}
+    YEONAN_TYPE_CD: {label: 연안유형코드, type: str, unit: ""}
+    YEONAN_TYPE_NM: {label: 연안유형, type: str, unit: ""}
+    MARK: {label: 표시, type: str, unit: ""}
+    SORT_KEY: {label: 정렬키, type: int, unit: ""}
+
+BY_TH_MARINE_101_007:
+  name: 해양관광 방문자 거주지 분포
+  screen: /datalab/portal/theme/getMarineTourSearch.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, srchAreaDate, tabDiv, srchDivType]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1", srchDivType: "REGN"}
+  granularity: period
+  section: 해양
+  query_axis: 지역
+  caution: 배열 파라미터가 필요하다. 거주 시도와 시군구가 함께 오므로 다 더하면 두 번 센다.
+  columns:
+    DPTR_REGN_NM: {label: 거주_시도, type: str, unit: ""}
+    DPTR_REGN_DTL_NM: {label: 거주_시군구, type: str, unit: ""}
+    DTL_TOU_NUM: {label: 시군구_방문자수, type: float, unit: 명}
+    TOT_DTL_TOU_NUM_RATE: {label: 시군구_비중, type: float, unit: "%"}
+    TOU_NUM: {label: 시도_방문자수, type: float, unit: 명}
+    # 2026-08-23 확인: sqrt(시도_방문자수)와 같다(12,000,891 →
+    # 3,464.2). 화면이 원 크기를 정할 때 쓰는 값이라 뜻이 없다.
+    TOU_NUM_SQRT: {label: 차트용_보조값, type: float, unit: ""}
+    # 시도_방문자수 ÷ 전체와 맞았다(33.17% ↔ 33.2).
+    TOU_NUM_RATE: {label: 거주시도_비중, type: float, unit: "%"}
+
+# ─────────────────────────────────────────────────────────────────
+# 2026-08-24 추가 — 외국인 환자 전체 표
+#
+# 이미 있던 `BY_TH_MEDIC_001_001`·`_001_003` 은 **해마다 상위 다섯만**
+# 준다(2024년 국가 합 925,094명). 여기 넣는 둘은 전체를 준다.
+# 두 표의 2024년 합이 2,340,934로 같고, 그 안에 '합계' 행이 절반을
+# 차지하므로 실제 외국인 환자는 1,170,467명이다(2026-08-24 검산).
+# ─────────────────────────────────────────────────────────────────
+
+BY_TH_MEDIC_001_002:
+  name: 국가별 외국인 환자 수(전체, 연도별)
+  screen: /datalab/portal/theme/getMedicalTourSearch.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, srchAreaDate, tabDiv]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1"}
+  granularity: year
+  section: 의료
+  query_axis: 전국
+  caution: >-
+    **'합계' 행이 섞여 있다.** 해마다 12행이 오는데 그중 하나가
+    `CUST_NAT_NM='합계'`다 — 걸러내지 않고 더하면 정확히 두 배가
+    된다(2024년 2,340,934 대 실제 1,170,467, 2026-08-24 검산).
+    '그외국가'도 한 행이므로 국가 수를 세지 마라.
+    상위 다섯만 필요하면 `BY_TH_MEDIC_001_001` 이다.
+    **기간 파라미터를 무시하고 늘 2018~2024를 준다**(2026-08-24 확인).
+    `MOD_CUST_NAT_CD` 는 사이트가 지도에 쓰는 보정 코드다.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    CUST_NAT_CD: {label: 국가코드, type: str, unit: ""}
+    CUST_NAT_NM: {label: 국가, type: str, unit: ""}
+    MOD_CUST_NAT_CD: {label: 지도용_국가코드, type: str, unit: ""}
+    FORN_TRAVL_CNT: {label: 외국인_환자수, type: float, unit: 명}
+
+BY_TH_MEDIC_001_004:
+  name: 지역별 외국인 환자 수(전체, 연도별)
+  screen: /datalab/portal/theme/getMedicalTourSearch.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, srchAreaDate, tabDiv]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1"}
+  granularity: year
+  section: 의료
+  query_axis: 전국
+  caution: >-
+    **'합계' 행이 섞여 있다.** 해마다 17행이 오는데 그중 하나가
+    `REGN_NM='합계'`다 — 더하면 두 배가 된다. 지역은 열여섯 곳이며
+    세종이 없다(2026-08-24 확인). 국가별 표(BY_TH_MEDIC_001_002)와
+    같은 모집단이라 두 표의 합이 같다.
+    상위 다섯만 필요하면 `BY_TH_MEDIC_001_003` 이다.
+    기간 파라미터를 무시하고 늘 2018~2024를 준다.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    REGN_NM: {label: 지역, type: str, unit: ""}
+    FORN_TRAVL_CNT: {label: 외국인_환자수, type: float, unit: 명}
+
+# ─────────────────────────────────────────────────────────────────
+# 2026-08-24 추가 — 해양관광의 읍면동 표 셋
+#
+# ── "해양관광객만 골라낸 값이 아니다" ──────────────────────────
+# 이 회차에서 확인한 것이다. `BY_TH_MARINE_101_001` 의 읍면동별
+# 방문자를 성·연령 조회의 읍면동 방문자(`SE_AG_01_01_001`)와 맞춰
+# 보니 **강릉시 21개 동 가운데 17개가 값이 완전히 같았다**
+# (경포동 둘 다 7,579,498, 2026-08-24 확인).
+#
+# 그러니 이 계열은 "연안 읍면동의 방문자·소비"이지 "바다를 보러 온
+# 사람"이 아니다. 리포트에 '해양관광객 N명'이라고 적지 마라.
+# ─────────────────────────────────────────────────────────────────
+
+BY_TH_MARINE_101_001:
+  name: 연안 읍면동별 방문자 수
+  screen: /datalab/portal/theme/getMarineTourSearch.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, srchAreaDate, tabDiv, srchDivType]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1", srchDivType: "REGN"}
+  granularity: period
+  section: 해양
+  query_axis: 해양
+  caution: >-
+    배열 파라미터가 필요하다(`marine.params_for` 가 만든다).
+    **해양관광객만 골라낸 값이 아니다** — 강릉시 21개 동 중 17개가
+    성·연령 조회의 읍면동 방문자와 값이 같다(2026-08-24 확인).
+    `AVG_TOU_NUM` 은 **월평균**이다 — 7,579,498 ÷ 12 = 631,625 로
+    검산했다. `SGG_CD` 에 열 자리 읍면동 코드가 오고 `GRP_SGG_CD` 가
+    시군구 다섯 자리다. `YEONAN_TYPE_NM` 으로 연안 유형이 나뉜다.
+  columns:
+    SGG_CD: {label: 읍면동코드_열자리, type: str, unit: ""}
+    PTL_SIDO_CD: {label: 포털_지역코드, type: str, unit: ""}
+    AREA_NM: {label: 전체_지역명, type: str, unit: ""}
+    SIDO_NM: {label: 시도, type: str, unit: ""}
+    GRP_SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    ADONG_CD: {label: 행정동코드, type: str, unit: ""}
+    ADONG_NM: {label: 행정동, type: str, unit: ""}
+    TOU_NUM: {label: 방문자수, type: float, unit: 명}
+    AVG_TOU_NUM: {label: 월평균_방문자수, type: float, unit: 명}
+    YEONAN_TYPE_CD: {label: 연안유형코드, type: str, unit: ""}
+    YEONAN_TYPE_NM: {label: 연안유형, type: str, unit: ""}
+
+BY_TH_MARINE_201_001:
+  name: 연안 읍면동별 관광소비액
+  screen: /datalab/portal/theme/getMarineTourSearch.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, srchAreaDate, tabDiv, srchDivType]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1", srchDivType: "REGN"}
+  granularity: period
+  section: 해양
+  query_axis: 해양
+  caution: >-
+    **단위가 원이다.** 성·연령 조회의 읍면동 소비(`SE_AG_02_20_001`)는
+    천원이라 1000배 차이가 난다 — 강릉 송정동에서 44,189,886,220 대
+    44,284,647 로 997.9배였다(2026-08-24 확인). 나란히 놓으면 1000배
+    틀린다. 방문자 표와 마찬가지로 **해양관광 소비만 골라낸 값이
+    아니다.** `CUST_TYPE_CD` 가 '1' 하나로만 왔다 — 다른 값이 있는지
+    확인하지 못했으니 "내국인만"처럼 단정하지 마라.
+  columns:
+    CUST_TYPE_CD: {label: 고객유형코드, type: str, unit: ""}
+    SGG_CD: {label: 읍면동코드_열자리, type: str, unit: ""}
+    PTL_SIDO_CD: {label: 포털_지역코드, type: str, unit: ""}
+    AREA_NM: {label: 전체_지역명, type: str, unit: ""}
+    GRP_SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도, type: str, unit: ""}
+    SGG_CD2: {label: 시군구코드_중복, type: str, unit: ""}
+    SGG_NM: {label: 시군구, type: str, unit: ""}
+    ADONG_CD: {label: 행정동코드, type: str, unit: ""}
+    ADONG_NM: {label: 행정동, type: str, unit: ""}
+    CNSM_AMT: {label: 관광소비액, type: float, unit: 원}
+    YEONAN_TYPE_CD: {label: 연안유형코드, type: str, unit: ""}
+    YEONAN_TYPE_NM: {label: 연안유형, type: str, unit: ""}
+
+BY_TH_MARINE_001_006_AGE_ALL:
+  name: 연령별 인기 연안 지역(전국)
+  screen: /datalab/portal/theme/getMarineTourSearch.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2, srchAreaDate, tabDiv, srchDivType]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1", srchDivType: "REGN"}
+  granularity: period
+  section: 해양
+  query_axis: 해양
+  caution: >-
+    **조회한 지역과 무관하게 전국 표가 온다.** 강릉시를 물어도 첫 행이
+    부산 기장읍이다(2026-08-24 확인). 연령 여덟 갈래(0~9세 ~ 70세
+    이상)에 지역 열여섯 곳이 섞여 40행이 왔다 — **연령마다 상위 몇
+    곳만 준다**는 뜻이므로 지역별 합계로 쓰지 마라. `RK` 는 그 연령
+    안에서의 순위다. `TOU_NUM` 이 소수점까지 오는데 사이트가 왜
+    그런지 밝히지 않는다 — 추정치로 보이나 확정하지 못했으니
+    반올림해 정수로 적고 근거를 함께 밝혀라.
+  columns:
+    RK: {label: 연령내_순위, type: float, unit: ""}
+    ADONG_CD: {label: 행정동코드, type: str, unit: ""}
+    ADONG_NM: {label: 지역명, type: str, unit: ""}
+    YEONAN_TYPE_CD: {label: 연안유형코드, type: str, unit: ""}
+    YEONAN_TYPE_NM: {label: 연안유형, type: str, unit: ""}
+    AGE_HNGL_NM: {label: 연령대, type: str, unit: ""}
+    TOU_NUM: {label: 방문자수, type: float, unit: 명}
+
+# ─────────────────────────────────────────────────────────────────
+# 2026-08-24 추가 — 의료관광을 진료과목까지
+#
+# 이미 있던 `BY_TH_MEDIC_002_003_*` 는 진료과목별 **비율**만 준다.
+# 여기 넷은 금액과 건수를 준다.
+#
+# ── 왜 오래 못 찾았나 ───────────────────────────────────────────
+# **색인(`qid_index.yaml`)이 이 지표들의 기간 파라미터를 모른다.**
+# `params` 에 `NAT_CD`·`RENAME`·`SGG_CD`·`SGG_NM` 만 적혀 있고
+# `BASE_YM1`·`BASE_YM2` 가 없다. 그래서 색인을 보고 부르면 기간을
+# 아예 보내지 않게 되고, 오류가 아니라 빈 배열이 온다.
+#
+# 실제로는 연월 여섯 자리를 주면 그대로 동작한다 —
+# `202401~202412` 로 96행이 온다(2026-08-24 확인).
+#
+# **네 자리 연도를 넣으면 범위가 짧아진다.** `2010~2026` 으로 부르면
+# 2018-01~2025-12 만 오고, 여섯 자리 `201801~202607` 로 부르면
+# 2026-07 까지 온다. 여섯 자리로 불러라.
+#
+# **넣지 않은 것.** `BY_TH_MEDIC_003_001_AMT` 는 `002_002_AMT` 와
+# 768칸이 모두 같다(2026-08-24 검산). `CUST_NAT_NM` 컬럼이 하나 더
+# 있지만 값이 늘 '글로벌'이라 국적으로 나뉘지 않는다 — 국가 코드를
+# 넣어도 빈 배열이다. 같은 것을 두 벌 두지 않았다.
+# ─────────────────────────────────────────────────────────────────
+
+BY_TH_MEDIC_002_002_AMT:
+  name: 의료기관 유형별 외국인 소비액(월별)
+  screen: /datalab/portal/theme/getMedicalTourSearch.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, srchAreaDate, tabDiv]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1", NAT_CD: "000"}
+  granularity: month
+  section: 의료
+  query_axis: 전국
+  caution: >-
+    **단위가 원이다.** 형제 지표 `BY_TH_MEDIC_002_001_AMT` 는 천원이라
+    정확히 1000배 차이 난다 — 나란히 놓지 마라(2026-08-24 재확인).
+    여덟 유형이 온다(대학/종합병원·성형외과·안과·약국·치과·피부과·
+    한약방·한의학과). `MCLS_SUM_AMT` 는 그 달 여덟 유형의 합이고
+    `MCLS_AMT_RATE` 가 그 안에서의 비중(%)이다.
+    **연월 여섯 자리로 불러라** — 네 자리 연도를 넣으면 2025-12 까지만
+    온다(2026-08-24 확인). 수록은 2018-01~2026-07 이다.
+    지역·국가 파라미터를 **무시한다**(전국 값만 온다).
+    `RN_AMT` 는 null 로만 왔다.
+  columns:
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    KTO_CATE_SCLS_CD: {label: 의료기관_유형코드, type: str, unit: ""}
+    KTO_CATE_SCLS_NM: {label: 의료기관_유형, type: str, unit: ""}
+    CARD_COMPT_AMT: {label: 소비액, type: float, unit: 원}
+    MCLS_SUM_AMT: {label: 그달_전체_소비액, type: float, unit: 원}
+    MCLS_AMT_RATE: {label: 비중, type: float, unit: "%"}
+    RN_AMT: {label: 순번_비어있음, type: float, unit: ""}
+
+BY_TH_MEDIC_002_002_CNT:
+  name: 의료기관 유형별 외국인 소비 건수(월별)
+  screen: /datalab/portal/theme/getMedicalTourSearch.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, srchAreaDate, tabDiv]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1", NAT_CD: "000"}
+  granularity: month
+  section: 의료
+  query_axis: 전국
+  caution: >-
+    **건수인데 소수점이 온다**(13,129.3). 표본을 늘린 추정치로 보이나
+    사이트가 밝히지 않으므로 정수로 반올림해 적되 그렇게 했다고
+    밝혀라(2026-08-24 확인). 여덟 유형이며 `MCLS_SUM_CNT` 가 그 달
+    합계, `MCLS_CNT_RATE` 가 비중(%)이다. 금액 지표와 유형별 순위가
+    다르다 — 2018-01 기준 금액은 대학/종합병원이 33.1%인데 건수는
+    27.5%다. 연월 여섯 자리로 불러라 — 네 자리 연도는 2025-12 까지만
+    준다. 지역·국가 파라미터는 **무시한다**(전국 값만 온다).
+  columns:
+    BASE_YM: {label: 기준월, type: str, unit: ""}
+    KTO_CATE_SCLS_CD: {label: 의료기관_유형코드, type: str, unit: ""}
+    KTO_CATE_SCLS_NM: {label: 의료기관_유형, type: str, unit: ""}
+    CARD_COMPT_CNT: {label: 소비_건수, type: float, unit: 건}
+    MCLS_SUM_CNT: {label: 그달_전체_건수, type: float, unit: 건}
+    MCLS_CNT_RATE: {label: 비중, type: float, unit: "%"}
+    RN_CNT: {label: 순번_비어있음, type: float, unit: ""}
+
+BY_TH_MEDIC_003_002_AMT:
+  name: 의료기관 유형별 외국인 소비액(기간 합계)
+  screen: /datalab/portal/theme/getMedicalTourSearch.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, srchAreaDate, tabDiv]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1", NAT_CD: "000"}
+  granularity: period
+  section: 의료
+  query_axis: 전국
+  caution: >-
+    여덟 행이 온다. `CARD_COMPT_AMT` 여덟 개의 합이 `TOT_AMT` 와
+    같고 `MCLS_AMT_RATE` 합이 100.0 이다(2026-08-24 검산).
+    단위는 **원**이다. `CUST_NAT_NM` 은 늘 '글로벌'이며 **국가 코드를
+    넣어도 빈 배열이 온다** — 국적별로 나눌 수 없다.
+    `MCLS_SUM_AMT` 는 `CARD_COMPT_AMT` 와 같은 값이 반복된 것이다.
+    연월 여섯 자리로 불러라. 지역 파라미터는 **무시한다**.
+  columns:
+    CUST_NAT_CD: {label: 국적코드, type: str, unit: ""}
+    CUST_NAT_NM: {label: 국적, type: str, unit: ""}
+    KTO_CATE_SCLS_CD: {label: 의료기관_유형코드, type: str, unit: ""}
+    KTO_CATE_SCLS_NM: {label: 의료기관_유형, type: str, unit: ""}
+    CARD_COMPT_AMT: {label: 소비액, type: float, unit: 원}
+    MCLS_SUM_AMT: {label: 소비액_중복, type: float, unit: 원}
+    TOT_AMT: {label: 여덟유형_합계, type: float, unit: 원}
+    MCLS_AMT_RATE: {label: 비중, type: float, unit: "%"}
+
+BY_TH_MEDIC_003_002_CNT:
+  name: 의료기관 유형별 외국인 소비 건수(기간 합계)
+  screen: /datalab/portal/theme/getMedicalTourSearch.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, srchAreaDate, tabDiv]
+  fixed_params: {srchAreaDate: "1", tabDiv: "1", NAT_CD: "000"}
+  granularity: period
+  section: 의료
+  query_axis: 전국
+  caution: >-
+    금액 지표(BY_TH_MEDIC_003_002_AMT)의 건수판이다. **건수인데
+    소수점이 온다.** `CUST_NAT_NM` 은 늘 '글로벌'이다.
+    연월 여섯 자리로 불러라. 지역·국가 파라미터는 **무시한다**
+    (2026-08-24 확인).
+  columns:
+    CUST_NAT_CD: {label: 국적코드, type: str, unit: ""}
+    CUST_NAT_NM: {label: 국적, type: str, unit: ""}
+    KTO_CATE_SCLS_CD: {label: 의료기관_유형코드, type: str, unit: ""}
+    KTO_CATE_SCLS_NM: {label: 의료기관_유형, type: str, unit: ""}
+    CARD_COMPT_CNT: {label: 소비_건수, type: float, unit: 건}
+    MCLS_SUM_CNT: {label: 소비_건수_중복, type: float, unit: 건}
+    TOT_CNT: {label: 여덟유형_합계, type: float, unit: 건}
+    MCLS_CNT_RATE: {label: 비중, type: float, unit: "%"}
+
+# ─────────────────────────────────────────────────────────────────
+# 2026-08-24 추가 — 해양 넷 (검색순위·소비 구성)
+#
+# **이 넷은 배열 파라미터를 쓰지 않는다.** 같은 화면인데 앞의
+# `101_001`·`201_001` 은 `marine.params_for` 가 만든 배열이 필요하고
+# 여기 넷은 `SGG_CD` 만 본다(2026-08-24 확인). 축이 섞여 있다.
+# ─────────────────────────────────────────────────────────────────
+
+BY_TH_MARINE_001_011:
+  name: 연안 지역 관광지 검색순위 Top100
+  screen: /datalab/portal/theme/getMarineTourSearch.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: period
+  section: 해양
+  query_axis: 지역
+  caution: >-
+    **끝 달이 최신이어야 값이 온다.** 202401~202412 나 202001~202412
+    는 빈 배열이고 201801~202607 이나 202601~202607 은 100행을 준다
+    (2026-08-24 확인) — 과거 구간만 떼어 볼 수 없다.
+    창을 바꾸면 값이 달라지므로 무시하는 것은 아니다.
+    검색 건수이지 방문자 수가 아니다. `SGG_CD` 는 시군구 다섯 자리다
+    (배열 파라미터가 필요 없다). `EMD_CD` 는 읍면동 코드다.
+  columns:
+    RK: {label: 순위, type: float, unit: ""}
+    ITS_BRO_ID: {label: 관광지ID, type: str, unit: ""}
+    MD5_POI_ID: {label: 관광지_해시, type: str, unit: ""}
+    ITS_BRO_NM: {label: 관광지명, type: str, unit: ""}
+    ADDR_ROAD_NM: {label: 도로명주소, type: str, unit: ""}
+    KTO_CATE_NAME_A: {label: 대분류, type: str, unit: ""}
+    KTO_CATE_NAME_B: {label: 중분류, type: str, unit: ""}
+    SRCH_CNT: {label: 검색건수, type: float, unit: 건}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    SGG_NM: {label: 시군구, type: str, unit: ""}
+    EMD_CD: {label: 읍면동코드, type: str, unit: ""}
+    ADONG_NM: {label: 행정동, type: str, unit: ""}
+    YEONAN_TYPE_NM: {label: 연안유형, type: str, unit: ""}
+
+BY_TH_MARINE_101_005:
+  name: 전국 연안 관광지 검색순위 Top100
+  screen: /datalab/portal/theme/getMarineTourSearch.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {SGG_CD: ""}
+  granularity: period
+  section: 해양
+  query_axis: 전국
+  caution: >-
+    **`SGG_CD` 를 빈 문자열로 보내야 전국이 온다**(화면이 전국 조회에서
+    그렇게 보낸다). 지역을 넣으면 그 지역 표가 아니라 다른 결과가
+    되므로 지역별이 필요하면 BY_TH_MARINE_001_011 을 쓰라.
+    1위가 '현대프리미엄아울렛송도점'인 데서 보이듯 **연안 지역에 있는
+    관광지이지 바다 자체가 아니다**(2026-08-24 확인).
+    검색 건수이지 방문자 수가 아니다. 지역·연안유형 컬럼이 없다.
+  columns:
+    RK: {label: 순위, type: float, unit: ""}
+    ITS_BRO_ID: {label: 관광지ID, type: str, unit: ""}
+    MD5_POI_ID: {label: 관광지_해시, type: str, unit: ""}
+    ITS_BRO_NM: {label: 관광지명, type: str, unit: ""}
+    ADDR_ROAD_NM: {label: 도로명주소, type: str, unit: ""}
+    KTO_CATE_NAME_B: {label: 중분류, type: str, unit: ""}
+    SRCH_CNT: {label: 검색건수, type: float, unit: 건}
+
+BY_TH_MARINE_201_003:
+  name: 연안 유형별 관광소비 비율
+  screen: /datalab/portal/theme/getMarineTourSearch.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: period
+  section: 해양
+  query_axis: 지역
+  caution: >-
+    세 행이 온다 — 연안 도시 · 연안 어촌 · **비연안**. `RATE_VAL` 합이
+    100.0 이다(강릉시 2024년 32.09 + 27.62 + 40.29, 2026-08-24 검산).
+    **비연안이 40%를 차지한다** — 이 표는 그 시군구 전체 소비를 연안
+    여부로 나눈 것이지 해양관광 소비만이 아니다.
+    `TOTAL_CNSM_AMT` 746,275,446,028원이 읍면동별 소비
+    (BY_TH_MARINE_201_001)의 합과 맞는다. 단위는 원이다.
+    `TOT_CNSM_AMT` 가 그 유형의 몫이고 `TOTAL_CNSM_AMT` 는 전체다 —
+    이름이 비슷해 뒤바꾸기 쉽다.
+  columns:
+    YEONAN_TYPE_CD: {label: 연안유형코드, type: str, unit: ""}
+    YEONAN_TYPE_NM: {label: 연안유형, type: str, unit: ""}
+    RATE_VAL: {label: 비중, type: float, unit: "%"}
+    TOT_CNSM_AMT: {label: 유형_소비액, type: float, unit: 원}
+    TOTAL_CNSM_AMT: {label: 전체_소비액, type: float, unit: 원}
+
+BY_TH_MARINE_201_005:
+  name: 연안 지역 업종별 관광소비
+  screen: /datalab/portal/theme/getMarineTourSearch.do
+  auth: public
+  params: [SGG_CD, BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: period
+  section: 해양
+  query_axis: 지역
+  caution: >-
+    일곱 대분류(쇼핑업·숙박업·식음료업·여가서비스업·여행업·운송업·
+    의료웰니스업)가 중분류로 갈려 온다. **`TOU_NUM` 은 대분류 합이
+    중분류 행마다 반복된 값이다** — 그냥 더하면 여러 배가 된다.
+    합계는 `DTL_TOU_NUM` 으로 내라. 컬럼 이름이 TOU_NUM 이지만
+    사람 수가 아니라 **금액(원)**이다. 행 수가 지역마다 다르다
+    (강릉시 2024년 15~16행, 2026-08-24 확인).
+  columns:
+    DPTR_REGN_NM: {label: 업종_대분류, type: str, unit: ""}
+    DPTR_REGN_DTL_NM: {label: 업종_중분류, type: str, unit: ""}
+    TOU_NUM: {label: 대분류_소비액, type: float, unit: 원}
+    TOU_NUM_SQRT: {label: 대분류_소비액_제곱근, type: float, unit: ""}
+    TOU_NUM_RATE: {label: 대분류_비중, type: float, unit: "%"}
+    DTL_TOU_NUM: {label: 중분류_소비액, type: float, unit: 원}
+    DTL_TOU_NUM_SQRT: {label: 중분류_소비액_제곱근, type: float, unit: ""}
+    DTL_TOU_NUM_RATE: {label: 대분류내_중분류_비중, type: float, unit: "%"}

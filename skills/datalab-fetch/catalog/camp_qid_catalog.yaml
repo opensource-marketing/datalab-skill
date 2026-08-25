@@ -1,0 +1,331 @@
+# 한국관광 데이터랩 qid 카탈로그 — 캠핑
+#
+# 화면: 지역별 분석 > 지역별 관광지표 > 캠핑장 현황
+#       (loc/getAreaCampDataForm)
+#
+# 캠핑장 수·캠핑사이트 수·개폐업·검색량 네 갈래다. 다른 카탈로그의
+# 숙박 지표(BZM_03_*)와 겹치지 않는다 — 그쪽은 관광진흥법상 숙박업이고
+# 여기는 야영장업이다.
+#
+# ── SIDO_NM에 시군구 이름이 온다 ──────────────────────────────
+# 지역별 지표(01_002 · 02_002 · 03_002 · 04_002 · 04_003)는 SGG_CD로
+# 물으면 SIDO_NM 칸에 **시군구 이름**을 담아 준다("정선군"). 컬럼
+# 이름만 보고 시도로 읽으면 강원도 전체 값으로 오해한다.
+#
+# ── 빈 배열이 여기서는 진짜 0이다 ─────────────────────────────
+# 개폐업 지역별(02_002)은 그 지역에 개업이 없으면 빈 배열이다. 정선군
+# 2024는 0행이고 강릉시는 9, 가평군은 34다. 다른 카탈로그에서는 빈
+# 배열을 "발표 안 됨"으로 읽어야 할 때가 많지만 여기서는 "그 해 그
+# 지역에 없었다"로 읽는 편이 맞다 — 다만 확신이 필요하면 시도별
+# (02_001)로 다시 물어 그 시도에 값이 있는지 보아라.
+#
+# ── BASE_YM2가 없으면 전부 빈 배열이다 ───────────────────────
+# 색인(qid_index.yaml)은 여러 지표의 params를 BASE_YM1 하나로 적어
+# 두었는데 틀렸다. 열한 개 모두 BASE_YM1과 BASE_YM2를 함께 줘야
+# 값이 온다. 하나만 주면 오류가 아니라 빈 배열이라 "그 지역에
+# 캠핑장이 없다"로 읽힌다.
+#
+# ── itemDiv가 개업과 폐업을 가른다 ────────────────────────────
+# 02_* 지표는 itemDiv를 주지 않으면 오류이거나 빈 배열이다.
+# 1이 개업, 2가 폐업이다(화면이 그 값으로 제목을 "개업 캠핑장수"·
+# "폐업 캠핑장수"로 바꾼다).
+# ────────────────────────────────────────────────────────────────
+
+LN_01_03_003_01_001:
+  name: 시도별 캠핑장 수
+  screen: /datalab/portal/loc/getAreaCampDataForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: month
+  section: 캠핑
+  query_axis: 전국
+  caution: >-
+    열여섯 행(시도)이 온다. SUM_NUM은 전국 합이며 모든 행에 같은 값이
+    들어 있다 — 행마다 더하지 마라(2024-12 기준 3,976곳, NUM 합과
+    일치하는 것을 확인했다). 지역을 골라 물어도 시도 목록이 온다.
+  columns:
+    BASE_YM: {label: 기준연월, type: str, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    PTL_SIDO_CD: {label: 포털_지역코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명_약칭, type: str, unit: ""}
+    SIDO_FULL_NM: {label: 시도명, type: str, unit: ""}
+    NUM: {label: 캠핑장수, type: float, unit: 개}
+    SUM_NUM: {label: 전국_캠핑장수, type: float, unit: 개}
+
+LN_01_03_003_01_002:
+  name: 지역 캠핑장 수
+  screen: /datalab/portal/loc/getAreaCampDataForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, SGG_CD]
+  fixed_params: {}
+  granularity: month
+  section: 캠핑
+  query_axis: 지역
+  caution: >-
+    한 행만 온다. **SIDO_NM에 시군구 이름이 들어온다**(정선군).
+    시도 값으로 읽지 마라. 한 행뿐이라 SUM_NUM과 NUM이 같다 —
+    전국 합이 아니다.
+  columns:
+    BASE_YM: {label: 기준연월, type: str, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    PTL_SIDO_CD: {label: 지도용_지역코드, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    SIDO_NM: {label: 지역명, type: str, unit: ""}
+    NUM: {label: 캠핑장수, type: float, unit: 개}
+    SUM_NUM: {label: 합계, type: float, unit: 개}
+
+LN_01_03_003_01_003:
+  name: 캠핑장 업종별 분포
+  screen: /datalab/portal/loc/getAreaCampDataForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, SGG_CD]
+  fixed_params: {}
+  granularity: month
+  section: 캠핑
+  query_axis: 지역
+  caution: >-
+    **기간을 월(YYYYMM)로 준다.** 응답의 BASE_YEAR가 연도라 연 단위로
+    보이지만, 연도 네 자리를 넣으면 빈 배열이다.
+    관광진흥법상 야영장 업종으로 나눈다(일반야영장업·자동차야영장업 등).
+    PER의 합이 100이다. 업종이 하나뿐인 지역은 한 행에 100.0이 온다
+    (정선군 2024는 일반야영장업 28곳 100%(2026-08-23 재확인)). 그것을 "전국 대비 100%"로
+    읽지 마라.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    OPNG_SVC_NM: {label: 업종, type: str, unit: ""}
+    NUM: {label: 캠핑장수, type: float, unit: 개}
+    PER: {label: 비중, type: float, unit: "%"}
+
+LN_01_03_003_02_001:
+  name: 시도별 캠핑장 개·폐업 수
+  screen: /datalab/portal/loc/getAreaCampDataForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, itemDiv]
+  fixed_params: {itemDiv: "1"}
+  granularity: month
+  section: 캠핑
+  query_axis: 전국
+  caution: >-
+    **itemDiv를 반드시 준다** — 1이 개업, 2가 폐업이다. **이 카탈로그는 1(개업)을 기본으로 박아 두었다.** 주지 않으면
+    오류이거나 빈 배열이라 "개폐업이 없다"로 잘못 읽힌다.
+    무엇을 넣었는지 리포트에 적어라 — 응답에는 개업인지 폐업인지가
+    적혀 있지 않다.
+    PRE_NUM은 직전 기간 값이다. SUM_NUM은 전국 합이며 NUM 합과 맞는
+    것을 확인했다(2024 개업 457곳 · 2026-08-23 재확인).
+  columns:
+    BASE_YM: {label: 기준연월, type: str, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    PTL_SIDO_CD: {label: 포털_지역코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명_약칭, type: str, unit: ""}
+    SIDO_FULL_NM: {label: 시도명, type: str, unit: ""}
+    NUM: {label: 개폐업수, type: float, unit: 개}
+    PRE_NUM: {label: 직전기간_개폐업수, type: float, unit: 개}
+    SUM_NUM: {label: 전국_개폐업수, type: float, unit: 개}
+
+LN_01_03_003_02_002:
+  name: 지역 캠핑장 개·폐업 수
+  screen: /datalab/portal/loc/getAreaCampDataForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, SGG_CD, itemDiv]
+  fixed_params: {itemDiv: "1"}
+  granularity: month
+  section: 캠핑
+  query_axis: 지역
+  caution: >-
+    **itemDiv를 반드시 준다**(1 개업 · 2 폐업). **이 카탈로그는 1(개업)을 기본으로 박아 두었다** — 폐업을 보려면 `--param itemDiv=2`.
+    **빈 배열이 진짜 0이다** — 그 해 그 지역에 개업(또는 폐업)이
+    없었다는 뜻이다. 정선군 2024는 0행, 강릉시 9곳, 가평군 34곳이었다(2026-08-23 재확인).
+    SIDO_NM에 시군구 이름이 들어온다.
+  columns:
+    BASE_YM: {label: 기준연월, type: str, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    PTL_SIDO_CD: {label: 지도용_지역코드, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    SIDO_NM: {label: 지역명, type: str, unit: ""}
+    NUM: {label: 개폐업수, type: float, unit: 개}
+    SUM_NUM: {label: 합계, type: float, unit: 개}
+
+LN_01_03_003_03_001:
+  name: 시도별 캠핑사이트 수
+  screen: /datalab/portal/loc/getAreaCampDataForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: month
+  section: 캠핑
+  query_axis: 전국
+  caution: >-
+    **캠핑장 수가 아니라 사이트(구획) 수다.** 캠핑장 하나에 사이트가
+    수십 개 있으므로 자릿수가 다르다(2024-12 전국 115,122개 대
+    캠핑장 3,976곳). 두 지표를 같은 표에 나란히 놓을 때 라벨을 반드시
+    구분하라. SUM_NUM은 전국 합이며 모든 행에 같은 값이다.
+  columns:
+    BASE_YM: {label: 기준연월, type: str, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    PTL_SIDO_CD: {label: 포털_지역코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명_약칭, type: str, unit: ""}
+    SIDO_FULL_NM: {label: 시도명, type: str, unit: ""}
+    NUM: {label: 캠핑사이트수, type: float, unit: 개}
+    SUM_NUM: {label: 전국_캠핑사이트수, type: float, unit: 개}
+
+LN_01_03_003_03_002:
+  name: 지역 캠핑사이트 수
+  screen: /datalab/portal/loc/getAreaCampDataForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, SGG_CD]
+  fixed_params: {}
+  granularity: month
+  section: 캠핑
+  query_axis: 지역
+  caution: >-
+    사이트(구획) 수다. 한 행만 오고 SIDO_NM에 시군구 이름이 들어온다.
+    LN_01_03_003_01_002(캠핑장 수)로 나누면 캠핑장당 평균 사이트 수가
+    된다(정선군 2024-12: 1,356 ÷ 28 = 48.4).
+  columns:
+    BASE_YM: {label: 기준연월, type: str, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    PTL_SIDO_CD: {label: 지도용_지역코드, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    SIDO_NM: {label: 지역명, type: str, unit: ""}
+    NUM: {label: 캠핑사이트수, type: float, unit: 개}
+    SUM_NUM: {label: 합계, type: float, unit: 개}
+
+LN_01_03_003_03_004:
+  name: 캠핑사이트 유형별 분포
+  screen: /datalab/portal/loc/getAreaCampDataForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, SGG_CD]
+  fixed_params: {}
+  granularity: month
+  section: 캠핑
+  query_axis: 지역
+  caution: >-
+    **기간을 월(YYYYMM)로 준다.** 응답의 BASE_YEAR가 연도라 연 단위로
+    보이지만, 연도 네 자리를 넣으면 빈 배열이다.
+    사이트를 시설 유형으로 나눈다(일반야영장·자동차야영장·카라반·
+    글램핑). PER의 합이 100이다. 업종(01_003)과 유형(여기)은 다른
+    분류다 — 업종은 사업자 등록 구분이고 유형은 사이트 시설 구분이라
+    행 수와 이름이 다르다. 섞어 쓰면 합이 200이 된다.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    OPNG_SVC_NM: {label: 사이트유형, type: str, unit: ""}
+    NUM: {label: 캠핑사이트수, type: float, unit: 개}
+    PER: {label: 비중, type: float, unit: "%"}
+
+LN_01_03_003_04_001:
+  name: 시도별 캠핑장 검색 건수
+  screen: /datalab/portal/loc/getAreaCampDataForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2]
+  fixed_params: {}
+  granularity: month
+  section: 캠핑
+  query_axis: 전국
+  caution: >-
+    **검색 건수는 방문자 수가 아니다.** 내비게이션(티맵) 목적지 검색
+    건수이며, 검색 없이 찾아가는 캠핑장은 잡히지 않는다.
+    SPPY_SRCH_CNT와 GROW_RATE_SPPY_SRCH_CNT는 조회한 지역 전부에서
+    0으로만 왔다 — 화면도 쓰지 않으므로 뜻을 짐작하지 마라.
+  columns:
+    AREA_NM: {label: 지역명, type: str, unit: ""}
+    PTL_SIDO_CD: {label: 포털_지역코드, type: str, unit: ""}
+    SIDO_NM: {label: 시도명, type: str, unit: ""}
+    SRCH_CNT: {label: 검색건수, type: float, unit: 건}
+    SPPY_SRCH_CNT: {label: 미상, type: float, unit: ""}
+    GROW_RATE_SPPY_SRCH_CNT: {label: 미상, type: float, unit: ""}
+
+LN_01_03_003_04_002:
+  name: 지역 캠핑장 검색 건수
+  screen: /datalab/portal/loc/getAreaCampDataForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, SGG_CD]
+  fixed_params: {}
+  granularity: month
+  section: 캠핑
+  query_axis: 지역
+  caution: >-
+    검색 건수는 방문자 수가 아니다(내비게이션 목적지 검색).
+    한 행만 오고 SIDO_NM에 시군구 이름이 들어온다.
+  columns:
+    BASE_YM: {label: 기준연월, type: str, unit: ""}
+    SIDO_CD: {label: 시도코드, type: str, unit: ""}
+    PTL_SIDO_CD: {label: 지도용_지역코드, type: str, unit: ""}
+    SGG_CD: {label: 시군구코드, type: str, unit: ""}
+    SIDO_NM: {label: 지역명, type: str, unit: ""}
+    NUM: {label: 검색건수, type: float, unit: 건}
+    SUM_NUM: {label: 합계, type: float, unit: 건}
+
+LN_01_03_003_04_003:
+  name: 지역 캠핑장 검색 건수 월별 추이
+  screen: /datalab/portal/loc/getAreaCampDataForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, SGG_CD]
+  fixed_params: {}
+  granularity: month
+  section: 캠핑
+  query_axis: 지역
+  caution: >-
+    검색 건수는 방문자 수가 아니다. **캠핑은 계절 편차가 커서** 이
+    추이를 한 달만 떼어 보면 안 된다(강릉시 2024: 1월 1,747건에서
+    성수기에 몇 배로 뛴다 · 2026-08-23 재확인). SIDO_NM에 시군구
+    이름이 들어온다.
+  columns:
+    BASE_DATE: {label: 기준연월, type: str, unit: ""}
+    SIDO_NM: {label: 지역명, type: str, unit: ""}
+    TMAP_CATE_MCLS_NM: {label: 분류, type: str, unit: ""}
+    SRCH_CNT: {label: 검색건수, type: float, unit: 건}
+    SPPY_SRCH_CNT: {label: 미상, type: float, unit: ""}
+
+# ─────────────────────────────────────────────────────────────────
+# 2026-08-24 추가 — 개·폐업을 업종으로 나눈 두 지표
+#
+# `LN_01_03_003_02_002`(지역 개폐업 수)가 주는 총계를 업종으로 나눈
+# 것이다. 강릉시 2024년 개업 9곳이 자동차야영장업 3 + 일반야영장업 6
+# 으로 정확히 갈린다(2026-08-24 검산).
+# ─────────────────────────────────────────────────────────────────
+
+LN_01_03_003_02_003:
+  name: 캠핑장 개·폐업 업종별 월별 추이
+  screen: /datalab/portal/loc/getAreaCampDataForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, SGG_CD, itemDiv]
+  fixed_params: {itemDiv: "1"}
+  granularity: month
+  section: 캠핑
+  query_axis: 지역
+  caution: >-
+    **itemDiv를 반드시 준다**(1 개업 · 2 폐업). 이 카탈로그는 1을
+    기본으로 박아 두었다 — 응답 어디에도 개업인지 폐업인지 적혀
+    있지 않으므로 무엇을 넣었는지 리포트에 적어라.
+    **`BASE_YEAR` 가 연도가 아니라 연월이다**(202404 꼴). 이름을
+    믿고 연도로 묶으면 한 해가 열두 개로 쪼개진 채 그려진다.
+    개폐업이 없던 달은 행이 오지 않는다(강릉시 2024년 6행,
+    2026-08-24 확인).
+  columns:
+    BASE_YEAR: {label: 기준연월, type: str, unit: ""}
+    OPNG_SVC_ID: {label: 업종코드, type: str, unit: ""}
+    OPNG_SVC_NM: {label: 업종, type: str, unit: ""}
+    NUM: {label: 개폐업수, type: float, unit: 개}
+
+LN_01_03_003_02_004:
+  name: 캠핑장 개·폐업 업종별 분포
+  screen: /datalab/portal/loc/getAreaCampDataForm.do
+  auth: public
+  params: [BASE_YM1, BASE_YM2, SGG_CD, itemDiv]
+  fixed_params: {itemDiv: "1"}
+  granularity: month
+  section: 캠핑
+  query_axis: 지역
+  caution: >-
+    **itemDiv를 반드시 준다**(1 개업 · 2 폐업). NUM 합이 같은 기간
+    `LN_01_03_003_02_002` 의 총계와 맞는다(강릉시 2024년 3 + 6 = 9,
+    2026-08-24 검산). PER 합은 100이다.
+    여기서는 `BASE_YEAR` 가 연도로 온다 — 형제 지표
+    `LN_01_03_003_02_003` 은 같은 이름의 컬럼에 연월을 담는다.
+    기간은 월(YYYYMM)로 준다.
+  columns:
+    BASE_YEAR: {label: 기준연도, type: str, unit: ""}
+    OPNG_SVC_NM: {label: 업종, type: str, unit: ""}
+    NUM: {label: 개폐업수, type: float, unit: 개}
+    PER: {label: 비중, type: float, unit: "%"}
